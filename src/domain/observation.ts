@@ -14,10 +14,15 @@ export type HairRegion =
   | "ends"
   | "all";
 
+  export type ObservationTrait =
+  | "post_wash_roughness"
+  | "wet_tangling"
+  | "conditioning_improvement";
+
 export type Observation = {
   id: string;
   domain: ObservationDomain;
-  trait: string;
+  trait: ObservationTrait;
   value: string | number | boolean;
   region?: HairRegion;
   source: "questionnaire";
