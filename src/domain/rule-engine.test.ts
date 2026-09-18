@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import type { Observation } from "../observation";
-import { evaluateRule } from "../rule-engine";
-import { strongConditioningResponseRule } from "./conditioning-response.rule";
+import type { Observation } from "./observation";
+import { evaluateRule } from "./rule-engine";
+import { strongConditioningResponseRule } from "./rules/conditioning-response.rule";
 
-describe("strongConditioningResponseRule", () => {
-  it("produces a high-confidence finding when all three signals are present and the rule is active", () => {
+describe("evaluateRule", () => {
+  it("produces the finding when every rule condition is matched", () => {
     const observations: Observation[] = [
       {
         id: "obs_001",
@@ -44,12 +44,20 @@ describe("strongConditioningResponseRule", () => {
     expect(result?.confidence).toBe("high");
   });
 
-  it("does not infer a strong conditioning response from roughness alone", () => {
+  it("does not produce the finding when a condition is missing", () => {
     const observations: Observation[] = [
       {
         id: "obs_001",
         domain: "fiber",
         trait: "post_wash_roughness",
+        value: "high",
+        region: "mid_length",
+        source: "questionnaire",
+      },
+      {
+        id: "obs_002",
+        domain: "fiber",
+        trait: "wet_tangling",
         value: "high",
         region: "mid_length",
         source: "questionnaire",
@@ -62,6 +70,42 @@ describe("strongConditioningResponseRule", () => {
     };
 
     const result = evaluateRule(activeRule, observations);
+
+    expect(result).toBeNull();
+  });
+
+  it("does not evaluate a draft rule", () => {
+    const observations: Observation[] = [
+      {
+        id: "obs_001",
+        domain: "fiber",
+        trait: "post_wash_roughness",
+        value: "high",
+        region: "mid_length",
+        source: "questionnaire",
+      },
+      {
+        id: "obs_002",
+        domain: "fiber",
+        trait: "wet_tangling",
+        value: "high",
+        region: "mid_length",
+        source: "questionnaire",
+      },
+      {
+        id: "obs_003",
+        domain: "product_response",
+        trait: "conditioning_improvement",
+        value: "high",
+        region: "mid_length",
+        source: "questionnaire",
+      },
+    ];
+
+    const result = evaluateRule(
+      strongConditioningResponseRule,
+      observations,
+    );
 
     expect(result).toBeNull();
   });
