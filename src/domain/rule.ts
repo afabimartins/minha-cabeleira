@@ -1,5 +1,6 @@
 import type {
   ObservationTrait,
+  ObservationValue,
 } from "./observation";
 
 import type {
@@ -13,7 +14,7 @@ export type RuleStatus =
 
 export type RuleCondition = {
   trait: ObservationTrait;
-  value: string | number | boolean;
+  value: ObservationValue;
 };
 
 export type KnowledgeRule = {
