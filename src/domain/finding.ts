@@ -1,16 +1,16 @@
 export type FindingConfidence =
   | "low"
-  | "moderate"
+  | "medium"
   | "high";
-
-export type FindingType =
-  | "strong_conditioning_response";
 
 export type Finding = {
   id: string;
-  type: FindingType;
+  type: string;
   confidence: FindingConfidence;
+
   basedOn: string[];
+
   evidence: string[];
+
   explanation: string;
 };

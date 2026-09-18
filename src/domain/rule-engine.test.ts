@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Observation } from "./observation";
-import { evaluateRule } from "./rule-engine";
-import { strongConditioningResponseRule } from "./rules/conditioning-response.rule";
+import { evaluateRule, evaluateRules } from "./rule-engine";import { strongConditioningResponseRule } from "./rules/conditioning-response.rule";
 
 describe("evaluateRule", () => {
   it("produces the finding when every rule condition is matched", () => {
@@ -109,4 +108,53 @@ describe("evaluateRule", () => {
 
     expect(result).toBeNull();
   });
+
+  it("evaluates multiple rules", () => {
+  const observations: Observation[] = [
+    {
+      id: "obs_001",
+      domain: "fiber",
+      trait: "post_wash_roughness",
+      value: "high",
+      region: "mid_length",
+      source: "questionnaire",
+    },
+    {
+      id: "obs_002",
+      domain: "fiber",
+      trait: "wet_tangling",
+      value: "high",
+      region: "mid_length",
+      source: "questionnaire",
+    },
+    {
+      id: "obs_003",
+      domain: "product_response",
+      trait: "conditioning_improvement",
+      value: "high",
+      region: "mid_length",
+      source: "questionnaire",
+    },
+  ];
+
+  const activeRule = {
+    ...strongConditioningResponseRule,
+    status: "active" as const,
+  };
+
+  const findings = evaluateRules(
+    [
+      activeRule,
+      strongConditioningResponseRule,
+    ],
+    observations,
+  );
+
+  expect(findings).toHaveLength(1);
+
+  expect(findings[0]?.type).toBe(
+    "strong_conditioning_response",
+  );
+});
+
 });

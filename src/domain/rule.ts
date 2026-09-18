@@ -1,9 +1,13 @@
-import type { FindingConfidence, FindingType } from "./finding";
-import type { ObservationTrait } from "./observation";
+import type {
+  ObservationTrait,
+} from "./observation";
+
+import type {
+  FindingConfidence,
+} from "./finding";
 
 export type RuleStatus =
   | "draft"
-  | "reviewed"
   | "active"
   | "retired";
 
@@ -14,20 +18,23 @@ export type RuleCondition = {
 
 export type KnowledgeRule = {
   id: string;
+
   name: string;
+
   description: string;
+
+  status: RuleStatus;
+
+  version: number;
 
   conditions: RuleCondition[];
 
   produces: {
-    type: FindingType;
+    type: string;
     confidence: FindingConfidence;
   };
 
   evidence: string[];
 
   rationale: string;
-
-  status: RuleStatus;
-  version: number;
 };
