@@ -5,8 +5,8 @@ import {
 } from "vitest";
 
 import type {
-  FindingSummary,
-} from "./finding-engine";
+  Finding,
+} from "./finding";
 
 import type {
   RecommendationRule,
@@ -16,26 +16,25 @@ import {
   evaluateRecommendationRule,
 } from "./recommendation-engine";
 
-const findings: FindingSummary[] = [
-  {
-    type: "strong_conditioning_response",
-    confidence: "high",
-    supportingFindings: ["finding_001"],
-    basedOn: [
-      "obs_001",
-      "obs_002",
-      "obs_003",
-    ],
-    evidence: [],
-    explanations: [
-      "Conditioning response supported.",
-    ],
-  },
-];
+const finding: Finding = {
+  id: "finding_conditioning_response",
+  type: "strong_conditioning_response",
+  confidence: "high",
+  basedOn: [
+    "roughness",
+    "tangling",
+    "conditioning",
+  ],
+  evidence: [
+    "Conditioning improves manageability",
+  ],
+  explanation:
+    "Hair responds positively to conditioning.",
+};
 
 const activeRule: RecommendationRule = {
-  id: "recommendation_rule_001",
-  name: "Example recommendation",
+  id: "recommendation_conditioning_support",
+  name: "Conditioning support",
   status: "active",
   version: 1,
 
@@ -44,55 +43,73 @@ const activeRule: RecommendationRule = {
   ],
 
   produces: {
-    type: "example_recommendation",
-    confidence: "medium",
+    type: "conditioning_support",
+    confidence: "high",
   },
 
-  evidence: ["evidence_001"],
+  evidence: [
+    "Strong conditioning response",
+  ],
 
   rationale:
-    "Example recommendation rationale.",
+    "The reported pattern supports prioritizing conditioning support.",
 };
 
-describe("evaluateRecommendationRule", () => {
-  it("creates a candidate when required findings exist", () => {
-    const result =
-      evaluateRecommendationRule(
-        activeRule,
-        findings,
-      );
+describe(
+  "evaluateRecommendationRule",
+  () => {
+    it(
+      "creates a candidate when required findings exist",
+      () => {
+        const result =
+          evaluateRecommendationRule(
+            activeRule,
+            [finding],
+          );
 
-    expect(result).not.toBeNull();
+        expect(result).not.toBeNull();
 
-    expect(result?.status).toBe(
-      "candidate",
+        expect(result?.status).toBe(
+          "candidate",
+        );
+
+        expect(result?.type).toBe(
+          "conditioning_support",
+        );
+
+        expect(
+          result?.basedOnFindings,
+        ).toContain(finding.id);
+      },
     );
 
-    expect(result?.type).toBe(
-      "example_recommendation",
+    it(
+      "does not evaluate draft recommendation rules",
+      () => {
+        const result =
+          evaluateRecommendationRule(
+            {
+              ...activeRule,
+              status: "draft",
+            },
+            [finding],
+          );
+
+        expect(result).toBeNull();
+      },
     );
-  });
 
-  it("does not evaluate draft recommendation rules", () => {
-    const result =
-      evaluateRecommendationRule(
-        {
-          ...activeRule,
-          status: "draft",
-        },
-        findings,
-      );
+    it(
+      "does not recommend when required findings are absent",
+      () => {
+        const result =
+          evaluateRecommendationRule(
+            activeRule,
+            [],
+          );
 
-    expect(result).toBeNull();
-  });
-
-  it("does not recommend when required findings are absent", () => {
-    const result =
-      evaluateRecommendationRule(
-        activeRule,
-        [],
-      );
-
-    expect(result).toBeNull();
-  });
-});
+        expect(result).toBeNull();
+      },
+    );
+  },
+);

@@ -1,6 +1,7 @@
 import type {
-  FindingSummary,
-} from "./finding-engine";
+  Finding,
+  FindingConfidence,
+} from "./finding";
 
 import type {
   Recommendation,
@@ -10,58 +11,94 @@ import type {
   RecommendationRule,
 } from "./recommendation-rule";
 
+const confidenceWeight: Record<
+  FindingConfidence,
+  number
+> = {
+  low: 1,
+  medium: 2,
+  high: 3,
+};
+
 export function evaluateRecommendationRule(
   rule: RecommendationRule,
-  findings: FindingSummary[],
+  findings: Finding[],
 ): Recommendation | null {
   if (rule.status !== "active") {
     return null;
   }
 
-  const availableFindingTypes = new Set(
-    findings.map((finding) => finding.type),
+  const matchedFindings = rule.requiresFindings.map(
+    (requiredType): Finding | undefined =>
+      findings.find(
+        (finding: Finding) =>
+          finding.type === requiredType,
+      ),
   );
 
-  const requirementsMet =
-    rule.requiresFindings.every((type) =>
-      availableFindingTypes.has(type),
-    );
-
-  if (!requirementsMet) {
+  if (
+    matchedFindings.some(
+      (finding: Finding | undefined) =>
+        finding === undefined,
+    )
+  ) {
     return null;
   }
 
-  const supportingFindings = findings.filter(
-    (finding) =>
-      rule.requiresFindings.includes(
-        finding.type,
-      ),
-  );
+  const supportedFindings =
+    matchedFindings.filter(
+      (finding): finding is Finding =>
+        finding !== undefined,
+    );
+
+  const strongestConfidence =
+    supportedFindings.reduce<FindingConfidence>(
+      (
+        strongest: FindingConfidence,
+        finding: Finding,
+      ) => {
+        return confidenceWeight[finding.confidence] >
+          confidenceWeight[strongest]
+          ? finding.confidence
+          : strongest;
+      },
+      "low",
+    );
 
   return {
-    id: `recommendation_${rule.id}`,
+    id: rule.id,
     type: rule.produces.type,
     status: "candidate",
-    confidence: rule.produces.confidence,
-
+    confidence:
+      confidenceWeight[
+        rule.produces.confidence
+      ] <
+      confidenceWeight[strongestConfidence]
+        ? rule.produces.confidence
+        : strongestConfidence,
     basedOnFindings:
-      supportingFindings.flatMap(
-        (finding) =>
-          finding.supportingFindings,
+      supportedFindings.map(
+        (finding: Finding) => finding.id,
       ),
-
-    evidence: rule.evidence,
-
+    evidence: Array.from(
+      new Set([
+        ...rule.evidence,
+        ...supportedFindings.flatMap(
+          (finding: Finding) =>
+            finding.evidence,
+        ),
+      ]),
+    ),
     rationale: rule.rationale,
   };
 }
 
-export function evaluateRecommendationRules(
+export function buildRecommendations(
   rules: RecommendationRule[],
-  findings: FindingSummary[],
+  findings: Finding[],
 ): Recommendation[] {
   return rules
-    .map((rule) =>
+    .map((rule: RecommendationRule) =>
       evaluateRecommendationRule(
         rule,
         findings,

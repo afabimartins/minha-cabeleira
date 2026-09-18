@@ -1,6 +1,4 @@
-import type {
-  FindingConfidence,
-} from "./finding";
+import type { FindingConfidence } from "./finding";
 
 export type RecommendationRuleStatus =
   | "draft"

@@ -2,6 +2,10 @@ import type {
   FindingConfidence,
 } from "./finding";
 
+import type {
+  ProductCriteria,
+} from "./product-criteria";
+
 export type RecommendationStatus =
   | "candidate"
   | "supported"
@@ -9,10 +13,18 @@ export type RecommendationStatus =
 
 export type Recommendation = {
   id: string;
+
   type: string;
+
   status: RecommendationStatus;
+
   confidence: FindingConfidence;
+
   basedOnFindings: string[];
+
   evidence: string[];
+
   rationale: string;
+
+  productCriteria?: ProductCriteria;
 };
