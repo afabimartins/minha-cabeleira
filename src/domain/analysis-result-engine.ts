@@ -11,6 +11,10 @@ import type {
   RecommendationResult,
 } from "./analysis-result";
 
+import type {
+  RecommendationRule,
+} from "./recommendation-rule";
+
 import {
   buildRecommendations,
 } from "./recommendation-engine";
@@ -31,15 +35,16 @@ export function buildAnalysisResult(
   diagnosis: Diagnosis,
   observations: Observation[],
   products: Product[],
+  recommendationRules: RecommendationRule[],
 ): AnalysisResult {
   const safety =
     assessSafety(observations);
 
   const recommendations =
-  buildRecommendations(
-    [],
-    diagnosis.findings,
-  );
+    buildRecommendations(
+      recommendationRules,
+      diagnosis.findings,
+    );
 
   const recommendationResults:
     RecommendationResult[] =
@@ -48,13 +53,11 @@ export function buildAnalysisResult(
           recommendation,
 
           products:
-            safety.canRecommendProducts
+            safety.canRecommendProducts &&
+            recommendation.productCriteria
               ? selectProducts(
                   products,
-recommendation.productCriteria ?? {
-  categories: [],
-  requiredAttributes: [],
-},
+                  recommendation.productCriteria,
                 )
               : [],
         }),

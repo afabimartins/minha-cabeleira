@@ -7,6 +7,10 @@ import type {
 } from "./product";
 
 import type {
+  RecommendationRule,
+} from "./recommendation-rule";
+
+import type {
   QuestionnaireAnswer,
   QuestionnaireQuestion,
 } from "./questionnaire";
@@ -28,6 +32,7 @@ export function runFullAnalysis(
   answers: QuestionnaireAnswer[],
   rules: KnowledgeRule[],
   products: Product[],
+  recommendationRules: RecommendationRule[] = [],
 ) {
   const questionnaire =
     processQuestionnaire(
@@ -57,6 +62,7 @@ export function runFullAnalysis(
         diagnosis,
         questionnaire.observations,
         products,
+        recommendationRules,
       ),
   };
 }
