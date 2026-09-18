@@ -14,17 +14,53 @@ export type HairRegion =
   | "ends"
   | "all";
 
-  export type ObservationTrait =
+export type ObservationTrait =
+  // Fiber surface / conditioning
   | "post_wash_roughness"
   | "wet_tangling"
-  | "conditioning_improvement";
+  | "conditioning_improvement"
+
+  // Water behaviour
+  | "wetting_speed"
+  | "drying_speed"
+  | "water_retention"
+
+  // Mechanical behaviour
+  | "elasticity"
+  | "breakage"
+  | "manipulation_damage"
+
+  // Scalp
+  | "scalp_oiliness"
+  | "scalp_dryness"
+  | "scalp_sensitivity"
+
+  // History
+  | "chemical_processing"
+  | "heat_exposure"
+  | "damage_history";
+
+export type ObservationValue =
+  | "low"
+  | "medium"
+  | "high"
+  | "slow"
+  | "normal"
+  | "fast"
+  | "none"
+  | "mild"
+  | "moderate"
+  | "severe"
+  | "yes"
+  | "no"
+  | number
+  | boolean;
 
 export type Observation = {
   id: string;
   domain: ObservationDomain;
   trait: ObservationTrait;
-  value: string | number | boolean;
-  region?: HairRegion;
+  value: ObservationValue;
+  region: HairRegion;
   source: "questionnaire";
 };
-
