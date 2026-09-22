@@ -15,6 +15,10 @@ import type {
   RecommendationRule,
 } from "./recommendation-rule";
 
+import type {
+  Observation,
+} from "./observation";
+
 import {
   buildRecommendations,
 } from "./recommendation-engine";
@@ -27,9 +31,9 @@ import {
   assessSafety,
 } from "./safety-engine";
 
-import type {
-  Observation,
-} from "./observation";
+import {
+  personalizeRecommendations,
+} from "./personalization";
 
 export function buildAnalysisResult(
   diagnosis: Diagnosis,
@@ -63,10 +67,18 @@ export function buildAnalysisResult(
         }),
       );
 
+  const personalizedRecommendations =
+    safety.canRecommendProducts
+      ? personalizeRecommendations(
+          recommendationResults,
+          observations,
+        )
+      : recommendationResults;
+
   return {
     diagnosis,
     safety,
     recommendations:
-      recommendationResults,
+      personalizedRecommendations,
   };
 }

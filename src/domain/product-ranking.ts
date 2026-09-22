@@ -2,6 +2,10 @@ import type {
   Product,
 } from "./product";
 
+export type ProductRankingStrategy =
+  | "lowest_price"
+  | "default";
+
 export function rankProductsByPrice(
   products: Product[],
 ): Product[] {
@@ -25,4 +29,18 @@ export function rankProductsByPrice(
       return a.price - b.price;
     },
   );
+}
+
+export function rankProducts(
+  products: Product[],
+  strategy: ProductRankingStrategy =
+    "default",
+): Product[] {
+  if (strategy === "lowest_price") {
+    return rankProductsByPrice(
+      products,
+    );
+  }
+
+  return [...products];
 }

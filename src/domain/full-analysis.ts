@@ -27,6 +27,10 @@ import {
   buildAnalysisResult,
 } from "./analysis-result-engine";
 
+import {
+  personalizeRecommendations,
+} from "./personalization";
+
 export function runFullAnalysis(
   questions: QuestionnaireQuestion[],
   answers: QuestionnaireAnswer[],
@@ -54,15 +58,30 @@ export function runFullAnalysis(
       questionnaire.observations,
     );
 
+  const analysisResult =
+    buildAnalysisResult(
+      diagnosis,
+      questionnaire.observations,
+      products,
+      recommendationRules,
+    );
+
+  const personalizedRecommendations =
+    personalizeRecommendations(
+      analysisResult.recommendations,
+      questionnaire.observations,
+    );
+
   return {
     valid: true as const,
+
     issues: [],
-    result:
-      buildAnalysisResult(
-        diagnosis,
-        questionnaire.observations,
-        products,
-        recommendationRules,
-      ),
+
+    result: {
+      ...analysisResult,
+
+      recommendations:
+        personalizedRecommendations,
+    },
   };
 }
