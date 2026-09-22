@@ -37,7 +37,7 @@ describe("assessSafety", () => {
     expect(result.notices).toEqual([]);
   });
 
-  it("returns caution for a high caution trait", () => {
+  it("returns caution and blocks products for a high caution trait", () => {
     const observations: Observation[] = [
       {
         id: "observation_1",
@@ -56,7 +56,7 @@ describe("assessSafety", () => {
 
     expect(
       result.canRecommendProducts,
-    ).toBe(true);
+    ).toBe(false);
 
     expect(result.notices).toHaveLength(1);
 

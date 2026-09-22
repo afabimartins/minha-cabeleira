@@ -128,7 +128,7 @@ export function assessSafety(
     return {
       level: "caution",
       notices,
-      canRecommendProducts: true,
+      canRecommendProducts: false,
     };
   }
 

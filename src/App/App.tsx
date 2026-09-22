@@ -4,17 +4,53 @@ import {
 
 export function App() {
   return (
-    <main>
-      <header>
-        <h1>Minha Cabeleira</h1>
+    <div className="app">
+      <header className="app-header">
+        <div className="app-header__inner">
+          <div className="app-brand">
+            <div
+              className="app-brand__mark"
+              aria-hidden="true"
+            >
+              MC
+            </div>
 
-        <p>
-          Vamos entender melhor as
-          necessidades do seu cabelo.
-        </p>
+            <div className="app-brand__text">
+              <h1>
+                Minha Cabeleira
+              </h1>
+
+              <p>
+                Cuidado sem rótulos
+              </p>
+            </div>
+          </div>
+        </div>
       </header>
 
-      <Questionnaire />
-    </main>
+      <main className="app-main">
+        <section className="app-intro">
+          <p className="app-intro__eyebrow">
+            Análise capilar
+          </p>
+
+          <h2>
+            Entenda melhor o que o seu
+            cabelo precisa.
+          </h2>
+
+          <p className="app-intro__description">
+            Responda algumas perguntas
+            sobre o seu cabelo, sua rotina
+            e seus objetivos. A análise
+            organiza essas informações
+            para mostrar prioridades e
+            produtos compatíveis.
+          </p>
+        </section>
+
+        <Questionnaire />
+      </main>
+    </div>
   );
 }

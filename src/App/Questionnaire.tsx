@@ -64,6 +64,11 @@ export function Questionnaire() {
         currentQuestion.id,
     );
 
+  const progress =
+    ((currentQuestionIndex + 1) /
+      questionnaireQuestions.length) *
+    100;
+
   function selectAnswer(
     value: ObservationValue,
   ) {
@@ -160,90 +165,129 @@ export function Questionnaire() {
   }
 
   return (
-    <section>
-      <p>
-        Pergunta{" "}
-        {currentQuestionIndex + 1} de{" "}
-        {questionnaireQuestions.length}
-      </p>
+    <section className="questionnaire">
+      <div className="questionnaire-progress">
+        <div className="questionnaire-progress__header">
+          <span>
+            Pergunta{" "}
+            {currentQuestionIndex + 1} de{" "}
+            {questionnaireQuestions.length}
+          </span>
 
-      <h2>
-        {currentQuestion.text}
-      </h2>
+          <span>
+            {Math.round(progress)}%
+          </span>
+        </div>
 
-      {currentQuestion.helpText && (
-        <p>
-          {currentQuestion.helpText}
-        </p>
-      )}
+        <div
+          className="questionnaire-progress__track"
+          aria-hidden="true"
+        >
+          <div
+            className="questionnaire-progress__bar"
+            style={{
+              width: `${progress}%`,
+            }}
+          />
+        </div>
+      </div>
 
-      <fieldset>
-        <legend>
-          Escolha uma opção
-        </legend>
+      <div className="questionnaire-card">
+        <header className="questionnaire-card__header">
+          <p className="questionnaire-card__eyebrow">
+            Sobre o seu cabelo
+          </p>
 
-        {currentQuestion.options?.map(
-          (option) => {
-            const optionId =
-              `${currentQuestion.id}-${String(
-                option.value,
-              )}`;
+          <h2>
+            {currentQuestion.text}
+          </h2>
 
-            return (
-              <div key={optionId}>
-                <input
-                  id={optionId}
-                  type="radio"
-                  name={
-                    currentQuestion.id
-                  }
-                  value={String(
-                    option.value,
-                  )}
-                  checked={
-                    currentAnswer?.value ===
-                    option.value
-                  }
-                  onChange={() =>
-                    selectAnswer(
-                      option.value,
-                    )
-                  }
-                />
+          {currentQuestion.helpText && (
+            <p className="questionnaire-card__help">
+              {currentQuestion.helpText}
+            </p>
+          )}
+        </header>
 
+        <fieldset className="questionnaire-options">
+          <legend className="sr-only">
+            Escolha uma opção
+          </legend>
+
+          {currentQuestion.options?.map(
+            (option) => {
+              const optionId =
+                `${currentQuestion.id}-${String(
+                  option.value,
+                )}`;
+
+              const isSelected =
+                currentAnswer?.value ===
+                option.value;
+
+              return (
                 <label
+                  className={`questionnaire-option${
+                    isSelected
+                      ? " questionnaire-option--selected"
+                      : ""
+                  }`}
                   htmlFor={optionId}
+                  key={optionId}
                 >
-                  {option.label}
+                  <input
+                    id={optionId}
+                    type="radio"
+                    name={
+                      currentQuestion.id
+                    }
+                    value={String(
+                      option.value,
+                    )}
+                    checked={isSelected}
+                    onChange={() =>
+                      selectAnswer(
+                        option.value,
+                      )
+                    }
+                  />
+
+                  <span className="questionnaire-option__control" />
+
+                  <span className="questionnaire-option__label">
+                    {option.label}
+                  </span>
                 </label>
-              </div>
-            );
-          },
-        )}
-      </fieldset>
+              );
+            },
+          )}
+        </fieldset>
 
-      <div>
-        <button
-          type="button"
-          onClick={goBack}
-          disabled={
-            currentQuestionIndex === 0
-          }
-        >
-          Voltar
-        </button>
+        <div className="questionnaire-actions">
+          <button
+            className="button button--secondary"
+            type="button"
+            onClick={goBack}
+            disabled={
+              currentQuestionIndex === 0
+            }
+          >
+            Voltar
+          </button>
 
-        <button
-          type="button"
-          onClick={goNext}
-          disabled={!currentAnswer}
-        >
-          {currentQuestionIndex ===
-          questionnaireQuestions.length -
-            1
-            ? "Ver minha análise"
-            : "Continuar"}
-        </button>
+          <button
+            className="button button--primary"
+            type="button"
+            onClick={goNext}
+            disabled={!currentAnswer}
+          >
+            {currentQuestionIndex ===
+            questionnaireQuestions.length -
+              1
+              ? "Ver minha análise"
+              : "Continuar"}
+          </button>
+        </div>
       </div>
     </section>
   );
