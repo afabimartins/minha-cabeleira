@@ -55,7 +55,9 @@ export function evaluateRecommendationRule(
   const supportedFindings =
     matchedFindings.filter(
       (
-        finding,
+        finding:
+          | Finding
+          | undefined,
       ): finding is Finding =>
         finding !== undefined,
     );
@@ -115,8 +117,13 @@ export function evaluateRecommendationRule(
 
     rationale: rule.rationale,
 
+    ingredientGuidance:
+      rule.produces
+        .ingredientGuidance,
+
     productCriteria:
-      rule.produces.productCriteria,
+      rule.produces
+        .productCriteria,
   };
 }
 

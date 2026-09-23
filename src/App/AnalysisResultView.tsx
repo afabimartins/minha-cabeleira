@@ -1,3 +1,7 @@
+import {
+  useState,
+} from "react";
+
 import type {
   AnalysisResult,
 } from "../domain/analysis-result";
@@ -77,7 +81,7 @@ function getSafetyDescription(
   if (
     result.safety.level === "caution"
   ) {
-    return "Identificamos um sinal que merece atenção. As sugestões de produtos ficam bloqueadas enquanto esse sinal exigir cautela.";
+    return "Identificamos um sinal que merece atenção. Você ainda pode consultar orientações gerais de fórmula, mas as sugestões de produtos ficam bloqueadas por segurança.";
   }
 
   return "Não identificamos sinais que impeçam a exibição de sugestões de produtos.";
@@ -102,8 +106,30 @@ export function AnalysisResultView({
   result,
   onRestart,
 }: AnalysisResultViewProps) {
-  const recommendationsBlocked =
+  const [visibleProducts, setVisibleProducts] =
+    useState<Record<string, boolean>>(
+      {},
+    );
+
+  const productsBlocked =
     !result.safety.canRecommendProducts;
+
+  const guidanceBlocked =
+    result.safety.level === "stop";
+
+  function toggleProducts(
+    recommendationId: string,
+  ) {
+    setVisibleProducts(
+      (previous) => ({
+        ...previous,
+        [recommendationId]:
+          !previous[
+            recommendationId
+          ],
+      }),
+    );
+  }
 
   return (
     <section className="analysis-result">
@@ -293,34 +319,8 @@ export function AnalysisResultView({
             </div>
           </div>
 
-          {recommendationsBlocked ? (
-            <div className="recommendation-blocked">
-              <span
-                className="recommendation-blocked__icon"
-                aria-hidden="true"
-              >
-                !
-              </span>
-
-              <div>
-                <h4>
-                  Sugestões de produtos
-                  pausadas
-                </h4>
-
-                <p>
-                  As sugestões de produtos
-                  foram temporariamente
-                  bloqueadas por segurança.
-                  Você ainda pode usar as
-                  observações acima para
-                  entender melhor os sinais
-                  identificados.
-                </p>
-              </div>
-            </div>
-          ) : result.recommendations
-              .length === 0 ? (
+          {result.recommendations.length ===
+          0 ? (
             <div className="analysis-empty">
               <p>
                 Ainda não há uma
@@ -337,102 +337,351 @@ export function AnalysisResultView({
                     products,
                   },
                   index,
-                ) => (
-                  <article
-                    className="recommendation-card"
-                    key={
-                      recommendation.id
-                    }
-                  >
-                    <div className="recommendation-card__header">
-                      <span className="recommendation-card__priority">
-                        Prioridade{" "}
-                        {index + 1}
-                      </span>
+                ) => {
+                  const guidance =
+                    recommendation
+                      .ingredientGuidance;
 
-                      <h4>
-                        {getRecommendationTitle(
-                          recommendation.type,
-                        )}
-                      </h4>
+                  const productsAreVisible =
+                    Boolean(
+                      visibleProducts[
+                        recommendation.id
+                      ],
+                    );
 
-                      <p>
-                        {
-                          recommendation.rationale
-                        }
-                      </p>
-                    </div>
+                  return (
+                    <article
+                      className="recommendation-card"
+                      key={
+                        recommendation.id
+                      }
+                    >
+                      <div className="recommendation-card__header">
+                        <span className="recommendation-card__priority">
+                          Prioridade{" "}
+                          {index + 1}
+                        </span>
 
-                    {products.length ===
-                    0 ? (
-                      <div className="recommendation-card__empty">
-                        Nenhum produto do
-                        catálogo atual
-                        atende aos critérios
-                        desta recomendação.
+                        <h4>
+                          {getRecommendationTitle(
+                            recommendation.type,
+                          )}
+                        </h4>
+
+                        <p>
+                          {
+                            recommendation.rationale
+                          }
+                        </p>
                       </div>
-                    ) : (
-                      <div className="recommendation-products">
-                        <div className="recommendation-products__heading">
-                          <h5>
-                            Produtos
-                            compatíveis
-                          </h5>
 
-                          <span>
-                            {
-                              products.length
-                            }{" "}
-                            {products.length ===
-                            1
-                              ? "opção"
-                              : "opções"}
+                      {guidanceBlocked ? (
+                        <div className="recommendation-blocked">
+                          <span
+                            className="recommendation-blocked__icon"
+                            aria-hidden="true"
+                          >
+                            !
                           </span>
-                        </div>
 
-                        <div className="product-grid">
-                          {products.map(
-                            (
-                              product,
-                            ) => (
-                              <article
-                                className="product-card"
-                                key={
-                                  product.id
+                          <div>
+                            <h4>
+                              Orientação de
+                              fórmula pausada
+                            </h4>
+
+                            <p>
+                              Identificamos
+                              um sinal que
+                              merece
+                              avaliação
+                              profissional
+                              antes de testar
+                              novos produtos
+                              ou tratamentos.
+                              Por isso, não
+                              exibimos
+                              orientações de
+                              fórmula para
+                              uso neste
+                              momento.
+                            </p>
+                          </div>
+                        </div>
+                      ) : (
+                        guidance && (
+                          <div className="ingredient-guidance">
+                            <div className="ingredient-guidance__intro">
+                              <p className="ingredient-guidance__eyebrow">
+                                Orientação de
+                                fórmula
+                              </p>
+
+                              <h5>
+                                O que procurar
+                                na fórmula
+                              </h5>
+
+                              <p>
+                                {
+                                  guidance.summary
+                                }
+                              </p>
+                            </div>
+
+                            {guidance.lookFor
+                              .length >
+                              0 && (
+                              <div className="ingredient-guidance__list">
+                                {guidance.lookFor.map(
+                                  (item) => (
+                                    <article
+                                      className="ingredient-guidance__item"
+                                      key={
+                                        item.id
+                                      }
+                                    >
+                                      <h6>
+                                        {
+                                          item.name
+                                        }
+                                      </h6>
+
+                                      <p>
+                                        {
+                                          item.purpose
+                                        }
+                                      </p>
+
+                                      {item
+                                        .examples
+                                        .length >
+                                        0 && (
+                                        <div className="ingredient-guidance__examples">
+                                          <span>
+                                            Exemplos
+                                            no
+                                            rótulo
+                                          </span>
+
+                                          <div className="ingredient-guidance__tags">
+                                            {item.examples.map(
+                                              (
+                                                example,
+                                              ) => (
+                                                <span
+                                                  className="ingredient-guidance__tag"
+                                                  key={`${item.id}-${example.inciName ?? example.name}`}
+                                                >
+                                                  {example.inciName ??
+                                                    example.name}
+                                                </span>
+                                              ),
+                                            )}
+                                          </div>
+                                        </div>
+                                      )}
+                                    </article>
+                                  ),
+                                )}
+                              </div>
+                            )}
+
+                            {guidance.avoid
+                              .length >
+                              0 && (
+                              <div className="ingredient-guidance__avoid">
+                                <h6>
+                                  Pontos de
+                                  atenção
+                                </h6>
+
+                                {guidance.avoid.map(
+                                  (item) => (
+                                    <div
+                                      key={
+                                        item.id
+                                      }
+                                    >
+                                      <strong>
+                                        {
+                                          item.name
+                                        }
+                                      </strong>
+
+                                      <p>
+                                        {
+                                          item.purpose
+                                        }
+                                      </p>
+                                    </div>
+                                  ),
+                                )}
+                              </div>
+                            )}
+
+                            <div className="ingredient-guidance__note">
+                              <span
+                                aria-hidden="true"
+                              >
+                                i
+                              </span>
+
+                              <p>
+                                A presença de
+                                um ingrediente
+                                isolado não
+                                garante o
+                                desempenho do
+                                produto. A
+                                formulação como
+                                um todo, a
+                                combinação dos
+                                componentes e o
+                                modo de uso
+                                também
+                                importam.
+                              </p>
+                            </div>
+                          </div>
+                        )
+                      )}
+
+                      {productsBlocked ? (
+                        <div className="recommendation-blocked">
+                          <span
+                            className="recommendation-blocked__icon"
+                            aria-hidden="true"
+                          >
+                            !
+                          </span>
+
+                          <div>
+                            <h4>
+                              Sugestões de
+                              produtos
+                              pausadas
+                            </h4>
+
+                            <p>
+                              As sugestões de
+                              produtos do
+                              catálogo foram
+                              bloqueadas por
+                              segurança neste
+                              resultado.
+                            </p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="recommendation-products">
+                          <div className="recommendation-products__summary">
+                            <div>
+                              <p className="recommendation-products__eyebrow">
+                                Consulta
+                                opcional
+                              </p>
+
+                              <h5>
+                                Produtos
+                                compatíveis
+                              </h5>
+
+                              <p>
+                                Veja produtos
+                                do catálogo
+                                que atendem
+                                aos critérios
+                                desta
+                                recomendação.
+                                A marca não
+                                determina a
+                                recomendação.
+                              </p>
+                            </div>
+
+                            {products.length >
+                              0 && (
+                              <button
+                                className="recommendation-products__toggle"
+                                type="button"
+                                aria-expanded={
+                                  productsAreVisible
+                                }
+                                onClick={() =>
+                                  toggleProducts(
+                                    recommendation.id,
+                                  )
                                 }
                               >
-                                <div className="product-card__content">
-                                  <p className="product-card__brand">
-                                    {
-                                      product.brand
-                                    }
-                                  </p>
+                                {productsAreVisible
+                                  ? "Ocultar produtos"
+                                  : "Ver produtos compatíveis"}
+                              </button>
+                            )}
+                          </div>
 
-                                  <h5>
-                                    {
-                                      product.name
-                                    }
-                                  </h5>
+                          {products.length ===
+                          0 ? (
+                            <div className="recommendation-card__empty">
+                              Nenhum produto
+                              do catálogo
+                              atual atende
+                              aos critérios
+                              desta
+                              recomendação.
+                              Isso não altera
+                              a orientação de
+                              fórmula acima.
+                            </div>
+                          ) : (
+                            productsAreVisible && (
+                              <div className="product-grid">
+                                {products.map(
+                                  (
+                                    product,
+                                  ) => (
+                                    <article
+                                      className="product-card"
+                                      key={
+                                        product.id
+                                      }
+                                    >
+                                      <div className="product-card__content">
+                                        <p className="product-card__brand">
+                                          {
+                                            product.brand
+                                          }
+                                        </p>
 
-                                  <p className="product-card__price">
-                                    {formatPrice(
-                                      product.price,
-                                      product.currency,
-                                    )}
-                                  </p>
-                                </div>
+                                        <h5>
+                                          {
+                                            product.name
+                                          }
+                                        </h5>
 
-                                <span className="product-card__badge">
-                                  Compatível
-                                </span>
-                              </article>
-                            ),
+                                        <p className="product-card__price">
+                                          {formatPrice(
+                                            product.price,
+                                            product.currency,
+                                          )}
+                                        </p>
+                                      </div>
+
+                                      <span className="product-card__badge">
+                                        Compatível
+                                      </span>
+                                    </article>
+                                  ),
+                                )}
+                              </div>
+                            )
                           )}
                         </div>
-                      </div>
-                    )}
-                  </article>
-                ),
+                      )}
+                    </article>
+                  );
+                },
               )}
             </div>
           )}

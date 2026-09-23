@@ -3,6 +3,10 @@ import type {
 } from "./finding";
 
 import type {
+  IngredientGuidance,
+} from "./ingredient-guidance";
+
+import type {
   ProductCriteria,
 } from "./product-criteria";
 
@@ -25,6 +29,8 @@ export type Recommendation = {
   evidence: string[];
 
   rationale: string;
+
+  ingredientGuidance?: IngredientGuidance;
 
   productCriteria?: ProductCriteria;
 };

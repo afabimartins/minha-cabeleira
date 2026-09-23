@@ -3,6 +3,10 @@ import type {
 } from "./finding";
 
 import type {
+  IngredientGuidance,
+} from "./ingredient-guidance";
+
+import type {
   ProductCriteria,
 } from "./product-criteria";
 
@@ -26,6 +30,8 @@ export type RecommendationRule = {
     type: string;
 
     confidence: FindingConfidence;
+
+    ingredientGuidance?: IngredientGuidance;
 
     productCriteria?: ProductCriteria;
   };

@@ -84,6 +84,67 @@ describe(
     );
 
     it(
+      "carries ingredient guidance from the rule into the recommendation",
+      () => {
+        const ruleWithIngredientGuidance:
+          RecommendationRule = {
+          ...activeRule,
+
+          produces: {
+            ...activeRule.produces,
+
+            ingredientGuidance: {
+              summary:
+                "Priorize fórmulas que ofereçam suporte ao condicionamento e ao desembaraço.",
+
+              lookFor: [
+                {
+                  id: "conditioning_agents",
+                  name:
+                    "Agentes condicionantes",
+                  purpose:
+                    "Ajudam a melhorar o condicionamento e o desembaraço dos fios.",
+                  examples: [
+                    {
+                      name:
+                        "Behentrimonium Chloride",
+                      inciName:
+                        "Behentrimonium Chloride",
+                    },
+                    {
+                      name:
+                        "Cetrimonium Chloride",
+                      inciName:
+                        "Cetrimonium Chloride",
+                    },
+                  ],
+                },
+              ],
+
+              avoid: [],
+            },
+          },
+        };
+
+        const result =
+          evaluateRecommendationRule(
+            ruleWithIngredientGuidance,
+            [finding],
+          );
+
+        expect(result).not.toBeNull();
+
+        expect(
+          result?.ingredientGuidance,
+        ).toEqual(
+          ruleWithIngredientGuidance
+            .produces
+            .ingredientGuidance,
+        );
+      },
+    );
+
+    it(
       "does not evaluate draft recommendation rules",
       () => {
         const result =
