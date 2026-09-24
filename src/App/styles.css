@@ -78,8 +78,10 @@ input:focus-visible,
 textarea:focus-visible,
 select:focus-visible,
 a:focus-visible {
-  outline: 3px solid
+  outline:
+    3px solid
     rgba(89, 70, 59, 0.25);
+
   outline-offset: 3px;
 }
 
@@ -92,7 +94,9 @@ p {
   margin-top: 0;
 }
 
-/* Acessibilidade */
+/* ========================================
+   ACESSIBILIDADE
+   ======================================== */
 
 .sr-only {
   position: absolute;
@@ -111,7 +115,9 @@ p {
   border: 0;
 }
 
-/* Aplicação */
+/* ========================================
+   APLICAÇÃO
+   ======================================== */
 
 .app {
   min-height: 100vh;
@@ -126,10 +132,11 @@ p {
 }
 
 .app-header__inner {
-  width: min(
-    calc(100% - 40px),
-    var(--page-width)
-  );
+  width:
+    min(
+      calc(100% - 40px),
+      var(--page-width)
+    );
 
   margin: 0 auto;
 
@@ -179,23 +186,27 @@ p {
 .app-brand__text p {
   margin: 4px 0 0;
 
-  color: var(--color-text-soft);
+  color:
+    var(--color-text-soft);
 
   font-size: 13px;
 }
 
 .app-main {
-  width: min(
-    calc(100% - 40px),
-    var(--page-width)
-  );
+  width:
+    min(
+      calc(100% - 40px),
+      var(--page-width)
+    );
 
   margin: 0 auto;
 
   padding: 56px 0 80px;
 }
 
-/* Introdução */
+/* ========================================
+   INTRODUÇÃO
+   ======================================== */
 
 .app-intro {
   max-width: 720px;
@@ -206,7 +217,8 @@ p {
 .app-intro__eyebrow {
   margin-bottom: 12px;
 
-  color: var(--color-primary);
+  color:
+    var(--color-primary);
 
   font-size: 13px;
   font-weight: 700;
@@ -231,13 +243,16 @@ p {
 
   margin-bottom: 0;
 
-  color: var(--color-text-soft);
+  color:
+    var(--color-text-soft);
 
   font-size: 17px;
   line-height: 1.7;
 }
 
-/* Questionário */
+/* ========================================
+   QUESTIONÁRIO
+   ======================================== */
 
 .questionnaire {
   width: 100%;
@@ -258,7 +273,8 @@ p {
 
   margin-bottom: 10px;
 
-  color: var(--color-text-soft);
+  color:
+    var(--color-text-soft);
 
   font-size: 13px;
   font-weight: 600;
@@ -266,7 +282,9 @@ p {
 
 .questionnaire-progress__header
   span:last-child {
-  color: var(--color-primary);
+  color:
+    var(--color-primary);
+
   font-weight: 700;
 }
 
@@ -319,7 +337,8 @@ p {
 .questionnaire-card__eyebrow {
   margin-bottom: 10px;
 
-  color: var(--color-primary);
+  color:
+    var(--color-primary);
 
   font-size: 12px;
   font-weight: 700;
@@ -347,7 +366,8 @@ p {
   margin-top: 12px;
   margin-bottom: 0;
 
-  color: var(--color-text-soft);
+  color:
+    var(--color-text-soft);
 
   font-size: 15px;
   line-height: 1.6;
@@ -462,7 +482,8 @@ p {
 }
 
 .questionnaire-option__label {
-  color: var(--color-text);
+  color:
+    var(--color-text);
 
   font-size: 15px;
   font-weight: 500;
@@ -604,7 +625,9 @@ p {
   opacity: 0.42;
 }
 
-/* Tablet */
+/* ========================================
+   QUESTIONÁRIO RESPONSIVO
+   ======================================== */
 
 @media (max-width: 700px) {
   .app-header__inner {
@@ -651,8 +674,6 @@ p {
     margin-top: 24px;
   }
 }
-
-/* Celular */
 
 @media (max-width: 480px) {
   .app-main {
@@ -703,6 +724,7 @@ p {
 
 .analysis-result {
   max-width: 880px;
+
   margin: 0 auto;
 }
 
@@ -717,7 +739,8 @@ p {
 
   margin-bottom: 18px;
 
-  color: var(--color-success);
+  color:
+    var(--color-success);
 
   font-size: 13px;
   font-weight: 700;
@@ -761,7 +784,8 @@ p {
 
   margin-bottom: 0;
 
-  color: var(--color-text-soft);
+  color:
+    var(--color-text-soft);
 
   font-size: 17px;
   line-height: 1.7;
@@ -830,7 +854,9 @@ p {
   letter-spacing: -0.025em;
 }
 
-/* Findings */
+/* ========================================
+   FINDINGS
+   ======================================== */
 
 .finding-grid {
   display: grid;
@@ -887,7 +913,9 @@ p {
   line-height: 1.65;
 }
 
-/* Segurança */
+/* ========================================
+   SEGURANÇA
+   ======================================== */
 
 .analysis-safety {
   padding: 26px;
@@ -1026,7 +1054,9 @@ p {
   line-height: 1.55;
 }
 
-/* Recomendações */
+/* ========================================
+   RECOMENDAÇÕES
+   ======================================== */
 
 .recommendation-list {
   display: grid;
@@ -1192,7 +1222,9 @@ p {
   font-weight: 700;
 }
 
-/* Estados sem produto */
+/* ========================================
+   ESTADOS SEM PRODUTO / BLOQUEADOS
+   ======================================== */
 
 .analysis-empty,
 .recommendation-blocked,
@@ -1222,6 +1254,7 @@ p {
 
 .recommendation-card__empty {
   margin: 0 26px 26px;
+
   padding: 18px;
 
   color:
@@ -1280,7 +1313,9 @@ p {
   line-height: 1.6;
 }
 
-/* Rodapé do resultado */
+/* ========================================
+   RODAPÉ DO RESULTADO
+   ======================================== */
 
 .analysis-result__footer {
   display: flex;
@@ -1293,6 +1328,11 @@ p {
 
   border-top:
     1px solid var(--color-border);
+}
+
+.analysis-result__footer > div:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .analysis-result__footer h3 {
@@ -1313,10 +1353,71 @@ p {
   line-height: 1.55;
 }
 
+/* Grupo dos botões */
+
+.analysis-result__footer-actions {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Botão PDF */
+
+.analysis-result__download {
+  min-height: 48px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 20px;
+
+  border:
+    1px solid var(--color-primary);
+
+  border-radius:
+    var(--radius-small);
+
+  background:
+    var(--color-surface);
+
+  color:
+    var(--color-primary);
+
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.analysis-result__download:hover {
+  border-color:
+    var(--color-primary);
+
+  background:
+    var(--color-surface-soft);
+
+  transform:
+    translateY(-1px);
+}
+
+/* Botão refazer */
+
 .analysis-result__restart {
   flex: 0 0 auto;
 
   min-height: 48px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
   padding: 0 20px;
 
@@ -1332,6 +1433,8 @@ p {
   color: white;
 
   font-weight: 700;
+
+  white-space: nowrap;
 
   transition:
     background 160ms ease,
@@ -1350,7 +1453,9 @@ p {
     translateY(-1px);
 }
 
-/* Resultado responsivo */
+/* ========================================
+   RESULTADO RESPONSIVO
+   ======================================== */
 
 @media (max-width: 700px) {
   .analysis-result__hero {
@@ -1395,14 +1500,26 @@ p {
   .analysis-result__footer {
     align-items: stretch;
     flex-direction: column;
+
+    gap: 22px;
   }
 
+  .analysis-result__footer-actions {
+    width: 100%;
+
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 10px;
+  }
+
+  .analysis-result__download,
   .analysis-result__restart {
     width: 100%;
   }
 }
 
-  /* ========================================
+/* ========================================
    ORIENTAÇÃO POR INGREDIENTES
    ======================================== */
 
@@ -1440,7 +1557,8 @@ p {
   letter-spacing: -0.015em;
 }
 
-.ingredient-guidance__intro > p:last-child {
+.ingredient-guidance__intro
+  > p:last-child {
   max-width: 700px;
 
   margin-bottom: 0;
@@ -1473,8 +1591,7 @@ p {
 }
 
 .ingredient-guidance__item h6 {
-  margin:
-    0 0 7px;
+  margin: 0 0 7px;
 
   color:
     var(--color-text);
@@ -1560,8 +1677,7 @@ p {
 }
 
 .ingredient-guidance__avoid h6 {
-  margin:
-    0 0 12px;
+  margin: 0 0 12px;
 
   font-size: 14px;
 }
@@ -1576,8 +1692,7 @@ p {
 }
 
 .ingredient-guidance__avoid p {
-  margin:
-    0 0 12px;
+  margin: 0 0 12px;
 
   color:
     var(--color-text-soft);
@@ -1627,7 +1742,10 @@ p {
   color:
     var(--color-primary);
 
-  font-family: Georgia, serif;
+  font-family:
+    Georgia,
+    serif;
+
   font-size: 12px;
   font-weight: 700;
 }
@@ -1642,7 +1760,9 @@ p {
   line-height: 1.6;
 }
 
-/* Produtos como camada secundária */
+/* ========================================
+   PRODUTOS COMO CAMADA SECUNDÁRIA
+   ======================================== */
 
 .recommendation-products__summary {
   display: flex;
@@ -1715,7 +1835,9 @@ p {
   margin-top: 18px;
 }
 
-/* Ajustes responsivos da orientação */
+/* ========================================
+   ORIENTAÇÃO / PRODUTOS RESPONSIVOS
+   ======================================== */
 
 @media (max-width: 700px) {
   .ingredient-guidance {

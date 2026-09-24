@@ -17,6 +17,14 @@ import {
   getAnalysisReportPolicy,
 } from "./analysis-report";
 
+import {
+  buildAnalysisReport,
+} from "./analysis-report-model";
+
+import {
+  generateAnalysisPdf,
+} from "./analysis-pdf";
+
 type AnalysisResultViewProps = {
   result: AnalysisResult;
   onRestart: () => void;
@@ -44,7 +52,6 @@ function formatPrice(
     2,
   )}`.trim();
 }
-
 
 function getSafetyClassName(
   level: AnalysisResult["safety"]["level"],
@@ -91,6 +98,13 @@ export function AnalysisResultView({
           ],
       }),
     );
+  }
+
+  function handleDownloadPdf() {
+    const report =
+      buildAnalysisReport(result);
+
+    generateAnalysisPdf(report);
   }
 
   return (
@@ -653,24 +667,37 @@ export function AnalysisResultView({
       <footer className="analysis-result__footer">
         <div>
           <h3>
-            Quer responder novamente?
+            Salve o resultado da sua análise
           </h3>
 
           <p>
-            Você pode refazer a análise
-            quando sua rotina, seus
-            objetivos ou a percepção sobre
-            o seu cabelo mudarem.
+            Baixe uma cópia em PDF para
+            consultar suas orientações
+            depois. Você também pode
+            refazer a análise quando sua
+            rotina, seus objetivos ou a
+            percepção sobre o seu cabelo
+            mudarem.
           </p>
         </div>
 
-        <button
-          className="analysis-result__restart"
-          type="button"
-          onClick={onRestart}
-        >
-          Refazer análise
-        </button>
+        <div className="analysis-result__footer-actions">
+          <button
+            className="analysis-result__download"
+            type="button"
+            onClick={handleDownloadPdf}
+          >
+            Baixar resultado em PDF
+          </button>
+
+          <button
+            className="analysis-result__restart"
+            type="button"
+            onClick={onRestart}
+          >
+            Refazer análise
+          </button>
+        </div>
       </footer>
     </section>
   );
