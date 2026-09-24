@@ -25,10 +25,10 @@ const findingPresentations: Record<
 
   elevated_damage_risk: {
     title:
-      "Sinais de maior exposição a danos",
+      "Sinais de maior risco de dano",
 
     description:
-      "A combinação das suas respostas sobre quebra, processos químicos e uso de calor indica maior necessidade de atenção à proteção da fibra.",
+      "A combinação das suas respostas sobre quebra intensa e mudança importante percebida no cabelo após química, calor ou outro processo indica maior necessidade de atenção à proteção da fibra.",
   },
 
   low_moisture_retention: {
@@ -37,6 +37,22 @@ const findingPresentations: Record<
 
     description:
       "O conjunto das suas respostas sobre molhamento, secagem e manutenção da umidade indica que o cabelo pode perder a sensação de umidade mais rapidamente.",
+  },
+
+  substantial_chemical_exposure: {
+    title:
+      "Exposição química frequente ou intensa",
+
+    description:
+      "Você relatou exposição frequente ou intensa a processos químicos. Essa informação é relevante para compreender o histórico do cabelo, mas, isoladamente, não significa que exista dano na fibra.",
+  },
+
+  frequent_heat_exposure: {
+    title:
+      "Exposição frequente ao calor",
+
+    description:
+      "Você relatou exposição frequente a fontes de calor. Essa informação é relevante para compreender o histórico do cabelo, mas, isoladamente, não significa que exista dano na fibra.",
   },
 };
 

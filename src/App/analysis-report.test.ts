@@ -40,6 +40,8 @@ function createResult(
     },
 
     recommendations: [],
+
+    routineGuidance: [],
   };
 }
 

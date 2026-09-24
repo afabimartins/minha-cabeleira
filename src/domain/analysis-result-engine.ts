@@ -35,6 +35,10 @@ import {
   personalizeRecommendations,
 } from "./personalization";
 
+import {
+  buildRoutineGuidance,
+} from "./routine-guidance-engine";
+
 export function buildAnalysisResult(
   diagnosis: Diagnosis,
   observations: Observation[],
@@ -75,10 +79,20 @@ export function buildAnalysisResult(
         )
       : recommendationResults;
 
+  const routineGuidance =
+    buildRoutineGuidance(
+      personalizedRecommendations,
+      observations,
+    );
+
   return {
     diagnosis,
+
     safety,
+
     recommendations:
       personalizedRecommendations,
+
+    routineGuidance,
   };
 }

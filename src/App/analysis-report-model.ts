@@ -27,6 +27,12 @@ export type AnalysisReportFinding = {
   description: string;
 };
 
+export type AnalysisReportRoutineGuidance = {
+  id: string;
+  title: string;
+  description: string;
+};
+
 export type AnalysisReportSafety = {
   level:
     AnalysisResult["safety"]["level"];
@@ -52,6 +58,8 @@ export type AnalysisReport = {
   introduction: string;
   findings: AnalysisReportFinding[];
   safety: AnalysisReportSafety;
+  routineGuidance:
+    AnalysisReportRoutineGuidance[];
   recommendations:
     AnalysisReportRecommendation[];
   disclaimer: string;
@@ -79,8 +87,10 @@ export function buildAnalysisReport(
 
           return {
             id: finding.id,
+
             title:
               presentation.title,
+
             description:
               presentation.description,
           };
@@ -103,6 +113,19 @@ export function buildAnalysisReport(
             notice.message,
         ),
     },
+
+    routineGuidance:
+      result.routineGuidance.map(
+        (guidance) => ({
+          id: guidance.id,
+
+          title:
+            guidance.title,
+
+          description:
+            guidance.description,
+        }),
+      ),
 
     recommendations:
       result.recommendations.map(

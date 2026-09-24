@@ -72,10 +72,12 @@ export function AnalysisResultView({
   result,
   onRestart,
 }: AnalysisResultViewProps) {
-  const [visibleProducts, setVisibleProducts] =
-    useState<Record<string, boolean>>(
-      {},
-    );
+  const [
+    visibleProducts,
+    setVisibleProducts,
+  ] = useState<
+    Record<string, boolean>
+  >({});
 
   const reportPolicy =
     getAnalysisReportPolicy(result);
@@ -92,6 +94,7 @@ export function AnalysisResultView({
     setVisibleProducts(
       (previous) => ({
         ...previous,
+
         [recommendationId]:
           !previous[
             recommendationId
@@ -118,17 +121,22 @@ export function AnalysisResultView({
             ✓
           </span>
 
-          <span>Análise concluída</span>
+          <span>
+            Análise concluída
+          </span>
         </div>
 
-        <h2>Sua análise está pronta.</h2>
+        <h2>
+          Sua análise está pronta.
+        </h2>
 
         <p>
-          Organizamos suas respostas para
-          destacar os sinais observados,
-          os cuidados importantes e o que
-          pode fazer mais sentido
-          priorizar na sua rotina.
+          Organizamos suas respostas
+          para destacar os sinais
+          observados, os cuidados
+          importantes e o que pode
+          fazer mais sentido priorizar
+          na sua rotina.
         </p>
       </header>
 
@@ -213,7 +221,9 @@ export function AnalysisResultView({
                 Cuidado
               </p>
 
-              <h3>Segurança</h3>
+              <h3>
+                Segurança
+              </h3>
             </div>
           </div>
 
@@ -294,6 +304,45 @@ export function AnalysisResultView({
               </h3>
             </div>
           </div>
+
+          {result.routineGuidance.length >
+            0 && (
+            <div className="routine-guidance">
+              <p className="routine-guidance__eyebrow">
+                Na sua rotina
+              </p>
+
+              <div className="routine-guidance__list">
+                {result.routineGuidance.map(
+                  (guidance) => (
+                    <article
+                      className="routine-guidance__card"
+                      key={guidance.id}
+                    >
+                      <div
+                        className="routine-guidance__mark"
+                        aria-hidden="true"
+                      />
+
+                      <div>
+                        <h4>
+                          {
+                            guidance.title
+                          }
+                        </h4>
+
+                        <p>
+                          {
+                            guidance.description
+                          }
+                        </p>
+                      </div>
+                    </article>
+                  ),
+                )}
+              </div>
+            </div>
+          )}
 
           {result.recommendations.length ===
           0 ? (
@@ -667,7 +716,8 @@ export function AnalysisResultView({
       <footer className="analysis-result__footer">
         <div>
           <h3>
-            Salve o resultado da sua análise
+            Salve o resultado da sua
+            análise
           </h3>
 
           <p>

@@ -23,6 +23,14 @@ import {
 } from "../domain/rules/moisture-retention.rule";
 
 import {
+  chemicalExposureRule,
+} from "../domain/rules/chemical-exposure.rule";
+
+import {
+  heatExposureRule,
+} from "../domain/rules/heat-exposure.rule";
+
+import {
   conditioningSupportRecommendationRule,
 } from "../domain/recommendation-rules/conditioning-support.rule";
 
@@ -54,6 +62,18 @@ export const analysisRules:
       ...moistureRetentionRule,
       status: "active",
     },
+
+    {
+      ...chemicalExposureRule,
+      status: "active",
+    },
+
+    {
+      ...heatExposureRule,
+      status: "active",
+    },
+
+    
   ];
 
 export const analysisProducts:

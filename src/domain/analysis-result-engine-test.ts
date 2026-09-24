@@ -235,6 +235,26 @@ function createObservation(
   };
 }
 
+function createRoutineObservation(
+  trait:
+    "conditioning_frequency",
+  value: Observation["value"],
+): Observation {
+  return {
+    id: trait,
+
+    domain: "routine",
+
+    trait,
+
+    value,
+
+    region: "mid_length",
+
+    source: "questionnaire",
+  };
+}
+
 function createSafetyObservation(
   trait:
     | "scalp_sensitivity"
@@ -522,6 +542,61 @@ describe(
           result.recommendations[0]
             .products,
         ).toEqual([]);
+      },
+    );
+
+    it(
+      "includes routine guidance when conditioning support exists and conditioning is rarely used",
+      () => {
+        const observations:
+          Observation[] = [
+            createRoutineObservation(
+              "conditioning_frequency",
+              "rarely",
+            ),
+          ];
+
+        const result =
+          buildAnalysisResult(
+            diagnosis,
+            observations,
+            products,
+            recommendationRules,
+          );
+
+        expect(
+          result.recommendations[0]
+            .recommendation.type,
+        ).toBe(
+          "conditioning_support",
+        );
+
+        expect(
+          result.routineGuidance,
+        ).toHaveLength(1);
+
+        expect(
+          result.routineGuidance[0]
+            .type,
+        ).toBe(
+          "conditioning_frequency_support",
+        );
+
+        expect(
+          result.routineGuidance[0]
+            .relatedRecommendationType,
+        ).toBe(
+          "conditioning_support",
+        );
+
+        expect(
+          result.routineGuidance[0]
+            .context,
+        ).toEqual({
+          trait:
+            "conditioning_frequency",
+          value: "rarely",
+        });
       },
     );
   },

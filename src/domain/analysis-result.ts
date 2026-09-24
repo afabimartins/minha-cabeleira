@@ -14,8 +14,13 @@ import type {
   SafetyAssessment,
 } from "./safety";
 
+import type {
+  RoutineGuidance,
+} from "./routine-guidance";
+
 export type RecommendationResult = {
   recommendation: Recommendation;
+
   products: Product[];
 };
 
@@ -26,4 +31,7 @@ export type AnalysisResult = {
 
   recommendations:
     RecommendationResult[];
+
+  routineGuidance:
+    RoutineGuidance[];
 };

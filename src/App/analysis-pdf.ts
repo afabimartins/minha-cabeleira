@@ -281,6 +281,53 @@ function addSafetySection(
   context.y += 4;
 }
 
+function addRoutineGuidance(
+  context: PdfContext,
+  report: AnalysisReport,
+): void {
+  if (
+    report.routineGuidance.length ===
+    0
+  ) {
+    return;
+  }
+
+  addWrappedText(
+    context,
+    "Na sua rotina",
+    {
+      fontSize: 8,
+      bold: true,
+      color: PRIMARY_COLOR,
+      spacingAfter: 3,
+    },
+  );
+
+  for (
+    const guidance of
+    report.routineGuidance
+  ) {
+    addWrappedText(
+      context,
+      guidance.title,
+      {
+        fontSize: 11,
+        bold: true,
+        spacingAfter: 2,
+      },
+    );
+
+    addWrappedText(
+      context,
+      guidance.description,
+      {
+        color: SOFT_TEXT_COLOR,
+        spacingAfter: 7,
+      },
+    );
+  }
+}
+
 function addIngredientGuidance(
   context: PdfContext,
   recommendation:
@@ -557,19 +604,35 @@ function addRecommendationsSection(
     "O que priorizar agora",
   );
 
+  addRoutineGuidance(
+    context,
+    report,
+  );
+
   if (
     report.recommendations.length ===
     0
   ) {
-    addWrappedText(
-      context,
-      "Ainda não há uma recomendação específica para este resultado.",
-      {
-        color: SOFT_TEXT_COLOR,
-      },
-    );
+    if (
+      report.routineGuidance.length ===
+      0
+    ) {
+      addWrappedText(
+        context,
+        "Ainda não há uma recomendação específica para este resultado.",
+        {
+          color: SOFT_TEXT_COLOR,
+        },
+      );
+    }
 
     return;
+  }
+
+  if (
+    report.routineGuidance.length > 0
+  ) {
+    addDivider(context);
   }
 
   report.recommendations.forEach(

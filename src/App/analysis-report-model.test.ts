@@ -138,6 +138,36 @@ function createResult(
         ],
       },
     ],
+
+    routineGuidance: [
+      {
+        id:
+          "routine_guidance_conditioning_frequency",
+
+        type:
+          "conditioning_frequency_support",
+
+        title:
+          "Condicionamento na sua rotina",
+
+        description:
+          "Seu resultado indica boa resposta ao condicionamento, enquanto você relatou usar condicionador ou máscara raramente.",
+
+        basedOn: [
+          "conditioning_frequency",
+        ],
+
+        relatedRecommendationType:
+          "conditioning_support",
+
+        context: {
+          trait:
+            "conditioning_frequency",
+
+          value: "rarely",
+        },
+      },
+    ],
   };
 }
 
@@ -145,7 +175,7 @@ describe(
   "buildAnalysisReport",
   () => {
     it(
-      "includes findings, ingredient guidance and products in normal state",
+      "includes findings, routine guidance, ingredient guidance and products in normal state",
       () => {
         const report =
           buildAnalysisReport(
@@ -164,6 +194,23 @@ describe(
         ).toBe(
           "Boa resposta ao condicionamento",
         );
+
+        expect(
+          report.routineGuidance,
+        ).toHaveLength(1);
+
+        expect(
+          report.routineGuidance[0],
+        ).toEqual({
+          id:
+            "routine_guidance_conditioning_frequency",
+
+          title:
+            "Condicionamento na sua rotina",
+
+          description:
+            "Seu resultado indica boa resposta ao condicionamento, enquanto você relatou usar condicionador ou máscara raramente.",
+        });
 
         expect(
           report.recommendations,
