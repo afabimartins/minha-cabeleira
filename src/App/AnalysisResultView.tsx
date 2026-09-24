@@ -10,6 +10,10 @@ import {
   getFindingPresentation,
 } from "./analysis-presentation";
 
+import {
+  getAnalysisReportPolicy,
+} from "./analysis-report";
+
 type AnalysisResultViewProps = {
   result: AnalysisResult;
   onRestart: () => void;
@@ -111,11 +115,14 @@ export function AnalysisResultView({
       {},
     );
 
+  const reportPolicy =
+    getAnalysisReportPolicy(result);
+
   const productsBlocked =
-    !result.safety.canRecommendProducts;
+    !reportPolicy.showProducts;
 
   const guidanceBlocked =
-    result.safety.level === "stop";
+    !reportPolicy.showIngredientGuidance;
 
   function toggleProducts(
     recommendationId: string,
