@@ -443,6 +443,51 @@ describe(
       ]);
     });
 
+    it(
+  "preserves recommendation order for a simplify routine goal",
+  () => {
+    const results:
+      RecommendationResult[] = [
+        createRecommendationResult(
+          "conditioning_support",
+        ),
+
+        createRecommendationResult(
+          "damage_protection",
+        ),
+
+        createRecommendationResult(
+          "moisture_support",
+        ),
+      ];
+
+    const observations:
+      Observation[] = [
+        createPreferenceObservation(
+          "primary_goal",
+          "simplify_routine",
+        ),
+      ];
+
+    const personalized =
+      personalizeRecommendations(
+        results,
+        observations,
+      );
+
+    expect(
+      personalized.map(
+        (result) =>
+          result.recommendation.type,
+      ),
+    ).toEqual([
+      "conditioning_support",
+      "damage_protection",
+      "moisture_support",
+    ]);
+  },
+);
+
     it("does not mutate the original recommendation results", () => {
       const results:
         RecommendationResult[] = [
@@ -556,6 +601,48 @@ describe(
           .products[0].price,
       ).toBe(14.9);
     });
+
+    it(
+  "preserves product order when cost benefit is preferred",
+  () => {
+    const results:
+      RecommendationResult[] = [
+        createRecommendationResult(
+          "conditioning_support",
+          [
+            29.9,
+            14.9,
+            22.9,
+          ],
+        ),
+      ];
+
+    const observations:
+      Observation[] = [
+        createPreferenceObservation(
+          "budget_priority",
+          "cost_benefit",
+        ),
+      ];
+
+    const personalized =
+      personalizeRecommendations(
+        results,
+        observations,
+      );
+
+    expect(
+      personalized[0].products.map(
+        (product) =>
+          product.price,
+      ),
+    ).toEqual([
+      29.9,
+      14.9,
+      22.9,
+    ]);
+  },
+);
 
     it("preserves product order when budget is flexible", () => {
       const results:
