@@ -83,5 +83,49 @@ export function buildRoutineGuidance(
     });
   }
 
+  const stylingFrequency =
+    findObservation(
+      observations,
+      "styling_frequency",
+    );
+
+  if (
+    hasRecommendation(
+      recommendationResults,
+      "damage_protection",
+    ) &&
+    stylingFrequency?.value ===
+      "daily"
+  ) {
+    guidance.push({
+      id:
+        "routine_guidance_frequent_styling_protection",
+
+      type:
+        "frequent_styling_protection",
+
+      title:
+        "Proteção durante a finalização",
+
+      description:
+        "Como a finalização faz parte da sua rotina diária e seu resultado já indica prioridade para proteção da fibra, vale reduzir atrito e tração durante a manipulação. Desembarace com cuidado e evite puxar ou tensionar o cabelo além do necessário durante a finalização.",
+
+      basedOn: [
+        stylingFrequency.id,
+      ],
+
+      relatedRecommendationType:
+        "damage_protection",
+
+      context: {
+        trait:
+          "styling_frequency",
+
+        value:
+          stylingFrequency.value,
+      },
+    });
+  }
+
   return guidance;
 }

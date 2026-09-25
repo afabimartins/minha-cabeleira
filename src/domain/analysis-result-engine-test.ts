@@ -24,6 +24,10 @@ import {
   buildAnalysisResult,
 } from "./analysis-result-engine";
 
+import {
+  damageProtectionRecommendationRule,
+} from "./recommendation-rules/damage-protection.rule";
+
 const finding = {
   id: "finding_conditioning",
 
@@ -237,7 +241,8 @@ function createObservation(
 
 function createRoutineObservation(
   trait:
-    "conditioning_frequency",
+    | "conditioning_frequency"
+    | "styling_frequency",
   value: Observation["value"],
 ): Observation {
   return {
@@ -595,7 +600,132 @@ describe(
         ).toEqual({
           trait:
             "conditioning_frequency",
+
           value: "rarely",
+        });
+      },
+    );
+
+    it(
+      "includes routine guidance when damage protection exists and styling is daily",
+      () => {
+        const damageFinding = {
+          id:
+            "finding_damage_risk",
+
+          type:
+            "elevated_damage_risk",
+
+          confidence:
+            "high" as const,
+
+          basedOn: [],
+
+          evidence: [],
+
+          explanation:
+            "Damage protection is relevant.",
+        };
+
+        const damageDiagnosis:
+          Diagnosis = {
+            findings: [
+              damageFinding,
+            ],
+
+            assessment: {
+              status:
+                "supported",
+
+              findings: [
+                damageFinding,
+              ],
+
+              reason:
+                "Damage risk finding is supported.",
+            },
+
+            profile: {
+              assessments: [
+                {
+                  type:
+                    "elevated_damage_risk",
+
+                  status:
+                    "supported",
+
+                  confidence:
+                    "high",
+
+                  basedOn: [],
+
+                  evidence: [],
+
+                  explanations: [
+                    "Damage protection is relevant.",
+                  ],
+                },
+              ],
+
+              unresolved: [],
+            },
+          };
+
+        const observations:
+          Observation[] = [
+            createRoutineObservation(
+              "styling_frequency",
+              "daily",
+            ),
+          ];
+
+        const result =
+          buildAnalysisResult(
+            damageDiagnosis,
+            observations,
+            [],
+            [
+              damageProtectionRecommendationRule,
+            ],
+          );
+
+        expect(
+          result.recommendations,
+        ).toHaveLength(1);
+
+        expect(
+          result.recommendations[0]
+            .recommendation.type,
+        ).toBe(
+          "damage_protection",
+        );
+
+        expect(
+          result.routineGuidance,
+        ).toHaveLength(1);
+
+        expect(
+          result.routineGuidance[0]
+            .type,
+        ).toBe(
+          "frequent_styling_protection",
+        );
+
+        expect(
+          result.routineGuidance[0]
+            .relatedRecommendationType,
+        ).toBe(
+          "damage_protection",
+        );
+
+        expect(
+          result.routineGuidance[0]
+            .context,
+        ).toEqual({
+          trait:
+            "styling_frequency",
+
+          value: "daily",
         });
       },
     );
