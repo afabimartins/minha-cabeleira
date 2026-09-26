@@ -127,5 +127,49 @@ export function buildRoutineGuidance(
     });
   }
 
+  const washFrequency =
+    findObservation(
+      observations,
+      "wash_frequency",
+    );
+
+  if (
+    hasRecommendation(
+      recommendationResults,
+      "damage_protection",
+    ) &&
+    washFrequency?.value ===
+      "daily"
+  ) {
+    guidance.push({
+      id:
+        "routine_guidance_frequent_washing_protection",
+
+      type:
+        "frequent_washing_protection",
+
+      title:
+        "Proteção durante a lavagem",
+
+      description:
+        "Como a lavagem faz parte da sua rotina diária e seu resultado já indica prioridade para proteção da fibra, vale tornar essa etapa mais gentil. Durante a lavagem e o desembaraço, reduza o atrito, evite esfregar ou torcer o comprimento e priorize um manuseio cuidadoso dos fios.",
+
+      basedOn: [
+        washFrequency.id,
+      ],
+
+      relatedRecommendationType:
+        "damage_protection",
+
+      context: {
+        trait:
+          "wash_frequency",
+
+        value:
+          washFrequency.value,
+      },
+    });
+  }
+
   return guidance;
 }

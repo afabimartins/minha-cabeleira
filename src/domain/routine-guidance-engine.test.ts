@@ -265,5 +265,106 @@ describe(
         expect(guidance).toEqual([]);
       },
     );
+
+    it(
+      "creates washing protection guidance when damage protection exists and washing is daily",
+      () => {
+        const recommendations = [
+          createRecommendation(
+            "damage_protection",
+          ),
+        ];
+
+        const observations = [
+          createObservation(
+            "wash_frequency",
+            "daily",
+          ),
+        ];
+
+        const guidance =
+          buildRoutineGuidance(
+            recommendations,
+            observations,
+          );
+
+        expect(guidance).toHaveLength(
+          1,
+        );
+
+        expect(guidance[0].type).toBe(
+          "frequent_washing_protection",
+        );
+
+        expect(
+          guidance[0]
+            .relatedRecommendationType,
+        ).toBe(
+          "damage_protection",
+        );
+
+        expect(
+          guidance[0].context,
+        ).toEqual({
+          trait:
+            "wash_frequency",
+
+          value: "daily",
+        });
+      },
+    );
+
+    it(
+      "does not create washing protection guidance from daily washing alone",
+      () => {
+        const recommendations:
+          RecommendationResult[] = [];
+
+        const observations = [
+          createObservation(
+            "wash_frequency",
+            "daily",
+          ),
+        ];
+
+        const guidance =
+          buildRoutineGuidance(
+            recommendations,
+            observations,
+          );
+
+        expect(guidance).toEqual([]);
+      },
+    );
+
+    it.each([
+      "rarely",
+      "sometimes",
+      "frequently",
+    ] as const)(
+      "does not create washing protection guidance when washing frequency is %s",
+      (value) => {
+        const recommendations = [
+          createRecommendation(
+            "damage_protection",
+          ),
+        ];
+
+        const observations = [
+          createObservation(
+            "wash_frequency",
+            value,
+          ),
+        ];
+
+        const guidance =
+          buildRoutineGuidance(
+            recommendations,
+            observations,
+          );
+
+        expect(guidance).toEqual([]);
+      },
+    );
   },
 );
