@@ -1,0 +1,111 @@
+-- Minha Cabeleira — lote inicial de produtos reais
+-- Verificação editorial: 27/09/2026.
+-- Antes da publicação definitiva, revise preço/estoque e acrescente imagens próprias/licenciadas.
+-- A seleção técnica do app continua baseada em atributos e formulação, nunca na marca.
+
+insert into public.products (
+  id, slug, brand, name, category, size,
+  image_url, price, currency, retailer, product_url,
+  price_checked_at, ingredients_raw, attributes,
+  availability, source_url, verified_at, link_type
+)
+values
+(
+  'vult-choque-reconstrucao-leave-in-100ml',
+  'vult-choque-reconstrucao-leave-in-100ml',
+  'Vult',
+  'Leave-In Spray Cabelos Choque de Reconstrução',
+  'leave_in',
+  '100 ml',
+  null,
+  20.90,
+  'BRL',
+  'Vult',
+  'https://www.vult.com.br/produto/leavein-spray-vult-cabelos-choque-de-reconstrucao-100ml',
+  '2026-09-27',
+  'Água; Glicerol; Álcool cetoestearílico; Estearamidopropil dimetilamina; Cloreto de cetrimônio; Álcoois C14-22; Perfume; Bis-cetearil amodimeticona; Copolímero de cloreto de acrilamidopropiltrimônio/acrilatos; Ácido láctico; Fenoxietanol; Isoexadecano; Álcool benzílico; Metossulfato de beentrimônio; Gliconato de sódio; Alquil C12-20 glicosídeo; Acetato de tocoferila; Polietilenoglicol-7 éter de álcool de coco; Cetomacrogol 1000; Isoestearato de sorbitana; Amido; Caprililglicol; Extrato de Cystoseira compressa; Gluconolactona; Ácido glicólico; Proteína de soja hidrolisada; Glúten de trigo hidrolisado; Proteína de milho hidrolisada; Benzoato de sódio; Hidróxido de sódio; Nicotinamida; Álcool feniletílico; Sorbato de potássio; Ácido deidroacético; Gliconato de cálcio; Extrato da semente de Ceratonia siliqua hidrolisado; Cloreto de goma guar hidroxipropiltrimônio; Poliquatérnio-16; Poliquatérnio-7; Extrato da folha de Amaranthus hypochondriacus; Citral; Citronelol; Cumarina; Hexil cinamal; Limoneno; Linalol',
+  array['conditioning', 'conditioning_support', 'moisture_support', 'damage_support'],
+  'active',
+  'https://www.vult.com.br/produto/leavein-spray-vult-cabelos-choque-de-reconstrucao-100ml',
+  '2026-09-27',
+  'editorial'
+),
+(
+  'salon-line-definicao-intensa-1kg',
+  'salon-line-definicao-intensa-1kg',
+  'Salon Line',
+  'Creme para Pentear Definição Intensa',
+  'styler',
+  '1 kg',
+  null,
+  39.99,
+  'BRL',
+  'Droga Raia',
+  'https://www.drogaraia.com.br/salon-line-creme-para-pentear-definicao-intensa-1kg.html',
+  '2026-09-27',
+  'Aqua; Cetearyl Alcohol; Sorbitol; Glycerin; Glycine Soja Oil; Ceteth-10; Phosphate; Diacetyl Phosphate; Petrolatum; Paraffinum Liquidum; Dimethicone; Cetrimonium Chloride; Cocos Nucifera Oil; Hydroxyethylcellulose; Ricinus Communis Seed Oil; Glyceryl Stearate; Behentrimonium Chloride; Parfum; Alcohol; Phenoxyethanol; Benzophenone-4; BHT; Isopropyl Alcohol; Methylparaben; Butylparaben; Potassium Hydroxide; Ethylparaben; Propylparaben; Butylphenyl Methylpropional; Linalool; Hexyl Cinnamal; Benzyl Salicylate; Geraniol; Propylene Glycol; Alpha-Isomethyl Ionone; Limonene; Disodium Phosphate; Polysorbate 60; Citronellol; Mel Extract; Prunus Amygdalus Dulcis Oil; Pollen Extract; Sodium Phosphate; Royal Jelly; Propolis Extract; Disodium EDTA; Gluconolactone; Potassium Sorbate; Sodium Benzoate; Tocopherol; Calcium Gluconate',
+  array['conditioning', 'conditioning_support', 'moisture_support'],
+  'active',
+  'https://www.drogaraia.com.br/salon-line-creme-para-pentear-definicao-intensa-1kg.html',
+  '2026-09-27',
+  'editorial'
+),
+(
+  'seda-boom-definicao-intensa-350ml',
+  'seda-boom-definicao-intensa-350ml',
+  'Seda',
+  'Creme para Pentear Boom Definição Intensa',
+  'styler',
+  '350 ml',
+  null,
+  11.19,
+  'BRL',
+  'Droga Raia',
+  'https://www.drogaraia.com.br/seda-boom-creme-para-pentear-definicao-intensa-350ml.html',
+  '2026-09-27',
+  'Água; Álcool cetoestearílico; Estearamidopropil dimetilamina; Glicerol; Perfume; Ácido láctico; Benzoato de sódio; Copolímero de ácido metacrílico e acrilato de etila; Edetato dissódico; Suco da folha de Aloe barbadensis; Óleo da semente de Argania spinosa; Óleo de Persea gratissima; Óleo da semente de Prunus armeniaca; Óleo da semente de Simmondsia chinensis; Óleo da semente de Vitis vinifera; Alfa-isometil ionona; Salicilato de benzila; Citronelol; Cumarina; Geraniol; Hexil cinamal; Limoneno; Linalol',
+  array['conditioning', 'conditioning_support', 'moisture_support'],
+  'active',
+  'https://www.ingredientesunilever.com.br/p/sedaboom-cremeparapenteardefinicaointensa350ml-2023.html/17891150088399',
+  '2026-09-27',
+  'editorial'
+),
+(
+  'elseve-reparacao-total-5-creme-milagroso-500ml',
+  'elseve-reparacao-total-5-creme-milagroso-500ml',
+  'Elseve',
+  'Creme Milagroso 3 em 1 Reparação Total 5',
+  'treatment',
+  '500 ml',
+  null,
+  42.99,
+  'BRL',
+  'Droga Raia',
+  'https://www.drogaraia.com.br/elseve-creme-milagroso-3-em-1-reparacao-total-5-500ml-1001534.html',
+  '2026-09-27',
+  'Água; Álcool cetoestearílico; Amodimeticona; Ésteres cetílicos; Benzoato de sódio; Hidroxicitronelal; Proteína do trigo hidrolisada hidroxipropiltrimônio; Fenoxietanol; Arginina; Cloreto de beentrimônio; Polietilenoglicol-6 éter de álcool tridecílico; Digliconato de clorexidina; Limoneno; Salicilato de benzila; Linalol; Álcool benzílico; Álcool isopropílico; 2-Oleamido-1,3-octadecanodiol; Alfa-isometil ionona; Serina; Ácido cítrico; Cloreto de cetrimônio; Citronelol; Cumarina; Hexil cinamal; Amil cinamal; Perfume',
+  array['conditioning', 'conditioning_support', 'damage_support'],
+  'active',
+  'https://www.loreal-paris.com.br/elseve/reparacao-total-5/creme-milagroso-3-em-1',
+  '2026-09-27',
+  'editorial'
+)
+on conflict (id)
+do update set
+  slug = excluded.slug,
+  brand = excluded.brand,
+  name = excluded.name,
+  category = excluded.category,
+  size = excluded.size,
+  image_url = excluded.image_url,
+  price = excluded.price,
+  currency = excluded.currency,
+  retailer = excluded.retailer,
+  product_url = excluded.product_url,
+  price_checked_at = excluded.price_checked_at,
+  ingredients_raw = excluded.ingredients_raw,
+  attributes = excluded.attributes,
+  availability = excluded.availability,
+  source_url = excluded.source_url,
+  verified_at = excluded.verified_at,
+  link_type = excluded.link_type;

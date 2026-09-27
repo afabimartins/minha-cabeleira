@@ -1,56 +1,89 @@
 import {
-  Questionnaire,
-} from "./Questionnaire";
+  AboutPage,
+} from "./AboutPage";
+
+import {
+  AdminPage,
+} from "./AdminPage";
+
+import {
+  AnalysisPage,
+} from "./AnalysisPage";
+
+import {
+  GlossaryEntryPage,
+} from "./GlossaryEntryPage";
+
+import {
+  GlossaryPage,
+} from "./GlossaryPage";
+
+import {
+  HomePage,
+} from "./HomePage";
+
+import {
+  SiteFooter,
+} from "./SiteFooter";
+
+import {
+  SiteHeader,
+} from "./SiteHeader";
+
+import {
+  usePathname,
+} from "./navigation";
+
+function getGlossarySlugFromPath(
+  pathname: string,
+): string | null {
+  const prefix = "/glossario/";
+
+  if (!pathname.startsWith(prefix)) {
+    return null;
+  }
+
+  const slug = pathname
+    .slice(prefix.length)
+    .split("/")[0];
+
+  return slug || null;
+}
 
 export function App() {
+  const pathname = usePathname();
+  const glossarySlug =
+    getGlossarySlugFromPath(
+      pathname,
+    );
+
+  let page = <HomePage />;
+
+  if (pathname === "/analise") {
+    page = <AnalysisPage />;
+  } else if (
+    pathname === "/glossario"
+  ) {
+    page = <GlossaryPage />;
+  } else if (glossarySlug) {
+    page = (
+      <GlossaryEntryPage
+        slug={glossarySlug}
+      />
+    );
+  } else if (pathname === "/sobre") {
+    page = <AboutPage />;
+  } else if (pathname === "/admin") {
+    page = <AdminPage />;
+  }
+
   return (
     <div className="app">
-      <header className="app-header">
-        <div className="app-header__inner">
-          <div className="app-brand">
-            <div
-              className="app-brand__mark"
-              aria-hidden="true"
-            >
-              MC
-            </div>
-
-            <div className="app-brand__text">
-              <h1>
-                Minha Cabeleira
-              </h1>
-
-              <p>
-                Cuidado sem rótulos
-              </p>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="app-main">
-        <section className="app-intro">
-          <p className="app-intro__eyebrow">
-            Análise capilar
-          </p>
-
-          <h2>
-            Entenda melhor o que o seu
-            cabelo precisa.
-          </h2>
-
-          <p className="app-intro__description">
-            Responda algumas perguntas
-            sobre o seu cabelo, sua rotina
-            e seus objetivos. A análise
-            organiza essas informações
-            para mostrar prioridades e
-            produtos compatíveis.
-          </p>
-        </section>
-
-        <Questionnaire />
-      </main>
+      <SiteHeader
+        currentPath={pathname}
+      />
+      {page}
+      <SiteFooter />
     </div>
   );
 }
