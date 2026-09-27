@@ -8246,3 +8246,96 @@ a:focus-visible {
     height: 104px;
   }
 }
+
+
+/* ==========================================================
+   BLOCO J0.1 — FOTOS REAIS SEM COLAGEM ARTIFICIAL
+   ========================================================== */
+
+.home-showcase__hair {
+  overflow: hidden;
+  border-radius:
+    46% 10% 12% 42% /
+    18% 8% 12% 20%;
+  background:
+    #f3dce7;
+}
+
+.home-showcase__hair::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255, 249, 244, 0.98) 0%,
+      rgba(255, 249, 244, 0.72) 6%,
+      rgba(255, 249, 244, 0.16) 18%,
+      transparent 34%
+    );
+}
+
+.home-showcase__hair img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: 54% 55%;
+  transform: scale(1.06);
+  filter:
+    saturate(0.90)
+    contrast(1.02)
+    brightness(1.01);
+}
+
+.home-showcase-card--hair {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.home-showcase-card--hair::after {
+  display: none !important;
+}
+
+.home-showcase-card__real-photo {
+  position: absolute;
+  z-index: 0;
+  right: 0;
+  top: 0;
+  width: 46%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 42% 26%;
+}
+
+.home-showcase-card--hair::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      #eef6ea 0%,
+      rgba(238, 246, 234, 0.98) 46%,
+      rgba(238, 246, 234, 0.78) 60%,
+      rgba(238, 246, 234, 0.08) 100%
+    );
+  pointer-events: none;
+}
+
+.home-showcase-card--hair .home-showcase-card__icon,
+.home-showcase-card--hair > div,
+.home-showcase-card--hair > a {
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 720px) {
+  .home-showcase-card__real-photo {
+    width: 42%;
+  }
+}

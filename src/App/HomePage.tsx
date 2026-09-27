@@ -1,4 +1,5 @@
-import heroHair from "../assets/hero-hair.png";
+import heroHairAnik from "../assets/hero-hair-anik-paul.jpg";
+import cardHairAnik from "../assets/card-hair-anik-paul.jpg";
 
 import {
   InternalLink,
@@ -101,7 +102,7 @@ export function HomePage() {
           <div className="home-showcase__visual" aria-label="Prévia da análise Minha Cabeleira">
             <div className="home-showcase__hair" aria-hidden="true">
               <img
-                src={heroHair}
+                src={heroHairAnik}
                 alt=""
               />
             </div>
@@ -174,13 +175,24 @@ export function HomePage() {
           </article>
 
           <article className="home-showcase-card home-showcase-card--hair">
+            <img
+              className="home-showcase-card__real-photo"
+              src={cardHairAnik}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              decoding="async"
+            />
+
             <span className="home-showcase-card__icon">❧</span>
+
             <div>
               <h3>Tipos de cabelo</h3>
               <p>
                 Entenda características e comportamentos sem transformar textura em rótulo.
               </p>
             </div>
+
             <InternalLink to="/glossario" aria-label="Explorar tipos e termos">→</InternalLink>
           </article>
 
