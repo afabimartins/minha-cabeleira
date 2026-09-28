@@ -2,6 +2,11 @@ import heroHairAnik from "../assets/hero-hair-anik-paul.jpg";
 import cardHairAnik from "../assets/card-hair-anik-paul.jpg";
 
 import {
+  AdSlot,
+  adSlots,
+} from "./adsense";
+
+import {
   InternalLink,
 } from "./InternalLink";
 
@@ -256,6 +261,11 @@ export function HomePage() {
           ))}
         </div>
       </section>
+
+      <AdSlot
+        slot={adSlots.homeContent}
+        placement="home-content"
+      />
 
       <section className="home-cta">
         <div>

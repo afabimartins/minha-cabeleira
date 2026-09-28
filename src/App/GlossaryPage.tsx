@@ -4,6 +4,11 @@ import {
 } from "react";
 
 import {
+  AdSlot,
+  adSlots,
+} from "./adsense";
+
+import {
   InternalLink,
 } from "./InternalLink";
 
@@ -216,6 +221,11 @@ export function GlossaryPage() {
           </div>
         )}
       </section>
+
+      <AdSlot
+        slot={adSlots.glossaryList}
+        placement="glossary-list"
+      />
     </main>
   );
 }

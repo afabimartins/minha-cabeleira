@@ -6,6 +6,10 @@ import {
   InternalLink,
 } from "./InternalLink";
 
+import {
+  PrivacySettingsButton,
+} from "./PrivacySettingsButton";
+
 export function SiteFooter() {
   return (
     <footer className="site-footer">
@@ -30,6 +34,12 @@ export function SiteFooter() {
           <InternalLink to="/sobre">
             Sobre
           </InternalLink>
+
+          <InternalLink to="/privacidade">
+            Privacidade
+          </InternalLink>
+
+          <PrivacySettingsButton />
         </div>
 
         <p className="site-footer__note">

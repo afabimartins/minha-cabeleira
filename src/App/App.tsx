@@ -27,6 +27,18 @@ import {
 } from "./SiteFooter";
 
 import {
+  AdSenseLoader,
+} from "./adsense";
+
+import {
+  PrivacyPage,
+} from "./PrivacyPage";
+
+import {
+  SiteSeo,
+} from "./SiteSeo";
+
+import {
   SiteHeader,
 } from "./SiteHeader";
 
@@ -48,6 +60,20 @@ function getGlossarySlugFromPath(
     .split("/")[0];
 
   return slug || null;
+}
+
+function pageCanLoadAds(
+  pathname: string,
+): boolean {
+  return (
+    pathname === "/" ||
+    pathname === "/sobre" ||
+    pathname === "/privacidade" ||
+    pathname === "/glossario" ||
+    pathname.startsWith(
+      "/glossario/",
+    )
+  );
 }
 
 export function App() {
@@ -73,16 +99,33 @@ export function App() {
     );
   } else if (pathname === "/sobre") {
     page = <AboutPage />;
+  } else if (
+    pathname ===
+    "/privacidade"
+  ) {
+    page = <PrivacyPage />;
   } else if (pathname === "/admin") {
     page = <AdminPage />;
   }
 
   return (
     <div className="app">
+      <SiteSeo
+        pathname={pathname}
+      />
+
+      <AdSenseLoader
+        active={pageCanLoadAds(
+          pathname,
+        )}
+      />
+
       <SiteHeader
         currentPath={pathname}
       />
+
       {page}
+
       <SiteFooter />
     </div>
   );

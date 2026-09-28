@@ -1,4 +1,9 @@
 import {
+  AdSlot,
+  adSlots,
+} from "./adsense";
+
+import {
   BrandMark,
 } from "./BrandMark";
 
@@ -214,6 +219,11 @@ export function GlossaryEntryPage({
           </section>
         </div>
       </article>
+
+      <AdSlot
+        slot={adSlots.glossaryEntry}
+        placement="glossary-entry"
+      />
     </main>
   );
 }

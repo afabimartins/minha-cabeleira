@@ -1,4 +1,9 @@
 import {
+  AdSlot,
+  adSlots,
+} from "./adsense";
+
+import {
   InternalLink,
 } from "./InternalLink";
 
@@ -40,6 +45,11 @@ export function AboutPage() {
           </p>
         </article>
       </section>
+
+      <AdSlot
+        slot={adSlots.aboutContent}
+        placement="about-content"
+      />
 
       <section className="about-cta">
         <div>
