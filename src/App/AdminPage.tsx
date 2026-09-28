@@ -9,9 +9,13 @@ import {
   getProductStoreMode,
   getStoredAdminSession,
   listAdminCatalogProducts,
+  PRODUCT_IMAGE_ACCEPT,
+  removeAdminProductImage,
   saveAdminCatalogProduct,
   signInAdmin,
   signOutAdmin,
+  uploadAdminProductImage,
+  validateProductImageFile,
 } from "./product-store";
 
 import type {
@@ -100,6 +104,9 @@ function createEmptyProduct(): CatalogProduct {
     category: "conditioner",
     size: "",
     imageUrl: "",
+    imagePath: "",
+    imageSourceUrl: "",
+    imageCredit: "",
     price: undefined,
     currency: "BRL",
     retailer: "",
@@ -132,8 +139,28 @@ export function AdminPage() {
     useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [pendingImageFile, setPendingImageFile] =
+    useState<File | null>(null);
+  const [pendingImagePreview, setPendingImagePreview] =
+    useState("");
+  const [
+    imagePathToRemove,
+    setImagePathToRemove,
+  ] = useState<string | null>(null);
 
   const mode = getProductStoreMode();
+
+  useEffect(() => {
+    return () => {
+      if (
+        pendingImagePreview.startsWith("blob:")
+      ) {
+        URL.revokeObjectURL(
+          pendingImagePreview,
+        );
+      }
+    };
+  }, [pendingImagePreview]);
 
   const filteredProducts = useMemo(() => {
     const normalizedQuery = query
@@ -204,7 +231,81 @@ export function AdminPage() {
     }
   }
 
+  function clearPendingImage(): void {
+    if (
+      pendingImagePreview.startsWith("blob:")
+    ) {
+      URL.revokeObjectURL(
+        pendingImagePreview,
+      );
+    }
+
+    setPendingImageFile(null);
+    setPendingImagePreview("");
+  }
+
+  function resetImageDraftState(): void {
+    clearPendingImage();
+    setImagePathToRemove(null);
+  }
+
+  function handleImageSelection(
+    file: File | undefined,
+  ): void {
+    if (!file) return;
+
+    const validationIssue =
+      validateProductImageFile(file);
+
+    if (validationIssue) {
+      setError(validationIssue);
+      return;
+    }
+
+    clearPendingImage();
+
+    setPendingImageFile(file);
+    setPendingImagePreview(
+      URL.createObjectURL(file),
+    );
+    setImagePathToRemove(null);
+    setError("");
+    setMessage(
+      "Imagem pronta para envio. Clique em Salvar produto para publicar a alteração.",
+    );
+  }
+
+  function handleRemoveImage(): void {
+    if (!selectedProduct) return;
+
+    if (pendingImageFile) {
+      clearPendingImage();
+      setMessage(
+        "Nova imagem descartada.",
+      );
+      return;
+    }
+
+    if (
+      selectedProduct.imagePath
+    ) {
+      setImagePathToRemove(
+        selectedProduct.imagePath,
+      );
+    }
+
+    updateSelectedProduct({
+      imageUrl: undefined,
+      imagePath: undefined,
+    });
+
+    setMessage(
+      "A imagem será removida quando você salvar o produto.",
+    );
+  }
+
   function handleLogout() {
+    resetImageDraftState();
     signOutAdmin();
     setSession(null);
     setProducts([]);
@@ -212,6 +313,7 @@ export function AdminPage() {
   }
 
   function startNewProduct() {
+    resetImageDraftState();
     setSelectedProduct(
       createEmptyProduct(),
     );
@@ -222,6 +324,7 @@ export function AdminPage() {
   function editProduct(
     product: CatalogProduct,
   ) {
+    resetImageDraftState();
     setSelectedProduct({ ...product });
     setMessage("");
     setError("");
@@ -295,7 +398,7 @@ export function AdminPage() {
     setMessage("");
 
     try {
-      const normalizedProduct: CatalogProduct = {
+      let normalizedProduct: CatalogProduct = {
         ...selectedProduct,
         slug:
           selectedProduct.slug.trim() ||
@@ -304,14 +407,50 @@ export function AdminPage() {
           ),
       };
 
+      if (pendingImageFile) {
+        const uploaded =
+          await uploadAdminProductImage(
+            session,
+            normalizedProduct.id,
+            pendingImageFile,
+          );
+
+        normalizedProduct = {
+          ...normalizedProduct,
+          imageUrl: uploaded.imageUrl,
+          imagePath: uploaded.imagePath,
+        };
+      }
+
       const saved =
         await saveAdminCatalogProduct(
           session,
           normalizedProduct,
         );
 
+      let imageCleanupWarning = "";
+
+      if (
+        imagePathToRemove &&
+        !pendingImageFile
+      ) {
+        try {
+          await removeAdminProductImage(
+            session,
+            imagePathToRemove,
+          );
+        } catch {
+          imageCleanupWarning =
+            " O produto foi salvo, mas o arquivo antigo não pôde ser removido do Storage.";
+        }
+      }
+
+      clearPendingImage();
+      setImagePathToRemove(null);
       setSelectedProduct(saved);
-      setMessage("Produto salvo.");
+      setMessage(
+        `Produto salvo.${imageCleanupWarning}`,
+      );
       await refreshProducts(session);
     } catch (caught) {
       setError(
@@ -339,12 +478,33 @@ export function AdminPage() {
     setError("");
 
     try {
+      const imagePath =
+        selectedProduct.imagePath;
+
       await deleteAdminCatalogProduct(
         session,
         selectedProduct.id,
       );
+
+      let imageCleanupWarning = "";
+
+      if (imagePath) {
+        try {
+          await removeAdminProductImage(
+            session,
+            imagePath,
+          );
+        } catch {
+          imageCleanupWarning =
+            " O cadastro foi excluído, mas o arquivo da imagem não pôde ser removido do Storage.";
+        }
+      }
+
+      resetImageDraftState();
       setSelectedProduct(null);
-      setMessage("Produto excluído.");
+      setMessage(
+        `Produto excluído.${imageCleanupWarning}`,
+      );
       await refreshProducts(session);
     } catch (caught) {
       setError(
@@ -502,9 +662,25 @@ export function AdminPage() {
                   key={product.id}
                   onClick={() => editProduct(product)}
                 >
-                  <span>
-                    <strong>{product.name}</strong>
-                    <small>{product.brand}</small>
+                  <span className="admin-product-row__identity">
+                    <span className="admin-product-row__thumb">
+                      {product.imageUrl ? (
+                        <img
+                          src={product.imageUrl}
+                          alt=""
+                          loading="lazy"
+                        />
+                      ) : (
+                        <span aria-hidden="true">
+                          {product.brand.slice(0, 1)}
+                        </span>
+                      )}
+                    </span>
+
+                    <span className="admin-product-row__copy">
+                      <strong>{product.name}</strong>
+                      <small>{product.brand}</small>
+                    </span>
                   </span>
                   <em
                     className={`admin-status admin-status--${product.availability}`}
@@ -648,18 +824,115 @@ export function AdminPage() {
                     </label>
                   </div>
 
-                  <label className="admin-field">
-                    <span>URL da imagem</span>
-                    <input
-                      type="url"
-                      value={selectedProduct.imageUrl ?? ""}
-                      onChange={(event) =>
-                        updateSelectedProduct({
-                          imageUrl: event.target.value,
-                        })
-                      }
-                    />
-                  </label>
+                  <div className="admin-image-manager">
+                    <div className="admin-image-preview">
+                      {pendingImagePreview ||
+                      selectedProduct.imageUrl ? (
+                        <img
+                          src={
+                            pendingImagePreview ||
+                            selectedProduct.imageUrl
+                          }
+                          alt={`Prévia de ${selectedProduct.brand || "produto"} ${selectedProduct.name || ""}`}
+                        />
+                      ) : (
+                        <div className="admin-image-preview__empty">
+                          <span aria-hidden="true">▧</span>
+                          <strong>Sem imagem</strong>
+                          <small>
+                            A análise usará um fallback até que uma foto seja adicionada.
+                          </small>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="admin-image-controls">
+                      <div>
+                        <strong>Imagem do produto</strong>
+                        <p>
+                          Use foto real da embalagem, preferencialmente oficial ou produzida/autorizada por você.
+                        </p>
+                      </div>
+
+                      <div className="admin-image-controls__actions">
+                        <label
+                          className={`admin-image-upload-button${
+                            mode !== "supabase"
+                              ? " admin-image-upload-button--disabled"
+                              : ""
+                          }`}
+                        >
+                          {pendingImageFile ||
+                          selectedProduct.imageUrl
+                            ? "Trocar imagem"
+                            : "Escolher imagem"}
+
+                          <input
+                            className="admin-image-file-input"
+                            type="file"
+                            accept={PRODUCT_IMAGE_ACCEPT}
+                            disabled={mode !== "supabase"}
+                            onChange={(event) =>
+                              handleImageSelection(
+                                event.target.files?.[0],
+                              )
+                            }
+                          />
+                        </label>
+
+                        {pendingImageFile ||
+                        selectedProduct.imageUrl ? (
+                          <button
+                            className="admin-secondary-button admin-image-remove-button"
+                            type="button"
+                            onClick={handleRemoveImage}
+                            disabled={isLoading}
+                          >
+                            Remover
+                          </button>
+                        ) : null}
+                      </div>
+
+                      <small className="admin-image-rules">
+                        JPG, PNG ou WEBP · máximo de 5 MB · a imagem é enviada ao Supabase Storage somente ao salvar.
+                      </small>
+
+                      {mode !== "supabase" ? (
+                        <small className="admin-image-rules admin-image-rules--warning">
+                          O upload fica disponível quando o projeto está conectado ao Supabase.
+                        </small>
+                      ) : null}
+
+                      <label className="admin-field">
+                        <span>Fonte da imagem</span>
+                        <input
+                          type="url"
+                          placeholder="Página oficial, banco de imagens ou outra origem"
+                          value={selectedProduct.imageSourceUrl ?? ""}
+                          onChange={(event) =>
+                            updateSelectedProduct({
+                              imageSourceUrl:
+                                event.target.value,
+                            })
+                          }
+                        />
+                      </label>
+
+                      <label className="admin-field">
+                        <span>Crédito / licença</span>
+                        <input
+                          placeholder="Ex.: Foto oficial da marca, foto própria, nome do fotógrafo"
+                          value={selectedProduct.imageCredit ?? ""}
+                          onChange={(event) =>
+                            updateSelectedProduct({
+                              imageCredit:
+                                event.target.value,
+                            })
+                          }
+                        />
+                      </label>
+                    </div>
+                  </div>
                 </section>
 
                 <section className="admin-form-section">

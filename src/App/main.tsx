@@ -10,9 +10,6 @@ import {
   App,
 } from "./App";
 
-// @ts-expect-error CSS files are handled by the bundler at runtime.
-import "./styles.css";
-
 const rootElement =
   document.getElementById("root");
 

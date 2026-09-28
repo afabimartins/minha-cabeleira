@@ -17,6 +17,9 @@ export type CatalogProduct = {
   category: string;
   size?: string;
   imageUrl?: string;
+  imagePath?: string;
+  imageSourceUrl?: string;
+  imageCredit?: string;
   price?: number;
   currency: string;
   retailer?: string;

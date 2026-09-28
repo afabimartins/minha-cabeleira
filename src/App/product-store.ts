@@ -25,6 +25,21 @@ const SUPABASE_ANON_KEY =
   import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ??
   import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+const PRODUCT_IMAGE_BUCKET = "product-images";
+
+export const PRODUCT_IMAGE_MAX_BYTES =
+  5 * 1024 * 1024;
+
+export const PRODUCT_IMAGE_ACCEPT =
+  "image/jpeg,image/png,image/webp";
+
+const PRODUCT_IMAGE_ALLOWED_TYPES =
+  new Set([
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+  ]);
+
 export type ProductStoreMode =
   | "supabase"
   | "local";
@@ -46,6 +61,9 @@ type SupabaseProductRow = {
   category: string;
   size: string | null;
   image_url: string | null;
+  image_path: string | null;
+  image_source_url: string | null;
+  image_credit: string | null;
   price: number | null;
   currency: string | null;
   retailer: string | null;
@@ -92,6 +110,11 @@ function rowToCatalogProduct(
     category: row.category,
     size: row.size ?? undefined,
     imageUrl: row.image_url ?? undefined,
+    imagePath: row.image_path ?? undefined,
+    imageSourceUrl:
+      row.image_source_url ?? undefined,
+    imageCredit:
+      row.image_credit ?? undefined,
     price: row.price ?? undefined,
     currency: row.currency ?? "BRL",
     retailer: row.retailer ?? undefined,
@@ -119,6 +142,11 @@ function catalogProductToRow(
     category: product.category,
     size: product.size ?? null,
     image_url: product.imageUrl ?? null,
+    image_path: product.imagePath ?? null,
+    image_source_url:
+      product.imageSourceUrl ?? null,
+    image_credit:
+      product.imageCredit ?? null,
     price: product.price ?? null,
     currency: product.currency || "BRL",
     retailer: product.retailer ?? null,
@@ -308,6 +336,190 @@ async function assertAdminAccess(
 
   return fresh;
 }
+
+export type ProductImageUploadResult = {
+  imageUrl: string;
+  imagePath: string;
+};
+
+export function validateProductImageFile(
+  file: File,
+): string | null {
+  if (!PRODUCT_IMAGE_ALLOWED_TYPES.has(file.type)) {
+    return "Use uma imagem JPG, PNG ou WEBP.";
+  }
+
+  if (file.size > PRODUCT_IMAGE_MAX_BYTES) {
+    return "A imagem deve ter no máximo 5 MB.";
+  }
+
+  return null;
+}
+
+function encodeStoragePath(
+  path: string,
+): string {
+  return path
+    .split("/")
+    .map((segment) => encodeURIComponent(segment))
+    .join("/");
+}
+
+function getProductImagePath(
+  productId: string,
+): string {
+  return `products/${productId}/cover`;
+}
+
+function getProductImagePublicUrl(
+  imagePath: string,
+): string {
+  if (!SUPABASE_URL) {
+    throw new Error(
+      "Supabase não configurado.",
+    );
+  }
+
+  const encodedPath =
+    encodeStoragePath(imagePath);
+
+  return `${SUPABASE_URL}/storage/v1/object/public/${PRODUCT_IMAGE_BUCKET}/${encodedPath}?v=${Date.now()}`;
+}
+
+async function readStorageError(
+  response: Response,
+): Promise<string> {
+  let message =
+    "Não foi possível concluir a operação com a imagem.";
+
+  try {
+    const body = await response.json();
+
+    message =
+      body?.message ??
+      body?.error ??
+      body?.statusCode ??
+      message;
+  } catch {
+    // Mantém a mensagem padrão.
+  }
+
+  if (response.status === 401) {
+    return "Sua sessão administrativa expirou. Entre novamente.";
+  }
+
+  if (response.status === 413) {
+    return "A imagem ultrapassa o limite permitido pelo Storage.";
+  }
+
+  if (response.status === 415) {
+    return "Formato de imagem não aceito pelo Storage.";
+  }
+
+  return String(message);
+}
+
+export async function uploadAdminProductImage(
+  session: AdminSession,
+  productId: string,
+  file: File,
+): Promise<ProductImageUploadResult> {
+  const validationIssue =
+    validateProductImageFile(file);
+
+  if (validationIssue) {
+    throw new Error(validationIssue);
+  }
+
+  if (
+    session.mode === "local" ||
+    !SUPABASE_URL ||
+    !SUPABASE_ANON_KEY
+  ) {
+    throw new Error(
+      "O upload de imagens usa o Supabase Storage e está disponível quando o projeto está conectado ao Supabase.",
+    );
+  }
+
+  const fresh =
+    await assertAdminAccess(session);
+
+  const imagePath =
+    getProductImagePath(productId);
+
+  const formData = new FormData();
+  formData.append("cacheControl", "3600");
+  formData.append("", file);
+
+  const response = await fetch(
+    `${SUPABASE_URL}/storage/v1/object/${PRODUCT_IMAGE_BUCKET}/${encodeStoragePath(
+      imagePath,
+    )}`,
+    {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization:
+          `Bearer ${fresh.accessToken}`,
+        "x-upsert": "true",
+      },
+      body: formData,
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      await readStorageError(response),
+    );
+  }
+
+  return {
+    imagePath,
+    imageUrl:
+      getProductImagePublicUrl(imagePath),
+  };
+}
+
+export async function removeAdminProductImage(
+  session: AdminSession,
+  imagePath: string,
+): Promise<void> {
+  if (!imagePath) return;
+
+  if (
+    session.mode === "local" ||
+    !SUPABASE_URL ||
+    !SUPABASE_ANON_KEY
+  ) {
+    return;
+  }
+
+  const fresh =
+    await assertAdminAccess(session);
+
+  const response = await fetch(
+    `${SUPABASE_URL}/storage/v1/object/${PRODUCT_IMAGE_BUCKET}`,
+    {
+      method: "DELETE",
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization:
+          `Bearer ${fresh.accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        prefixes: [imagePath],
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      await readStorageError(response),
+    );
+  }
+}
+
 
 function isPublishableProduct(
   product: CatalogProduct,
