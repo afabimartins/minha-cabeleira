@@ -1,39 +1,110 @@
-# Créditos das fotografias — Bloco J0
+# IMAGE CREDITS — Minha Cabeleira
 
-O Bloco J0 substitui as imagens fotográficas geradas por IA da Home por fotografias reais selecionadas no Pexels.
+Este arquivo registra as fotografias reais usadas no site.
 
-As páginas abaixo estavam marcadas pelo Pexels como **Free to use** no momento da curadoria (27/09/2026).
+## Licença
 
-## Hero — cabelos castanhos ondulados
+As fotografias abaixo provenientes do Pexels são usadas sob a **Pexels License**.
+O Pexels permite uso em sites e projetos comerciais e não exige atribuição, embora
+o crédito seja recomendado. O Minha Cabeleira mantém os créditos por transparência.
 
-- Fotógrafa: Mathilde Langevin
-- Fonte: https://www.pexels.com/photo/back-view-of-woman-with-brown-hair-13543276/
+As pessoas retratadas nas imagens **não endossam** o Minha Cabeleira, seus conteúdos,
+suas análises ou eventuais anúncios.
 
-## Hero — cabelo ruivo
+Consulta de licença: 29/09/2026  
+Licença: https://www.pexels.com/license/
 
-- Fotógrafa: Beyzanur K.
-- Fonte: https://www.pexels.com/photo/close-up-of-red-hair-and-hands-in-soft-lighting-28994648/
+---
 
-## Hero — cabelo loiro ondulado
+## Home — diversidade visual
 
-- Fotógrafa: Olga Solo
-- Fonte: https://www.pexels.com/photo/wavy-blonde-hair-with-sunlit-8977848/
+### hair-coily-augusto-carneiro.webp
+- Fotógrafo: Augusto Carneiro Junior
+- Banco: Pexels
+- Foto original: https://www.pexels.com/photo/28446738/
+- Perfil: https://www.pexels.com/@augustocarneirojr/
+- Uso: seção “Todos os cabelos. Sem rótulos.”
+- Arquivo original fornecido: `pexels-augustocarneirojr-28446738.jpg`
 
-## Hero e card “Tipos de cabelo” — cabelo cacheado
+### hair-man-alax-matias.webp
+- Fotógrafo: Alax Matias
+- Banco: Pexels
+- Foto original: https://www.pexels.com/photo/13721972/
+- Perfil: https://www.pexels.com/@alaxmatias/
+- Uso: seção “Todos os cabelos. Sem rótulos.”
+- Arquivo original fornecido: `pexels-alaxmatias-13721972.jpg`
 
-- Fotógrafa: Alena Darmel
-- Fonte: https://www.pexels.com/photo/crop-anonymous-woman-touching-hair-in-sunlight-7222368/
+### hair-straight-hanna-pad.webp
+- Fotógrafa: Hanna Pad
+- Banco: Pexels
+- Foto original: https://www.pexels.com/photo/8058660/
+- Perfil: https://www.pexels.com/@anna-nekrashevich/
+- Uso: seção “Todos os cabelos. Sem rótulos.”
+- Arquivo original fornecido: `pexels-anna-nekrashevich-8058660.jpg`
 
-## Arquitetura
+### hair-wavy-caique-araujo.webp
+- Fotógrafo: Caique Araujo
+- Banco: Pexels
+- Foto original: https://www.pexels.com/photo/15798710/
+- Perfil: https://www.pexels.com/@caique-araujo-101156227/
+- Uso: seção “Todos os cabelos. Sem rótulos.”
+- Arquivo original fornecido: `pexels-caique-araujo-101156227-15798710.jpg`
 
-As URLs das imagens e suas fontes ficam centralizadas em:
+### hair-care-tima-miroshnichenko.webp
+- Fotógrafo: Tima Miroshnichenko
+- Banco: Pexels
+- Foto original: https://www.pexels.com/photo/7879790/
+- Perfil: https://www.pexels.com/@tima-miroshnichenko/
+- Uso: card “Tipos de cabelo” na Home
+- Arquivo original fornecido: `pexels-tima-miroshnichenko-7879790.jpg`
 
-```text
-src/App/home-stock-images.ts
-```
+---
 
-Isso permite trocar uma foto depois sem espalhar URLs pelo JSX.
+## Sobre
 
-### Próximo passo recomendado
+### hair-natural-oscar-steiner.webp
+- Fotógrafo: Oscar Steiner
+- Banco: Pexels
+- Foto original: https://www.pexels.com/photo/33376638/
+- Perfil: https://www.pexels.com/@oscar-steiner-982093/
+- Uso: retrato principal da página Sobre
+- Arquivo original fornecido: `pexels-oscar-steiner-982093-33376638.jpg`
 
-No Bloco J, quando configurarmos o Supabase Storage, podemos copiar as fotografias escolhidas para o próprio armazenamento do Minha Cabeleira. Assim a Home deixa de depender diretamente da CDN externa em produção, mantendo a origem/licença registrada neste arquivo.
+### hair-blonde-julia-kuzenkov.webp
+- Fotógrafa: Julia Kuzenkov
+- Banco: Pexels
+- Foto original: https://www.pexels.com/photo/2817082/
+- Perfil: https://www.pexels.com/@julia-kuzenkov-442028/
+- Uso: seção de contexto/transformação na página Sobre
+- Arquivo original fornecido: `pexels-julia-kuzenkov-442028-2817082.jpg`
+
+---
+
+## Glossário
+
+### hair-products-nataliya-vaitkevich.webp
+- Fotógrafa: Nataliya Vaitkevich
+- Banco: Pexels
+- Foto original: https://www.pexels.com/photo/8467970/
+- Perfil: https://www.pexels.com/@n-voitkevich/
+- Uso: hero visual do Glossário — ativos e produtos
+- Arquivo original fornecido: `pexels-n-voitkevich-8467970.jpg`
+
+### hair-texture-oscar-steiner.webp
+- Fotógrafo: Oscar Steiner
+- Banco: Pexels
+- Foto original: https://www.pexels.com/photo/36868177/
+- Perfil: https://www.pexels.com/@oscar-steiner-982093/
+- Uso: hero visual do Glossário — textura do cabelo
+- Arquivo original fornecido: `pexels-oscar-steiner-982093-36868177.jpg`
+
+---
+
+## Hero atual
+
+### hero-hair-anik-paul.jpg
+- Fotógrafo informado: Anik Paul
+- Uso: hero principal da Home
+- Observação: fotografia já estava aprovada e permanece inalterada neste bloco.
+- A URL original não está registrada neste arquivo; manter o crédito já documentado
+  no histórico do projeto e complementar quando a página-fonte estiver disponível.

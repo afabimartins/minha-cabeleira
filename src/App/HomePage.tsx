@@ -1,5 +1,9 @@
 import heroHairAnik from "../assets/hero-hair-anik-paul.jpg";
-import cardHairAnik from "../assets/card-hair-anik-paul.jpg";
+import hairCareTima from "../assets/hair-care-tima-miroshnichenko.webp";
+import hairCoilyAugusto from "../assets/hair-coily-augusto-carneiro.webp";
+import hairManAlax from "../assets/hair-man-alax-matias.webp";
+import hairStraightHanna from "../assets/hair-straight-hanna-pad.webp";
+import hairWavyCaique from "../assets/hair-wavy-caique-araujo.webp";
 
 import {
   AdSlot,
@@ -182,7 +186,7 @@ export function HomePage() {
           <article className="home-showcase-card home-showcase-card--hair">
             <img
               className="home-showcase-card__real-photo"
-              src={cardHairAnik}
+              src={hairCareTima}
               alt=""
               aria-hidden="true"
               loading="lazy"
@@ -223,6 +227,82 @@ export function HomePage() {
             <InternalLink to="/analise" aria-label="Ver análise de produtos">→</InternalLink>
           </article>
         </div>
+      </section>
+
+      <section
+        className="home-diversity"
+        aria-labelledby="home-diversity-title"
+      >
+        <div className="home-diversity__intro">
+          <p className="home-section-kicker">
+            Todos os cabelos
+          </p>
+
+          <h2 id="home-diversity-title">
+            Sem rótulos. Com contexto.
+          </h2>
+
+          <p>
+            Textura, comprimento, cor e estilo fazem parte da aparência do cabelo,
+            mas não dizem sozinhos do que ele precisa. A análise parte dos sinais
+            relatados, da rotina e dos seus objetivos.
+          </p>
+
+          <InternalLink
+            className="home-diversity__link"
+            to="/analise"
+          >
+            Entender minhas prioridades
+            <span aria-hidden="true">→</span>
+          </InternalLink>
+        </div>
+
+        <div className="home-diversity__gallery">
+          <figure className="home-diversity__photo home-diversity__photo--feature">
+            <img
+              src={hairCoilyAugusto}
+              alt="Pessoa com cabelo crespo volumoso em retrato de estúdio."
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>Texturas naturais</figcaption>
+          </figure>
+
+          <figure className="home-diversity__photo home-diversity__photo--man">
+            <img
+              src={hairManAlax}
+              alt="Pessoa de perfil com cabelo cacheado volumoso."
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>Cuidado para todos</figcaption>
+          </figure>
+
+          <figure className="home-diversity__photo home-diversity__photo--straight">
+            <img
+              src={hairStraightHanna}
+              alt="Pessoa prendendo cabelo liso castanho."
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>Fios lisos</figcaption>
+          </figure>
+
+          <figure className="home-diversity__photo home-diversity__photo--wavy">
+            <img
+              src={hairWavyCaique}
+              alt="Pessoa com cabelo castanho longo e ondulado entre flores."
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>Ondas e movimento</figcaption>
+          </figure>
+        </div>
+
+        <p className="home-diversity__note">
+          As fotografias representam diversidade visual. Elas não determinam
+          diagnóstico, necessidade técnica ou recomendação de produto.
+        </p>
       </section>
 
       <section className="home-glossary">

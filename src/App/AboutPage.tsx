@@ -1,3 +1,6 @@
+import aboutBlondeJulia from "../assets/hair-blonde-julia-kuzenkov.webp";
+import aboutNaturalOscar from "../assets/hair-natural-oscar-steiner.webp";
+
 import {
   AdSlot,
   adSlots,
@@ -10,14 +13,28 @@ import {
 export function AboutPage() {
   return (
     <main className="about-page">
-      <section className="about-hero">
-        <p>Sobre o projeto</p>
-        <h1>
-          Cuidado sem rótulos começa com informação melhor organizada.
-        </h1>
-        <p>
-          O Minha Cabeleira foi pensado para transformar respostas sobre cabelo, rotina e objetivos em orientações compreensíveis — sem reduzir pessoas a uma categoria de curvatura e sem transformar um ingrediente isolado em promessa.
-        </p>
+      <section className="about-hero about-hero--with-photo">
+        <div className="about-hero__copy">
+          <p>Sobre o projeto</p>
+          <h1>
+            Cuidado sem rótulos começa com informação melhor organizada.
+          </h1>
+          <p>
+            O Minha Cabeleira foi pensado para transformar respostas sobre cabelo,
+            rotina e objetivos em orientações compreensíveis — sem reduzir pessoas
+            a uma categoria de curvatura e sem transformar um ingrediente isolado
+            em promessa.
+          </p>
+        </div>
+
+        <figure className="about-hero__photo">
+          <img
+            src={aboutNaturalOscar}
+            alt="Pessoa sorrindo com cabelo natural curto e cacheado."
+            loading="eager"
+            decoding="async"
+          />
+        </figure>
       </section>
 
       <section className="about-principles">
@@ -44,6 +61,29 @@ export function AboutPage() {
             O glossário concentra definições, limitações de interpretação e bibliografia para que a base técnica possa ser consultada e revisada.
           </p>
         </article>
+      </section>
+
+      <section className="about-perspective">
+        <div className="about-perspective__copy">
+          <p>O cabelo muda</p>
+          <h2>
+            A análise precisa acompanhar contexto, não uma imagem ideal.
+          </h2>
+          <p>
+            Cor, textura, comprimento e aparência podem mudar ao longo do tempo.
+            Por isso, a proposta é observar sinais e rotina sem transformar
+            estética em regra técnica.
+          </p>
+        </div>
+
+        <figure className="about-perspective__photo">
+          <img
+            src={aboutBlondeJulia}
+            alt="Close de cabelo loiro ondulado em luz quente."
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
       </section>
 
       <AdSlot

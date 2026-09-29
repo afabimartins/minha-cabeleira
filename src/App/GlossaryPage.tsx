@@ -1,3 +1,6 @@
+import glossaryProductsNataliya from "../assets/hair-products-nataliya-vaitkevich.webp";
+import glossaryTextureOscar from "../assets/hair-texture-oscar-steiner.webp";
+
 import {
   useMemo,
   useState,
@@ -106,14 +109,34 @@ export function GlossaryPage() {
           </p>
         </div>
 
-        <div className="glossary-hero__stats">
-          <strong>
-            {glossaryEntries.length}
-          </strong>
-          <span>verbetes iniciais</span>
-          <small>
-            Ativos e conceitos serão ampliados conforme a base técnica crescer.
-          </small>
+        <div className="glossary-hero__visual">
+          <figure className="glossary-hero__photo glossary-hero__photo--products">
+            <img
+              src={glossaryProductsNataliya}
+              alt="Frascos de shampoo e condicionador dispostos sobre mechas de cabelo."
+              loading="eager"
+              decoding="async"
+            />
+          </figure>
+
+          <figure className="glossary-hero__photo glossary-hero__photo--texture">
+            <img
+              src={glossaryTextureOscar}
+              alt="Close de cabelo natural com textura cacheada e crespa visível."
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
+
+          <div className="glossary-hero__stats">
+            <strong>
+              {glossaryEntries.length}
+            </strong>
+            <span>verbetes iniciais</span>
+            <small>
+              Ativos e conceitos serão ampliados conforme a base técnica crescer.
+            </small>
+          </div>
         </div>
       </section>
 
