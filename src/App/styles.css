@@ -9337,3 +9337,56 @@ a:focus-visible {
     min-height: 116px;
   }
 }
+
+
+/* ==========================================================
+   BLOCO L.2 — ÍCONES DOS CARDS DA HOME
+   ========================================================== */
+
+.home-showcase-card__icon {
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(71, 48, 40, 0.08);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow:
+    0 5px 15px rgba(68, 43, 34, 0.045);
+  font-size: 0;
+}
+
+.home-showcase-card__icon svg {
+  width: 21px;
+  height: 21px;
+  display: block;
+}
+
+.home-showcase-card--analysis .home-showcase-card__icon {
+  color: #e95f49;
+  background: rgba(255, 249, 246, 0.92);
+}
+
+.home-showcase-card--hair .home-showcase-card__icon {
+  color: #2f8a64;
+  background: rgba(248, 253, 248, 0.90);
+}
+
+.home-showcase-card--routine .home-showcase-card__icon {
+  color: #7958c9;
+  background: rgba(252, 249, 255, 0.92);
+}
+
+.home-showcase-card--products .home-showcase-card__icon {
+  color: #2f8a64;
+  background: rgba(248, 253, 248, 0.92);
+}
+
+@media (max-width: 560px) {
+  .home-showcase-card__icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .home-showcase-card__icon svg {
+    width: 20px;
+    height: 20px;
+  }
+}

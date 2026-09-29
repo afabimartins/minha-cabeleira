@@ -370,14 +370,19 @@ function addSectionHeader(
     "F",
   );
 
+  // Small section badge instead of a large circular marker.
+  // Using only vector shapes and ASCII digits avoids glyph issues in jsPDF.
   setFillColor(
     context.pdf,
     color,
   );
-  context.pdf.circle(
-    23,
-    y + 5,
-    6.2,
+  context.pdf.roundedRect(
+    17,
+    y - 0.5,
+    14,
+    7.5,
+    2.2,
+    2.2,
     "F",
   );
 
@@ -385,36 +390,39 @@ function addSectionHeader(
     "helvetica",
     "bold",
   );
-  context.pdf.setFontSize(8.5);
+  context.pdf.setFontSize(7.2);
   setTextColor(
     context.pdf,
     COLORS.white,
   );
   context.pdf.text(
     number,
-    19.3,
-    y + 7.5,
+    24,
+    y + 4.5,
+    {
+      align: "center",
+    },
   );
 
-  context.pdf.setFontSize(6.5);
+  context.pdf.setFontSize(6.2);
   setTextColor(
     context.pdf,
     color,
   );
   context.pdf.text(
     eyebrow.toUpperCase(),
-    35,
+    36,
     y + 1,
   );
 
-  context.pdf.setFontSize(14.5);
+  context.pdf.setFontSize(14.2);
   setTextColor(
     context.pdf,
     COLORS.ink,
   );
   context.pdf.text(
     title,
-    35,
+    36,
     y + 8.5,
   );
 
@@ -426,7 +434,7 @@ function addFindingCard(
   title: string,
   description: string,
 ): void {
-  const innerWidth = 149;
+  const innerWidth = 157;
   const titleHeight = measureText(
     context,
     title,
@@ -476,30 +484,24 @@ function addFindingCard(
     "FD",
   );
 
+  // A slim vector accent replaces the oversized circle + bullet.
   setFillColor(
-    context.pdf,
-    "#FFE4D8",
-  );
-  context.pdf.circle(
-    27,
-    y + 13,
-    6,
-    "F",
-  );
-  setTextColor(
     context.pdf,
     COLORS.coral,
   );
-  context.pdf.setFontSize(9);
-  context.pdf.text(
-    "•",
-    25.2,
-    y + 15.4,
+  context.pdf.roundedRect(
+    22,
+    y + 7,
+    1.5,
+    Math.max(8, cardHeight - 14),
+    0.7,
+    0.7,
+    "F",
   );
 
   context.y = y + 10;
   addText(context, title, {
-    x: 39,
+    x: 29,
     width: innerWidth,
     fontSize: 10.5,
     lineHeight: 4.8,
@@ -510,7 +512,7 @@ function addFindingCard(
     context,
     description,
     {
-      x: 39,
+      x: 29,
       width: innerWidth,
       fontSize: 8.7,
       lineHeight: 4.5,
@@ -602,7 +604,7 @@ function addSafetySection(
     colors.background,
   );
 
-  const textWidth = 149;
+  const textWidth = 158;
   const titleHeight = measureText(
     context,
     report.safety.title,
@@ -667,32 +669,20 @@ function addSafetySection(
     "FD",
   );
 
+  // Status is indicated by color and a vector accent bar.
+  // No Unicode checkmark/exclamation glyph is used in the PDF.
   setFillColor(
     context.pdf,
     colors.accent,
   );
-  context.pdf.circle(
-    28,
-    y + 14,
-    6.3,
+  context.pdf.roundedRect(
+    22,
+    y + 7,
+    1.5,
+    Math.max(8, cardHeight - 14),
+    0.7,
+    0.7,
     "F",
-  );
-  context.pdf.setFont(
-    "helvetica",
-    "bold",
-  );
-  context.pdf.setFontSize(10);
-  setTextColor(
-    context.pdf,
-    COLORS.white,
-  );
-  context.pdf.text(
-    report.safety.level ===
-      "normal"
-      ? "✓"
-      : "!",
-    26.5,
-    y + 17,
   );
 
   context.y = y + 10;
@@ -700,7 +690,7 @@ function addSafetySection(
     context,
     report.safety.title,
     {
-      x: 40,
+      x: 29,
       width: textWidth,
       fontSize: 10.6,
       lineHeight: 4.8,
@@ -712,7 +702,7 @@ function addSafetySection(
     context,
     report.safety.description,
     {
-      x: 40,
+      x: 29,
       width: textWidth,
       fontSize: 8.7,
       lineHeight: 4.5,
@@ -738,22 +728,23 @@ function addSafetySection(
 
     report.safety.notices.forEach(
       (notice) => {
-        setFillColor(
+        setDrawColor(
           context.pdf,
           colors.accent,
         );
-        context.pdf.circle(
-          27,
+        context.pdf.setLineWidth(0.8);
+        context.pdf.line(
+          25,
           context.y - 1.5,
-          1.1,
-          "F",
+          29,
+          context.y - 1.5,
         );
         addText(
           context,
           notice,
           {
-            x: 34,
-            width: 154,
+            x: 33,
+            width: 155,
             fontSize: 8.2,
             lineHeight: 4.2,
             color:
@@ -1018,7 +1009,7 @@ function addProducts(
 
   addText(
     context,
-    "PRODUTOS COMPATÍVEIS — CONSULTA OPCIONAL",
+    "PRODUTOS COMPATÍVEIS - CONSULTA OPCIONAL",
     {
       x: 23,
       width: 164,
@@ -1063,7 +1054,7 @@ function addProducts(
       const productHeight =
         measureText(
           context,
-          `${product.name} — ${product.brand}`,
+          `${product.name} - ${product.brand}`,
           {
             width: 158,
             fontSize: 8.6,
@@ -1091,7 +1082,7 @@ function addProducts(
       );
       addText(
         context,
-        `${product.name} — ${product.brand}`,
+        `${product.name} - ${product.brand}`,
         {
           x: 25,
           width: 158,
@@ -1208,6 +1199,74 @@ function getPdfBaselinePriority(
   };
 }
 
+function measureVectorActionList(
+  context: PdfContext,
+  actions: string[],
+): number {
+  return actions.reduce(
+    (total, action) =>
+      total +
+      measureText(
+        context,
+        action,
+        {
+          width: 150,
+          fontSize: 8.2,
+          lineHeight: 4.2,
+        },
+      ) +
+      2.2,
+    0,
+  );
+}
+
+function addVectorActionList(
+  context: PdfContext,
+  actions: string[],
+): void {
+  actions.forEach((action) => {
+    const lines = splitLines(
+      context,
+      action,
+      150,
+      8.2,
+      false,
+    );
+
+    const height =
+      lines.length * 4.2;
+
+    setDrawColor(
+      context.pdf,
+      COLORS.purple,
+    );
+    context.pdf.setLineWidth(0.75);
+    context.pdf.line(
+      27,
+      context.y - 1.5,
+      31,
+      context.y - 1.5,
+    );
+
+    context.pdf.setFont(
+      "helvetica",
+      "normal",
+    );
+    context.pdf.setFontSize(8.2);
+    setTextColor(
+      context.pdf,
+      COLORS.softText,
+    );
+    context.pdf.text(
+      lines,
+      35,
+      context.y,
+    );
+
+    context.y += height + 2.2;
+  });
+}
+
 function addRecommendationsSection(
   context: PdfContext,
   report: ReportWithRoutineGuidance,
@@ -1243,10 +1302,6 @@ function addRecommendationsSection(
     const baseline =
       getPdfBaselinePriority(report);
 
-    const actionText = baseline.actions
-      .map((action) => `• ${action}`)
-      .join("\n");
-
     const titleHeight = measureText(
       context,
       baseline.title,
@@ -1268,15 +1323,11 @@ function addRecommendationsSection(
       },
     );
 
-    const actionsHeight = measureText(
-      context,
-      actionText,
-      {
-        width: 154,
-        fontSize: 8.2,
-        lineHeight: 4.2,
-      },
-    );
+    const actionsHeight =
+      measureVectorActionList(
+        context,
+        baseline.actions,
+      );
 
     const cardHeight =
       22 + titleHeight +
@@ -1344,17 +1395,9 @@ function addRecommendationsSection(
         spacingAfter: 3,
       },
     );
-    addText(
+    addVectorActionList(
       context,
-      actionText,
-      {
-        x: 27,
-        width: 153,
-        fontSize: 8.2,
-        lineHeight: 4.2,
-        color: COLORS.softText,
-        spacingAfter: 0,
-      },
+      baseline.actions,
     );
 
     context.y = y + cardHeight + 5;

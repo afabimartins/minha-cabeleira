@@ -25,6 +25,72 @@ const highlightedGlossary = [
   "panthenol",
 ];
 
+type FeatureIconName =
+  | "analysis"
+  | "hair"
+  | "routine"
+  | "products";
+
+function FeatureIcon({
+  name,
+}: {
+  name: FeatureIconName;
+}) {
+  const commonProps = {
+    width: 21,
+    height: 21,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.8,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    "aria-hidden": true,
+  };
+
+  if (name === "analysis") {
+    return (
+      <svg {...commonProps}>
+        <path d="M9 6h10" />
+        <path d="M9 12h10" />
+        <path d="M9 18h10" />
+        <path d="m4.5 6 1 1 2-2" />
+        <path d="m4.5 12 1 1 2-2" />
+        <path d="m4.5 18 1 1 2-2" />
+      </svg>
+    );
+  }
+
+  if (name === "hair") {
+    return (
+      <svg {...commonProps}>
+        <path d="M4 7.5c2.2-2.2 4.4-2.2 6.6 0s4.4 2.2 6.6 0" />
+        <path d="M4 12c2.2-2.2 4.4-2.2 6.6 0s4.4 2.2 6.6 0" />
+        <path d="M4 16.5c2.2-2.2 4.4-2.2 6.6 0s4.4 2.2 6.6 0" />
+      </svg>
+    );
+  }
+
+  if (name === "routine") {
+    return (
+      <svg {...commonProps}>
+        <circle cx="12" cy="12" r="7.5" />
+        <path d="M12 8.3v4.2l2.8 1.8" />
+        <path d="M7.2 4.8 5.6 3.2" />
+        <path d="m16.8 4.8 1.6-1.6" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg {...commonProps}>
+      <path d="M9.2 3.5h5.6" />
+      <path d="M10 3.5v3L7.8 9.2v9.3c0 1.1.9 2 2 2h4.4c1.1 0 2-.9 2-2V9.2L14 6.5v-3" />
+      <path d="M7.8 12h8.4" />
+    </svg>
+  );
+}
+
 export function HomePage() {
   const glossaryHighlights =
     highlightedGlossary
@@ -173,7 +239,7 @@ export function HomePage() {
           id="como-funciona"
         >
           <article className="home-showcase-card home-showcase-card--analysis">
-            <span className="home-showcase-card__icon">☷</span>
+            <span className="home-showcase-card__icon" aria-hidden="true"><FeatureIcon name="analysis" /></span>
             <div>
               <h3>Análise personalizada</h3>
               <p>
@@ -193,7 +259,7 @@ export function HomePage() {
               decoding="async"
             />
 
-            <span className="home-showcase-card__icon">❧</span>
+            <span className="home-showcase-card__icon" aria-hidden="true"><FeatureIcon name="hair" /></span>
 
             <div>
               <h3>Tipos de cabelo</h3>
@@ -206,7 +272,7 @@ export function HomePage() {
           </article>
 
           <article className="home-showcase-card home-showcase-card--routine">
-            <span className="home-showcase-card__icon">□</span>
+            <span className="home-showcase-card__icon" aria-hidden="true"><FeatureIcon name="routine" /></span>
             <div>
               <h3>Prioridades da rotina</h3>
               <p>
@@ -217,7 +283,7 @@ export function HomePage() {
           </article>
 
           <article className="home-showcase-card home-showcase-card--products">
-            <span className="home-showcase-card__icon">♙</span>
+            <span className="home-showcase-card__icon" aria-hidden="true"><FeatureIcon name="products" /></span>
             <div>
               <h3>Produtos compatíveis</h3>
               <p>
