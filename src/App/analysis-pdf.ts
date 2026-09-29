@@ -1267,6 +1267,130 @@ function addVectorActionList(
   });
 }
 
+
+function getRoutineCategoryLabel(
+  category: string,
+): string {
+  switch (category) {
+    case "shampoo":
+      return "Shampoo";
+    case "conditioner":
+      return "Condicionador";
+    case "mask":
+      return "Máscara / tratamento";
+    case "leave_in":
+      return "Finalizador / leave-in";
+    case "oil":
+      return "Óleo / sérum";
+    case "scalp":
+      return "Cuidado do couro cabeludo";
+    default:
+      return "Produto";
+  }
+}
+
+function getRoutineMatchLabel(
+  level: string,
+): string {
+  switch (level) {
+    case "exact":
+      return "melhor correspondência";
+    case "compatible":
+      return "compatível";
+    case "basic":
+      return "opção básica";
+    default:
+      return "catálogo incompleto";
+  }
+}
+
+function addRoutineProducts(
+  context: PdfContext,
+  report: ReportWithRoutineGuidance,
+): void {
+  if (!report.routineProducts?.length) {
+    return;
+  }
+
+  addText(
+    context,
+    "ROTINA-BASE DE PRODUTOS",
+    {
+      x: 20,
+      width: 166,
+      fontSize: 6.2,
+      bold: true,
+      color: COLORS.green,
+      spacingAfter: 1.5,
+    },
+  );
+
+  addText(
+    context,
+    "Uma opção por etapa essencial, preservando os critérios de exclusão e usando fallback apenas quando não há correspondência completa.",
+    {
+      x: 20,
+      width: 166,
+      fontSize: 7.7,
+      lineHeight: 4,
+      color: COLORS.softText,
+      spacingAfter: 4,
+    },
+  );
+
+  report.routineProducts.forEach(
+    (selection) => {
+      const product = selection.product;
+      const categoryLabel =
+        getRoutineCategoryLabel(
+          selection.category,
+        );
+
+      if (!product) {
+        addText(
+          context,
+          `${categoryLabel}: categoria sem produto ativo verificado no catálogo.`,
+          {
+            x: 23,
+            width: 164,
+            fontSize: 8,
+            color: COLORS.warning,
+            spacingAfter: 2.5,
+          },
+        );
+        return;
+      }
+
+      const price =
+        product.price === undefined
+          ? "Preço não informado"
+          : product.currency === "BRL"
+            ? new Intl.NumberFormat(
+                "pt-BR",
+                {
+                  style: "currency",
+                  currency: "BRL",
+                },
+              ).format(product.price)
+            : `${product.currency ?? ""} ${product.price.toFixed(2)}`.trim();
+
+      addText(
+        context,
+        `${categoryLabel}: ${product.brand} ${product.name} — ${price} (${getRoutineMatchLabel(selection.matchLevel)})`,
+        {
+          x: 23,
+          width: 164,
+          fontSize: 8.2,
+          lineHeight: 4.2,
+          spacingAfter: 2.5,
+        },
+      );
+    },
+  );
+
+  context.y += 3;
+}
+
 function addRecommendationsSection(
   context: PdfContext,
   report: ReportWithRoutineGuidance,
@@ -1294,6 +1418,11 @@ function addRecommendationsSection(
       },
     );
   }
+
+  addRoutineProducts(
+    context,
+    report,
+  );
 
   if (
     report.recommendations.length ===

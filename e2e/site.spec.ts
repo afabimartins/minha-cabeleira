@@ -9,11 +9,129 @@ async function selectOption(page: Page, optionIndex = 0) {
 }
 
 async function mockPublicProductCatalog(page: Page) {
+  const rows = [
+    {
+      id: "fixture-shampoo",
+      slug: "fixture-shampoo",
+      brand: "Fixture",
+      name: "Shampoo Hidratação",
+      category: "shampoo",
+      size: "350 ml",
+      image_url: null,
+      image_path: null,
+      image_source_url: null,
+      image_credit: null,
+      price: 12.9,
+      currency: "BRL",
+      retailer: "Fixture",
+      product_url: "https://example.com/shampoo",
+      price_checked_at: "2026-09-29",
+      ingredients_raw: "Glicerol",
+      attributes: ["moisture_support"],
+      availability: "active",
+      source_url: "https://example.com/shampoo",
+      verified_at: "2026-09-29",
+      link_type: "editorial",
+    },
+    {
+      id: "fixture-conditioner",
+      slug: "fixture-conditioner",
+      brand: "Fixture",
+      name: "Condicionador Hidratação",
+      category: "conditioner",
+      size: "200 ml",
+      image_url: null,
+      image_path: null,
+      image_source_url: null,
+      image_credit: null,
+      price: 14.9,
+      currency: "BRL",
+      retailer: "Fixture",
+      product_url: "https://example.com/conditioner",
+      price_checked_at: "2026-09-29",
+      ingredients_raw: "Glicerol; Álcool cetearílico",
+      attributes: ["conditioning", "moisture_support"],
+      availability: "active",
+      source_url: "https://example.com/conditioner",
+      verified_at: "2026-09-29",
+      link_type: "editorial",
+    },
+    {
+      id: "fixture-mask",
+      slug: "fixture-mask",
+      brand: "Fixture",
+      name: "Máscara Reparadora",
+      category: "mask",
+      size: "250 g",
+      image_url: null,
+      image_path: null,
+      image_source_url: null,
+      image_credit: null,
+      price: 18.9,
+      currency: "BRL",
+      retailer: "Fixture",
+      product_url: "https://example.com/mask",
+      price_checked_at: "2026-09-29",
+      ingredients_raw: "Glicerol; Proteína hidrolisada",
+      attributes: ["conditioning", "moisture_support", "damage_support"],
+      availability: "active",
+      source_url: "https://example.com/mask",
+      verified_at: "2026-09-29",
+      link_type: "editorial",
+    },
+    {
+      id: "fixture-leave-in",
+      slug: "fixture-leave-in",
+      brand: "Fixture",
+      name: "Leave-in Protetor",
+      category: "leave_in",
+      size: "100 ml",
+      image_url: null,
+      image_path: null,
+      image_source_url: null,
+      image_credit: null,
+      price: 20.9,
+      currency: "BRL",
+      retailer: "Fixture",
+      product_url: "https://example.com/leave-in",
+      price_checked_at: "2026-09-29",
+      ingredients_raw: "Glicerol; Amodimeticona",
+      attributes: ["conditioning", "moisture_support", "damage_support"],
+      availability: "active",
+      source_url: "https://example.com/leave-in",
+      verified_at: "2026-09-29",
+      link_type: "editorial",
+    },
+    {
+      id: "fixture-oil",
+      slug: "fixture-oil",
+      brand: "Fixture",
+      name: "Óleo Finalizador",
+      category: "oil",
+      size: "90 ml",
+      image_url: null,
+      image_path: null,
+      image_source_url: null,
+      image_credit: null,
+      price: 22.9,
+      currency: "BRL",
+      retailer: "Fixture",
+      product_url: "https://example.com/oil",
+      price_checked_at: "2026-09-29",
+      ingredients_raw: "Dimeticona; Óleo vegetal",
+      attributes: ["conditioning", "moisture_support", "damage_support"],
+      availability: "active",
+      source_url: "https://example.com/oil",
+      verified_at: "2026-09-29",
+      link_type: "editorial",
+    },
+  ];
+
   await page.route("**/rest/v1/products*", async (route) => {
     await route.fulfill({
       status: 200,
       contentType: "application/json",
-      body: "[]",
+      body: JSON.stringify(rows),
     });
   });
 }
@@ -70,7 +188,7 @@ test.describe("Minha Cabeleira — fluxo público", () => {
       .getByRole("button", { name: /Continuar/ })
       .click();
 
-    await expect(page.getByText(/02 \/ 20/)).toBeVisible();
+    await expect(page.getByText(/02 \/ 22/)).toBeVisible();
     await expect(page.locator(".ad-slot")).toHaveCount(0);
   });
 
@@ -89,16 +207,18 @@ test.describe("Minha Cabeleira — fluxo público", () => {
       0, // 08 chemical_processing: low
       0, // 09 heat_exposure: low
       3, // 10 damage_history: severe
-      0, // 11 scalp_sensitivity: none
-      0, // 12 scalp_burning: none
-      0, // 13 scalp_wound: none
-      0, // 14 sudden_hair_loss: none
-      0, // 15 wash_frequency: rarely
-      0, // 16 conditioning_frequency: rarely
-      0, // 17 styling_frequency: rarely
-      0, // 18 primary_goal: reduce_breakage
-      1, // 19 routine_complexity: balanced
-      0, // 20 budget_priority: lowest_price
+      0, // 11 scalp_oiliness: none
+      0, // 12 scalp_dryness: none
+      0, // 13 scalp_sensitivity: none
+      0, // 14 scalp_burning: none
+      0, // 15 scalp_wound: none
+      0, // 16 sudden_hair_loss: none
+      0, // 17 wash_frequency: rarely
+      0, // 18 conditioning_frequency: rarely
+      0, // 19 styling_frequency: rarely
+      0, // 20 primary_goal: reduce_breakage
+      1, // 21 routine_complexity: balanced
+      0, // 22 budget_priority: lowest_price
     ];
 
     for (let index = 0; index < optionIndexes.length; index += 1) {
@@ -118,6 +238,25 @@ test.describe("Minha Cabeleira — fluxo público", () => {
     await expect(
       page.getByText("Análise concluída", { exact: true }),
     ).toBeVisible({ timeout: 20_000 });
+
+    await expect(
+      page.getByRole("heading", {
+        level: 4,
+        name: /Uma indicação por tipo de produto/i,
+      }),
+    ).toBeVisible();
+
+    for (const category of [
+      "Shampoo",
+      "Condicionador",
+      "Máscara / tratamento",
+      "Finalizador / leave-in",
+      "Óleo / sérum",
+    ]) {
+      await expect(
+        page.getByText(category, { exact: true }),
+      ).toBeVisible();
+    }
 
     const downloadButton = page.getByRole("button", {
       name: /Baixar resultado em PDF/i,

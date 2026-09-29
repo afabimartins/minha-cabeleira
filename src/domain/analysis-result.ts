@@ -4,6 +4,7 @@ import type {
 
 import type {
   Product,
+  ProductCategory,
 } from "./product";
 
 import type {
@@ -17,6 +18,21 @@ import type {
 import type {
   RoutineGuidance,
 } from "./routine-guidance";
+
+
+export type RoutineProductMatchLevel =
+  | "exact"
+  | "compatible"
+  | "basic"
+  | "missing";
+
+export type RoutineProductSelection = {
+  category: ProductCategory;
+  product: Product | null;
+  matchLevel: RoutineProductMatchLevel;
+  matchedAttributes: string[];
+  missingAttributes: string[];
+};
 
 export type RecommendationResult = {
   recommendation: Recommendation;
@@ -34,4 +50,7 @@ export type AnalysisResult = {
 
   routineGuidance:
     RoutineGuidance[];
+
+  routineProducts?:
+    RoutineProductSelection[];
 };

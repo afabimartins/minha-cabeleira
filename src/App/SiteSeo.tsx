@@ -51,7 +51,7 @@ function getSeoData(
       title:
         "Análise capilar personalizada | Minha Cabeleira",
       description:
-        "Responda 20 perguntas sobre sinais, rotina e objetivos e receba uma análise capilar organizada sem rótulos de curvatura.",
+        "Responda 22 perguntas sobre sinais, rotina e objetivos e receba uma análise capilar organizada sem rótulos de curvatura.",
     };
   }
 

@@ -152,7 +152,7 @@ export function HomePage() {
                 <span className="home-showcase__benefit home-showcase__benefit--coral">✦</span>
                 <p>
                   <strong>Rápida e prática</strong>
-                  <small>Apenas 20 perguntas</small>
+                  <small>Apenas 22 perguntas</small>
                 </p>
               </div>
 
@@ -185,7 +185,7 @@ export function HomePage() {
             <div className="home-showcase__quiz">
               <div className="home-showcase__quiz-progress">
                 <span>Seu progresso</span>
-                <strong>01 / 20</strong>
+                <strong>01 / 22</strong>
                 <small>5%</small>
               </div>
 

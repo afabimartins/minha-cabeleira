@@ -1,82 +1,56 @@
-# Teste automático — Minha Cabeleira
+# Teste automático ao vivo — Minha Cabeleira
 
-Este pequeno bloco substitui o teste manual de preencher as 20 perguntas para confirmar o fluxo:
+Este teste valida a integração real entre o Supabase e o motor sem exigir que você responda manualmente o questionário.
 
 ```text
 Supabase real
 → catálogo público
-→ 20 respostas automáticas
+→ 22 respostas automáticas
 → motor de análise
-→ damage_protection
-→ produtos compatíveis
+→ recomendações técnicas
+→ rotina-base por categoria
 → ordenação por menor preço
 ```
 
-## Arquivos
-
-```text
-src/App/live-catalog-analysis.test.ts
-test-live-analysis.cmd
-```
-
-## Como instalar
-
-Extraia o ZIP na raiz do projeto `minha-cabeleira`, permitindo adicionar os arquivos.
-
-Ele não substitui nenhum arquivo atual do site.
-
 ## Como executar
 
-Com o `.env.local` já configurado para o Supabase, na raiz do projeto:
+Com o `.env.local` configurado para o Supabase, na raiz do projeto:
 
 ```powershell
 .\test-live-analysis.cmd
 ```
 
-Você também pode dar duplo clique em `test-live-analysis.cmd`.
+Também é possível dar duplo clique no arquivo no Windows.
 
-Não é necessário preencher o questionário no navegador.
+## O que o teste exige do catálogo
 
-## O que o teste confere
+O catálogo público precisa ter, no mínimo:
 
-O cenário automático responde:
+- 3 shampoos;
+- 3 condicionadores;
+- 3 máscaras/tratamentos;
+- 3 finalizadores/leave-ins;
+- 3 óleos/séruns;
+- 2 produtos de couro cabeludo, com cobertura de ressecamento e oleosidade.
 
-- quebra: alta;
-- histórico de dano: severo;
-- objetivo: reduzir quebra;
-- rotina: equilibrada;
-- orçamento: menor preço;
-- sinais de segurança: sem alerta;
-- demais respostas: escolhidas para não disparar outras prioridades desnecessariamente.
+O teste também confere que os produtos do lote editorial mais recente chegaram ao Supabase e que as listas de uma recomendação continuam ordenadas pelo menor preço quando essa preferência é selecionada.
 
-O teste exige:
+## Cenário automático
 
-1. que o frontend esteja usando Supabase, não o catálogo local;
-2. que existam produtos públicos ativos/verificados;
-3. que Vult Choque de Reconstrução e Elseve Reparação Total 5 estejam no catálogo;
-4. que a análise seja válida;
-5. que a segurança fique em `normal`;
-6. que a recomendação `damage_protection` seja criada;
-7. que os dois produtos `damage_support` sejam selecionados;
-8. que apareçam na ordem de menor preço:
-   - Vult — R$ 20,90
-   - Elseve — R$ 42,99
+A simulação usa:
+
+- quebra alta;
+- histórico de dano severo;
+- objetivo de reduzir quebra;
+- rotina equilibrada;
+- prioridade para menor preço;
+- oleosidade e ressecamento do couro cabeludo marcados como ausentes;
+- sinais de segurança sem alerta.
+
+O resultado precisa permanecer válido, com segurança `normal`, recomendação de proteção contra danos e todas as cinco categorias-base preenchidas.
 
 ## Importante
 
-Este é um **teste de integração ao vivo**: ele consulta o seu Supabase real. Se você editar, pausar, excluir ou mudar o preço desses produtos, o teste poderá falhar — e isso é proposital, porque ele serve para detectar quando o catálogo real deixa de corresponder ao cenário esperado.
+Este é um teste de integração ao vivo: ele consulta o Supabase real. Se produtos forem pausados, excluídos ou ficarem sem os dados necessários para a política pública do banco, o teste deve falhar. Isso é intencional.
 
-Os testes unitários normais (`npm test`) continuam independentes da internet e não devem depender do Supabase.
-
-## Depois
-
-Quando entrarmos no fechamento do projeto, vale acrescentar uma segunda camada com Playwright para testar também o navegador:
-
-```text
-abrir /analise
-→ preencher automaticamente
-→ clicar
-→ conferir o resultado visual
-```
-
-Por enquanto, este teste elimina a parte cansativa do preenchimento manual e valida a integração mais importante.
+Os testes unitários (`npm test`) continuam independentes do Supabase.

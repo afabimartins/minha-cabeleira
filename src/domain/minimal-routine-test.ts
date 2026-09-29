@@ -6,6 +6,7 @@ import {
 
 import type {
   Product,
+  ProductCategory,
 } from "./product";
 
 import type {
@@ -18,6 +19,7 @@ import {
 
 function createProduct(
   id: string,
+  category: ProductCategory,
   price: number,
   attributes: string[],
 ): Product {
@@ -25,7 +27,7 @@ function createProduct(
     id,
     name: id,
     brand: "Minha Cabeleira",
-    category: "conditioner",
+    category,
     price,
     currency: "BRL",
     ingredients: [],
@@ -49,7 +51,6 @@ function createRecommendationResult(
       rationale:
         `Recommendation for ${type}.`,
     },
-
     products,
   };
 }
@@ -57,117 +58,65 @@ function createRecommendationResult(
 describe(
   "selectMinimalRoutine",
   () => {
-    it("selects one product when it covers all recommendation needs", () => {
-      const multiPurpose =
+    it("keeps at most one product per category", () => {
+      const cheapConditioner =
         createProduct(
-          "multi_purpose",
+          "cheap_conditioner",
+          "conditioner",
+          19.9,
+          ["conditioning"],
+        );
+
+      const expensiveConditioner =
+        createProduct(
+          "expensive_conditioner",
+          "conditioner",
           29.9,
-          [
-            "conditioning",
-            "moisture_support",
-          ],
+          ["conditioning"],
         );
 
-      const results:
-        RecommendationResult[] = [
-          createRecommendationResult(
-            "conditioning_support",
-            [multiPurpose],
-          ),
-
-          createRecommendationResult(
-            "moisture_support",
-            [multiPurpose],
-          ),
-        ];
-
-      const routine =
-        selectMinimalRoutine(
-          results,
-        );
-
-      expect(routine).toHaveLength(1);
-
-      expect(routine[0].id).toBe(
-        "multi_purpose",
+      const leaveIn = createProduct(
+        "leave_in",
+        "leave_in",
+        22.9,
+        ["conditioning"],
       );
-    });
 
-    it("selects two products when two are required to cover all needs", () => {
-      const moistureConditioner =
-        createProduct(
-          "moisture_conditioner",
-          25.9,
-          [
-            "conditioning",
-            "moisture_support",
-          ],
-        );
-
-      const damageLeaveIn =
-        createProduct(
-          "damage_leave_in",
-          22.9,
-          [
-            "damage_support",
-          ],
-        );
-
-      const results:
-        RecommendationResult[] = [
+      const routine =
+        selectMinimalRoutine([
           createRecommendationResult(
             "conditioning_support",
             [
-              moistureConditioner,
+              expensiveConditioner,
+              cheapConditioner,
+              leaveIn,
             ],
           ),
-
-          createRecommendationResult(
-            "moisture_support",
-            [
-              moistureConditioner,
-            ],
-          ),
-
-          createRecommendationResult(
-            "damage_protection",
-            [
-              damageLeaveIn,
-            ],
-          ),
-        ];
-
-      const routine =
-        selectMinimalRoutine(
-          results,
-        );
-
-      expect(routine).toHaveLength(2);
+        ]);
 
       expect(
         routine.map(
           (product) => product.id,
         ),
       ).toEqual([
-        "moisture_conditioner",
-        "damage_leave_in",
+        "cheap_conditioner",
+        "leave_in",
       ]);
     });
 
-    it("chooses the cheapest combination when multiple minimal combinations cover the same needs", () => {
-      const expensiveMultiPurpose =
+    it("prefers the product that covers more detected needs inside the same category", () => {
+      const singlePurpose =
         createProduct(
-          "expensive_multi",
-          40,
-          [
-            "conditioning",
-            "moisture_support",
-          ],
+          "single_purpose",
+          "conditioner",
+          10,
+          ["conditioning"],
         );
 
-      const cheapMultiPurpose =
+      const multiPurpose =
         createProduct(
-          "cheap_multi",
+          "multi_purpose",
+          "conditioner",
           25,
           [
             "conditioning",
@@ -175,141 +124,117 @@ describe(
           ],
         );
 
-      const results:
-        RecommendationResult[] = [
+      const routine =
+        selectMinimalRoutine([
           createRecommendationResult(
             "conditioning_support",
-            [
-              expensiveMultiPurpose,
-              cheapMultiPurpose,
-            ],
+            [singlePurpose, multiPurpose],
           ),
-
           createRecommendationResult(
             "moisture_support",
-            [
-              expensiveMultiPurpose,
-              cheapMultiPurpose,
-            ],
+            [multiPurpose],
           ),
-        ];
-
-      const routine =
-        selectMinimalRoutine(
-          results,
-        );
+        ]);
 
       expect(routine).toHaveLength(1);
+      expect(routine[0].id).toBe(
+        "multi_purpose",
+      );
+    });
+
+    it("uses the cheapest option when coverage is tied", () => {
+      const first = createProduct(
+        "first",
+        "mask",
+        30,
+        ["damage_support"],
+      );
+
+      const second = createProduct(
+        "second",
+        "mask",
+        20,
+        ["damage_support"],
+      );
+
+      const routine =
+        selectMinimalRoutine([
+          createRecommendationResult(
+            "damage_protection",
+            [first, second],
+          ),
+        ]);
 
       expect(routine[0].id).toBe(
-        "cheap_multi",
+        "second",
       );
     });
 
     it("does not select unavailable products", () => {
       const unavailable =
         createProduct(
-          "unavailable_multi",
+          "unavailable",
+          "conditioner",
           10,
-          [
-            "conditioning",
-            "moisture_support",
-          ],
+          ["conditioning"],
         );
-
       unavailable.availability =
         "unavailable";
 
-      const conditioner =
+      const available =
         createProduct(
+          "available",
           "conditioner",
           20,
           ["conditioning"],
         );
 
-      const moisture =
-        createProduct(
-          "moisture",
-          20,
-          ["moisture_support"],
-        );
-
-      const results:
-        RecommendationResult[] = [
+      const routine =
+        selectMinimalRoutine([
           createRecommendationResult(
             "conditioning_support",
-            [
-              unavailable,
-              conditioner,
-            ],
+            [unavailable, available],
           ),
-
-          createRecommendationResult(
-            "moisture_support",
-            [
-              unavailable,
-              moisture,
-            ],
-          ),
-        ];
-
-      const routine =
-        selectMinimalRoutine(
-          results,
-        );
+        ]);
 
       expect(
         routine.map(
           (product) => product.id,
         ),
-      ).toEqual([
-        "conditioner",
-        "moisture",
-      ]);
+      ).toEqual(["available"]);
     });
 
     it("does not mutate recommendation results or product arrays", () => {
-      const first =
-        createProduct(
-          "first",
-          30,
-          ["conditioning"],
-        );
-
-      const second =
-        createProduct(
-          "second",
-          20,
-          ["conditioning"],
-        );
-
-      const products = [
-        first,
-        second,
+      const first = createProduct(
+        "first",
+        "conditioner",
+        30,
+        ["conditioning"],
+      );
+      const second = createProduct(
+        "second",
+        "conditioner",
+        20,
+        ["conditioning"],
+      );
+      const products = [first, second];
+      const results = [
+        createRecommendationResult(
+          "conditioning_support",
+          products,
+        ),
       ];
-
-      const results:
-        RecommendationResult[] = [
-          createRecommendationResult(
-            "conditioning_support",
-            products,
-          ),
-        ];
 
       selectMinimalRoutine(results);
 
-      expect(
-        results[0].products,
-      ).toBe(products);
-
+      expect(results[0].products).toBe(
+        products,
+      );
       expect(
         results[0].products.map(
           (product) => product.id,
         ),
-      ).toEqual([
-        "first",
-        "second",
-      ]);
+      ).toEqual(["first", "second"]);
     });
   },
 );

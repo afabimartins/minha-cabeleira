@@ -302,6 +302,74 @@ export const questionnaireQuestions:
     // 4 — Scalp / safety
 
     {
+      id: "scalp_oiliness",
+      text:
+        "Como seu couro cabeludo costuma ficar em relação à oleosidade entre as lavagens?",
+      type: "single_choice",
+      domain: "scalp",
+      trait: "scalp_oiliness",
+      region: "scalp",
+      options: [
+        {
+          label:
+            "Não percebo excesso de oleosidade",
+          value: "none",
+        },
+        {
+          label:
+            "Percebo oleosidade leve",
+          value: "mild",
+        },
+        {
+          label:
+            "Percebo oleosidade moderada",
+          value: "moderate",
+        },
+        {
+          label:
+            "Fica muito oleoso rapidamente",
+          value: "severe",
+        },
+      ],
+      helpText:
+        "Considere o comportamento habitual do couro cabeludo, sem contar suor após exercício ou um dia excepcionalmente quente.",
+    },
+
+    {
+      id: "scalp_dryness",
+      text:
+        "Você percebe ressecamento ou descamação seca no couro cabeludo?",
+      type: "single_choice",
+      domain: "scalp",
+      trait: "scalp_dryness",
+      region: "scalp",
+      options: [
+        {
+          label:
+            "Não percebo ressecamento",
+          value: "none",
+        },
+        {
+          label:
+            "Percebo ressecamento leve",
+          value: "mild",
+        },
+        {
+          label:
+            "Percebo ressecamento moderado",
+          value: "moderate",
+        },
+        {
+          label:
+            "Percebo ressecamento intenso ou frequente",
+          value: "severe",
+        },
+      ],
+      helpText:
+        "Esta pergunta descreve o comportamento do couro cabeludo; coceira, ardor e feridas são avaliados separadamente por segurança.",
+    },
+
+    {
       id: "scalp_sensitivity",
       text:
         "Com que frequência seu couro cabeludo apresenta coceira ou sensibilidade?",

@@ -10,6 +10,10 @@ import type {
   Product,
 } from "../domain/product";
 
+import type {
+  RoutineProductSelection,
+} from "../domain/analysis-result";
+
 import {
   getFindingPresentation,
   getRecommendationTitle,
@@ -60,6 +64,8 @@ export type AnalysisReport = {
   safety: AnalysisReportSafety;
   routineGuidance:
     AnalysisReportRoutineGuidance[];
+  routineProducts:
+    RoutineProductSelection[];
   recommendations:
     AnalysisReportRecommendation[];
   disclaimer: string;
@@ -126,6 +132,11 @@ export function buildAnalysisReport(
             guidance.description,
         }),
       ),
+
+    routineProducts:
+      policy.showProducts
+        ? result.routineProducts ?? []
+        : [],
 
     recommendations:
       result.recommendations.map(

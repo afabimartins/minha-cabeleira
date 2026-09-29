@@ -27,6 +27,10 @@ import {
 } from "./analysis-data";
 
 import {
+  CORE_ROUTINE_PRODUCT_CATEGORIES,
+} from "../domain/routine-product-selection";
+
+import {
   getActiveAnalysisProducts,
   getProductStoreMode,
 } from "./product-store";
@@ -71,6 +75,14 @@ const answers: QuestionnaireAnswer[] = [
   {
     questionId: "damage_history",
     value: "severe",
+  },
+  {
+    questionId: "scalp_oiliness",
+    value: "none",
+  },
+  {
+    questionId: "scalp_dryness",
+    value: "none",
   },
   {
     questionId: "scalp_sensitivity",
@@ -148,13 +160,55 @@ describe(
           expect.arrayContaining([
             "vult-choque-reconstrucao-leave-in-100ml",
             "elseve-reparacao-total-5-creme-milagroso-500ml",
+            "vult-recarga-hidratacao-shampoo-350ml",
+            "vult-recarga-hidratacao-condicionador-200ml",
+            "vult-glow-acid-mascara-acidificante-150ml",
+            "vult-oleo-bifasico-oleos-poderosos-90ml",
+            "vult-choque-reconstrucao-shampoo-350ml",
+            "seda-hidratacao-diaria-shampoo-325ml",
+            "vult-choque-reconstrucao-condicionador-200ml",
+            "seda-ceramidas-condicionador-325ml",
+            "vult-choque-reconstrucao-mascara-250g",
+            "elseve-oleo-extraordinario-100ml",
+            "seda-toque-de-seda-serum-oleo-60ml",
+            "loccitane-pataua-serum-calmante-couro-50ml",
+            "match-agente-antioleosidade-tonico-100ml",
           ]),
         );
+
+        for (const category of
+          CORE_ROUTINE_PRODUCT_CATEGORIES) {
+          const productsInCategory =
+            products.filter(
+              (product) =>
+                product.category ===
+                  category ||
+                (category === "mask" &&
+                  product.category ===
+                    "treatment") ||
+                (category === "leave_in" &&
+                  product.category ===
+                    "styler"),
+            );
+
+          expect(
+            productsInCategory.length,
+            `O catálogo precisa ter pelo menos 3 opções para a categoria-base: ${category}.`,
+          ).toBeGreaterThanOrEqual(3);
+        }
+
+        expect(
+          products.filter(
+            (product) =>
+              product.category === "scalp",
+          ).length,
+          "O catálogo precisa ter opções separadas para oleosidade e ressecamento do couro cabeludo.",
+        ).toBeGreaterThanOrEqual(2);
       },
     );
 
     it(
-      "simula as 20 respostas e recomenda proteção da fibra com produtos reais em ordem de menor preço",
+      "simula as 22 respostas e recomenda proteção da fibra com produtos reais em ordem de menor preço",
       () => {
         const analysis =
           runFullAnalysis(
@@ -167,7 +221,7 @@ describe(
 
         expect(
           analysis.valid,
-          "A análise deveria ser válida com as 20 respostas automáticas.",
+          "A análise deveria ser válida com as 22 respostas automáticas.",
         ).toBe(true);
 
         expect(
@@ -204,19 +258,44 @@ describe(
             (product) => product.id,
           );
 
-        expect(recommendedIds).toEqual([
-          "vult-choque-reconstrucao-leave-in-100ml",
-          "elseve-reparacao-total-5-creme-milagroso-500ml",
-        ]);
+        expect(recommendedIds).toEqual(
+          expect.arrayContaining([
+            "vult-choque-reconstrucao-shampoo-350ml",
+            "vult-glow-acid-mascara-acidificante-150ml",
+            "vult-choque-reconstrucao-mascara-250g",
+            "vult-choque-reconstrucao-leave-in-100ml",
+            "seda-toque-de-seda-serum-oleo-60ml",
+            "vult-oleo-bifasico-oleos-poderosos-90ml",
+            "elseve-reparacao-total-5-creme-milagroso-500ml",
+          ]),
+        );
+
+        const recommendedPrices =
+          damageProtection!.products
+            .map((product) => product.price)
+            .filter(
+              (price): price is number =>
+                price !== undefined,
+            );
+
+        expect(recommendedPrices).toEqual(
+          [...recommendedPrices].sort(
+            (a, b) => a - b,
+          ),
+        );
 
         expect(
-          damageProtection!.products.map(
-            (product) => product.price,
+          result.routineProducts,
+        ).toHaveLength(
+          CORE_ROUTINE_PRODUCT_CATEGORIES.length,
+        );
+
+        expect(
+          result.routineProducts?.every(
+            (selection) =>
+              selection.product !== null,
           ),
-        ).toEqual([
-          20.9,
-          42.99,
-        ]);
+        ).toBe(true);
       },
     );
   },

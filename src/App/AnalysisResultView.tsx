@@ -227,6 +227,43 @@ function formatPrice(
 
 
 
+
+function getRoutineProductCategoryLabel(
+  category: string,
+): string {
+  switch (category) {
+    case "shampoo":
+      return "Shampoo";
+    case "conditioner":
+      return "Condicionador";
+    case "mask":
+      return "Máscara / tratamento";
+    case "leave_in":
+      return "Finalizador / leave-in";
+    case "oil":
+      return "Óleo / sérum";
+    case "scalp":
+      return "Cuidado do couro cabeludo";
+    default:
+      return "Produto";
+  }
+}
+
+function getRoutineProductMatchLabel(
+  level: string,
+): string {
+  switch (level) {
+    case "exact":
+      return "Melhor correspondência";
+    case "compatible":
+      return "Compatível";
+    case "basic":
+      return "Opção básica segura";
+    default:
+      return "Catálogo incompleto";
+  }
+}
+
 function getSafetyClassName(
 
   level: AnalysisResult["safety"]["level"],
@@ -840,6 +877,99 @@ export function AnalysisResultView({
           )}
 
 
+
+          {!productsBlocked &&
+            (result.routineProducts?.length ?? 0) > 0 && (
+            <div className="routine-products">
+              <div className="routine-products__intro">
+                <p className="routine-products__eyebrow">
+                  Rotina-base
+                </p>
+
+                <h4>
+                  Uma indicação por tipo de produto
+                </h4>
+
+                <p>
+                  O motor escolhe uma opção para cada etapa essencial.
+                  Primeiro tenta a correspondência técnica mais completa;
+                  quando ela não existe, usa a melhor alternativa compatível
+                  e só então uma opção básica da categoria, sem relaxar
+                  critérios de exclusão.
+                </p>
+              </div>
+
+              <div className="routine-products__grid">
+                {result.routineProducts?.map((selection) => {
+                  const product = selection.product;
+
+                  if (!product) {
+                    return (
+                      <article
+                        className="routine-product-slot routine-product-slot--missing"
+                        key={selection.category}
+                      >
+                        <span className="routine-product-slot__category">
+                          {getRoutineProductCategoryLabel(selection.category)}
+                        </span>
+                        <strong>Categoria sem produto ativo</strong>
+                        <p>
+                          O catálogo precisa de pelo menos uma opção verificada
+                          nesta categoria antes da publicação.
+                        </p>
+                      </article>
+                    );
+                  }
+
+                  const metadata =
+                    product as typeof product & ProductWithCatalogMeta;
+
+                  return (
+                    <article
+                      className="routine-product-slot"
+                      key={selection.category}
+                    >
+                      <div className="routine-product-slot__topline">
+                        <span className="routine-product-slot__category">
+                          {getRoutineProductCategoryLabel(selection.category)}
+                        </span>
+                        <span className={`routine-product-slot__match routine-product-slot__match--${selection.matchLevel}`}>
+                          {getRoutineProductMatchLabel(selection.matchLevel)}
+                        </span>
+                      </div>
+
+                      <p className="routine-product-slot__brand">
+                        {product.brand}
+                      </p>
+                      <h5>{product.name}</h5>
+
+                      {metadata.size ? (
+                        <p className="routine-product-slot__size">
+                          {metadata.size}
+                        </p>
+                      ) : null}
+
+                      <p className="routine-product-slot__price">
+                        {formatPrice(product.price, product.currency)}
+                      </p>
+
+                      {metadata.productUrl ? (
+                        <a
+                          className="product-card__link"
+                          href={metadata.productUrl}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                        >
+                          Ver produto
+                          <span aria-hidden="true">↗</span>
+                        </a>
+                      ) : null}
+                    </article>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {result.recommendations.length ===
 

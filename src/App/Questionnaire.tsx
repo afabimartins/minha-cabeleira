@@ -159,7 +159,7 @@ export function Questionnaire() {
           </p>
 
           <div className="questionnaire-hero__features" aria-label="Características da análise">
-            <span>20 perguntas</span>
+            <span>22 perguntas</span>
             <span>Foco em necessidades</span>
             <span>Sem rótulos de cabelo</span>
           </div>

@@ -1,5 +1,6 @@
 import type {
   Product,
+  ProductCategory,
 } from "./product";
 
 import type {
@@ -18,32 +19,54 @@ const recommendationAttributeMap:
       "damage_support",
   };
 
-function getRequiredAttribute(
-  recommendationResult:
-    RecommendationResult,
-): string | undefined {
-  return recommendationAttributeMap[
-    recommendationResult
-      .recommendation.type
-  ];
-}
-
-function productCoversAttribute(
-  product: Product,
-  attribute: string,
-): boolean {
-  return product.attributes.some(
-    (productAttribute) =>
-      productAttribute
-        .trim()
-        .toLowerCase() ===
-      attribute
-        .trim()
-        .toLowerCase(),
+function getRequiredAttributes(
+  recommendationResults:
+    RecommendationResult[],
+): string[] {
+  return Array.from(
+    new Set(
+      recommendationResults
+        .map(
+          (result) =>
+            recommendationAttributeMap[
+              result.recommendation.type
+            ],
+        )
+        .filter(
+          (
+            attribute,
+          ): attribute is string =>
+            attribute !== undefined,
+        ),
+    ),
   );
 }
 
-function getProductPrice(
+function normalize(value: string): string {
+  return value.trim().toLowerCase();
+}
+
+function coverageScore(
+  product: Product,
+  requiredAttributes: string[],
+): number {
+  const attributes = new Set(
+    product.attributes.map(normalize),
+  );
+
+  return requiredAttributes.reduce(
+    (score, attribute) =>
+      score +
+      (attributes.has(
+        normalize(attribute),
+      )
+        ? 1
+        : 0),
+    0,
+  );
+}
+
+function priceForSort(
   product: Product,
 ): number {
   return (
@@ -52,94 +75,19 @@ function getProductPrice(
   );
 }
 
-function getCombinationPrice(
-  products: Product[],
-): number {
-  return products.reduce(
-    (total, product) =>
-      total + getProductPrice(product),
-    0,
-  );
-}
-
-function generateCombinations(
-  products: Product[],
-  size: number,
-): Product[][] {
-  const combinations: Product[][] = [];
-
-  function buildCombination(
-    startIndex: number,
-    current: Product[],
-  ) {
-    if (current.length === size) {
-      combinations.push([
-        ...current,
-      ]);
-
-      return;
-    }
-
-    for (
-      let index = startIndex;
-      index < products.length;
-      index += 1
-    ) {
-      current.push(products[index]);
-
-      buildCombination(
-        index + 1,
-        current,
-      );
-
-      current.pop();
-    }
-  }
-
-  buildCombination(0, []);
-
-  return combinations;
-}
-
-function combinationCoversAll(
-  combination: Product[],
-  requiredAttributes: string[],
-): boolean {
-  return requiredAttributes.every(
-    (attribute) =>
-      combination.some(
-        (product) =>
-          productCoversAttribute(
-            product,
-            attribute,
-          ),
-      ),
-  );
-}
-
+/**
+ * Uma rotina mínima mantém no máximo um produto por categoria.
+ * Entre produtos da mesma categoria, prioriza aquele que cobre o
+ * maior número de necessidades detectadas e, em empate, o mais barato.
+ */
 export function selectMinimalRoutine(
   recommendationResults:
     RecommendationResult[],
 ): Product[] {
   const requiredAttributes =
-    Array.from(
-      new Set(
-        recommendationResults
-          .map(getRequiredAttribute)
-          .filter(
-            (
-              attribute,
-            ): attribute is string =>
-              attribute !== undefined,
-          ),
-      ),
+    getRequiredAttributes(
+      recommendationResults,
     );
-
-  if (
-    requiredAttributes.length === 0
-  ) {
-    return [];
-  }
 
   const productsById =
     new Map<string, Product>();
@@ -164,39 +112,61 @@ export function selectMinimalRoutine(
     }
   }
 
-  const products = Array.from(
-    productsById.values(),
-  );
+  const productsByCategory =
+    new Map<
+      ProductCategory,
+      Product[]
+    >();
 
-  for (
-    let size = 1;
-    size <= products.length;
-    size += 1
-  ) {
-    const combinations =
-      generateCombinations(
-        products,
-        size,
-      ).filter(
-        (combination) =>
-          combinationCoversAll(
-            combination,
-            requiredAttributes,
-          ),
-      );
+  for (const product of productsById.values()) {
+    const current =
+      productsByCategory.get(
+        product.category,
+      ) ?? [];
 
-    if (combinations.length === 0) {
-      continue;
-    }
-
-    combinations.sort(
-      (a, b) =>
-        getCombinationPrice(a) -
-        getCombinationPrice(b),
+    current.push(product);
+    productsByCategory.set(
+      product.category,
+      current,
     );
-
-    return combinations[0];
   }
 
-  return [];
+  return Array.from(
+    productsByCategory.entries(),
+  )
+    .sort(([a], [b]) =>
+      a.localeCompare(b),
+    )
+    .map(([, products]) =>
+      [...products].sort((a, b) => {
+        const coverageDifference =
+          coverageScore(
+            b,
+            requiredAttributes,
+          ) -
+          coverageScore(
+            a,
+            requiredAttributes,
+          );
+
+        if (
+          coverageDifference !== 0
+        ) {
+          return coverageDifference;
+        }
+
+        const priceDifference =
+          priceForSort(a) -
+          priceForSort(b);
+
+        if (priceDifference !== 0) {
+          return priceDifference;
+        }
+
+        return a.name.localeCompare(
+          b.name,
+          "pt-BR",
+        );
+      })[0],
+    );
 }

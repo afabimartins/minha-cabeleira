@@ -168,6 +168,26 @@ function createResult(
         },
       },
     ],
+
+    routineProducts: [
+      {
+        category: "conditioner",
+        product: {
+          id: "routine-conditioner",
+          name: "Routine Conditioner",
+          brand: "Marca de teste",
+          category: "conditioner",
+          price: 18.9,
+          currency: "BRL",
+          ingredients: [],
+          attributes: ["conditioning"],
+          availability: "active",
+        },
+        matchLevel: "exact",
+        matchedAttributes: ["conditioning"],
+        missingAttributes: [],
+      },
+    ],
   };
 }
 
@@ -211,6 +231,14 @@ describe(
           description:
             "Seu resultado indica boa resposta ao condicionamento, enquanto você relatou usar condicionador ou máscara raramente.",
         });
+
+        expect(
+          report.routineProducts,
+        ).toHaveLength(1);
+
+        expect(
+          report.routineProducts[0].product?.id,
+        ).toBe("routine-conditioner");
 
         expect(
           report.recommendations,
@@ -270,6 +298,10 @@ describe(
         ).toBe(false);
 
         expect(
+          report.routineProducts,
+        ).toEqual([]);
+
+        expect(
           report.recommendations[0]
             .products,
         ).toEqual([]);
@@ -311,6 +343,10 @@ describe(
           report.recommendations[0]
             .ingredientGuidanceBlocked,
         ).toBe(true);
+
+        expect(
+          report.routineProducts,
+        ).toEqual([]);
 
         expect(
           report.recommendations[0]

@@ -9,10 +9,11 @@ echo ==============================================
 echo.
 echo Este teste:
 echo - consulta o catalogo REAL no Supabase
-echo - simula as 20 respostas do questionario
+echo - simula as 22 respostas do questionario
 echo - executa o motor de analise
 echo - exige damage_protection
-echo - confere Vult + Elseve
+echo - confere 3+ opcoes por categoria-base e 2+ cuidados de couro cabeludo
+echo - confere produtos reais do catalogo
 echo - confere a ordem por menor preco
 echo.
 

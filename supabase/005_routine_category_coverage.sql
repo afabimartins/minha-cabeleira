@@ -1,0 +1,111 @@
+-- Minha Cabeleira — cobertura mínima de categorias da rotina
+-- Verificação editorial: 29/09/2026.
+-- Objetivo: garantir pelo menos uma opção real nas categorias-base da rotina.
+-- A marca nunca é critério de recomendação; a seleção continua técnica e auditável.
+
+insert into public.products (
+  id, slug, brand, name, category, size,
+  image_url, price, currency, retailer, product_url,
+  price_checked_at, ingredients_raw, attributes,
+  availability, source_url, verified_at, link_type
+)
+values
+(
+  'vult-recarga-hidratacao-shampoo-350ml',
+  'vult-recarga-hidratacao-shampoo-350ml',
+  'Vult',
+  'Shampoo Cabelos Recarga de Hidratação',
+  'shampoo',
+  '350 ml',
+  null,
+  15.50,
+  'BRL',
+  'Vult',
+  'https://www.vult.com.br/produto/shampoo-vult-cabelos-recarga-de-hidratacao-350ml-v2/',
+  '2026-09-29',
+  'Água; Sulfato de sódio laurete; Cocamidopropil betaína; Cloreto de potássio; Glicerol; Fenoxietanol; Perfume; Diestearato de etilenoglicol; Benzoato de sódio; Dimeticonol; Laurete-4; Ácido láctico; Gliconato de sódio; Cloreto de guar hidroxipropiltrimônio; Poliquatérnio-7; Acetato de tocoferila; Dodecilbenzenosulfonato de trietanolamina; Ácido benzoico; Álcool benzílico; Polissorbato 20; Hialuronato de sódio; Amido de milho; Extrato de alga Cystoseira compressa; Hidróxido de sódio; Gliconolactona; Proteína de soja hidrolisada; Proteína de milho hidrolisada; Glúten de trigo hidrolisado; Álcool feniletílico; Sorbato de potássio; Butilcarbamato de iodopropinila; Caprililglicol; Extrato de alga Porphyra umbilicalis; Goma de falso-pau-brasil; Ácido desidroacético; Gliconato de cálcio; Cumarina; Hexil cinamal; Limoneno; Linalol',
+  array['moisture_support', 'gentle_cleansing'],
+  'active',
+  'https://www.vult.com.br/produto/shampoo-vult-cabelos-recarga-de-hidratacao-350ml-v2/',
+  '2026-09-29',
+  'editorial'
+),
+(
+  'vult-recarga-hidratacao-condicionador-200ml',
+  'vult-recarga-hidratacao-condicionador-200ml',
+  'Vult',
+  'Condicionador Intensivo Cabelos Recarga de Hidratação',
+  'conditioner',
+  '200 ml',
+  null,
+  13.10,
+  'BRL',
+  'Vult',
+  'https://www.vult.com.br/produto/condicionador-intensivo-vult-cabelos-recarga-de-hidratacao-200ml/',
+  '2026-09-29',
+  'Água; Álcool cetearílico; Glicerol; Isoestearamidopropil dimetilamina; Dimeticonol; Perfume; Cloreto de cetrimônio; Ácido láctico; Fenoxietanol; Metossulfato de beentrimônio; Álcool benzílico; Gliconato de sódio; Hietelose; Acetato de tocoferila; Dodecilbenzenosulfonato de trietanolamina; Hidróxido de sódio; Hialuronato de sódio; Polissorbato 60; Fosfato dissódico; Cocoil colágeno hidrolisado; Amido de milho; Fosfato de sódio; Poliuretano-39; Extrato de alga Cystoseira compressa; Gliconolactona; Butilcarbamato de iodopropinila; Glúten de trigo hidrolisado; Proteína de soja hidrolisada; Proteína de milho hidrolisada; Benzoato de sódio; Álcool feniletílico; Sorbato de potássio; Caprililglicol; Ácido desidroacético; Propanodiol; Fenilpropanol; Tocoferol; Gliconato de cálcio; Cumarina; Hexil cinamal; Limoneno; Linalol',
+  array['conditioning', 'moisture_support'],
+  'active',
+  'https://www.vult.com.br/produto/condicionador-intensivo-vult-cabelos-recarga-de-hidratacao-200ml/',
+  '2026-09-29',
+  'editorial'
+),
+(
+  'vult-glow-acid-mascara-acidificante-150ml',
+  'vult-glow-acid-mascara-acidificante-150ml',
+  'Vult',
+  'Máscara Acidificante Glow Acid Reparação',
+  'mask',
+  '150 ml',
+  null,
+  17.90,
+  'BRL',
+  'Vult',
+  'https://www.vult.com.br/produto/mascara-acidificante-vult-glow-acid-reparacao-150ml/',
+  '2026-09-29',
+  'Água; Álcool cetoestearílico; Glicerol; Estearamidopropil dimetilamina; Triglicerídeo caprílico/cáprico; Creatina; Ácido láctico; Cloreto de cetrimônio; Perfume; Manteiga da semente de Cocos nucifera; Fenoxietanol; Metossulfato de beentrimônio; Caprililglicol; Pidolato de sódio; Lactato de sódio; Cloreto de goma guar hidroxipropiltrimônio; Gliconato de sódio; Arginina; Ácido aspártico; Ácido pidólico; Glicina; Alanina; Serina; Valina; Prolina; Treonina; Óleo da semente de Adansonia digitata hidrogenado; Manteiga de Butyrospermum parkii; Óleo da semente de Calophyllum inophyllum; Óleo da semente de Moringa oleifera; Óleo da semente de Nigella sativa; Óleo da semente de Opuntia ficus-indica; Histidina; Isoleucina; Fenilalanina; Ácido cítrico; Tocoferol; Ácido glicólico; Amido; Extrato de Cystoseira compressa; Gliconolactona; Álcool benzílico; Proteína de milho hidrolisada; Proteína de soja hidrolisada; Glúten de trigo hidrolisado; Benzoato de sódio; Álcool feniletílico; Sorbato de potássio; Hidróxido de sódio; Ácido desidroacético; Gliconato de cálcio; Cumarina; Hexil cinamal; Limoneno; Linalol',
+  array['conditioning', 'moisture_support', 'damage_support'],
+  'active',
+  'https://www.vult.com.br/produto/mascara-acidificante-vult-glow-acid-reparacao-150ml/',
+  '2026-09-29',
+  'editorial'
+),
+(
+  'vult-oleo-bifasico-oleos-poderosos-90ml',
+  'vult-oleo-bifasico-oleos-poderosos-90ml',
+  'Vult',
+  'Óleo Bifásico Cabelos Óleos Poderosos Nutrição',
+  'oil',
+  '90 ml',
+  null,
+  26.90,
+  'BRL',
+  'Vult',
+  'https://www.vult.com.br/produto/oleo-bifasico-vult-cabelos-oleos-poderosos-nutricao-90ml/',
+  '2026-09-29',
+  'Água; Dimeticona; Farneseno hidrogenado; Dimeticonol; Perfume; Cloreto de potássio; Fenoxietanol; Caprililglicol; Álcool benzílico; Gliconato de sódio; Fosfato de sódio dibásico; Fosfato de sódio monobásico; Octissalato; Acetato de tocoferila; Óleo de girassol; Glicerol; Óleo da semente de Argania spinosa; Óleo de coco; Óleo da semente de Linum usitatissimum; Óleo da semente de Macadamia integrifolia; Vermelho escarlate 125; Hidróxido de sódio; Propilenoglicol; Ácido láctico; Amido; Extrato da folha de Rosmarinus officinalis; Extrato da folha de Adansonia digitata; Extrato da folha de Amaranthus hypochondriacus; Extrato de resina de Commiphora myrrha; Extrato de Cystoseira compressa; Amarelo de tartrazina; Gluconolactona; Extrato da flor de Gardenia tahitensis; Álcool desnaturado; Proteína de milho hidrolisada; Proteína de soja hidrolisada; Glúten de trigo hidrolisado; Benzoato de sódio; Azul brilhante; Álcool feniletílico; Sorbato de potássio; Extrato de âmbar; Ácido desidroacético; Tocoferol; Gliconato de cálcio; Citral; Citronelol; Cumarina; Hexil cinamal; Limoneno; Linalol',
+  array['conditioning', 'moisture_support', 'damage_support', 'heat_protection'],
+  'active',
+  'https://www.vult.com.br/produto/oleo-bifasico-vult-cabelos-oleos-poderosos-nutricao-90ml/',
+  '2026-09-29',
+  'editorial'
+)
+on conflict (id)
+do update set
+  slug = excluded.slug,
+  brand = excluded.brand,
+  name = excluded.name,
+  category = excluded.category,
+  size = excluded.size,
+  image_url = excluded.image_url,
+  price = excluded.price,
+  currency = excluded.currency,
+  retailer = excluded.retailer,
+  product_url = excluded.product_url,
+  price_checked_at = excluded.price_checked_at,
+  ingredients_raw = excluded.ingredients_raw,
+  attributes = excluded.attributes,
+  availability = excluded.availability,
+  source_url = excluded.source_url,
+  verified_at = excluded.verified_at,
+  link_type = excluded.link_type;

@@ -39,6 +39,10 @@ import {
   buildRoutineGuidance,
 } from "./routine-guidance-engine";
 
+import {
+  selectRoutineProducts,
+} from "./routine-product-selection";
+
 export function buildAnalysisResult(
   diagnosis: Diagnosis,
   observations: Observation[],
@@ -85,6 +89,15 @@ export function buildAnalysisResult(
       observations,
     );
 
+  const routineProducts =
+    safety.canRecommendProducts
+      ? selectRoutineProducts(
+          products,
+          personalizedRecommendations,
+          observations,
+        )
+      : [];
+
   return {
     diagnosis,
 
@@ -94,5 +107,7 @@ export function buildAnalysisResult(
       personalizedRecommendations,
 
     routineGuidance,
+
+    routineProducts,
   };
 }
