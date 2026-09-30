@@ -73,4 +73,79 @@ describe("selectProducts", () => {
       "product_001",
     ]);
   });
+
+  it("does not leak scalp products into general hair recommendations", () => {
+    const products: Product[] = [
+      {
+        id: "hair-moisture",
+        name: "Hair Moisture",
+        brand: "Example",
+        category: "conditioner",
+        price: 20,
+        currency: "BRL",
+        ingredients: [],
+        attributes: ["moisture_support"],
+        availability: "active",
+      },
+      {
+        id: "scalp-moisture",
+        name: "Scalp Moisture",
+        brand: "Example",
+        category: "scalp",
+        price: 10,
+        currency: "BRL",
+        ingredients: [],
+        attributes: [
+          "moisture_support",
+          "scalp_dryness_support",
+        ],
+        availability: "active",
+      },
+    ];
+
+    const result = selectProducts(
+      products,
+      {
+        requiredAttributes: [
+          "moisture_support",
+        ],
+      },
+    );
+
+    expect(
+      result.map((product) => product.id),
+    ).toEqual(["hair-moisture"]);
+  });
+
+  it("allows scalp products when a rule explicitly requests the scalp category", () => {
+    const products: Product[] = [
+      {
+        id: "scalp-dryness",
+        name: "Scalp Dryness",
+        brand: "Example",
+        category: "scalp",
+        price: 10,
+        currency: "BRL",
+        ingredients: [],
+        attributes: [
+          "scalp_dryness_support",
+        ],
+        availability: "active",
+      },
+    ];
+
+    const result = selectProducts(
+      products,
+      {
+        categories: ["scalp"],
+        requiredAttributes: [
+          "scalp_dryness_support",
+        ],
+      },
+    );
+
+    expect(
+      result.map((product) => product.id),
+    ).toEqual(["scalp-dryness"]);
+  });
 });

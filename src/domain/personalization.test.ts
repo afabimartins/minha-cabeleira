@@ -303,7 +303,7 @@ describe(
       );
     });
 
-    it("limits each recommendation to one product for a minimal routine", () => {
+    it("keeps at most one product per category for a minimal routine", () => {
       const results:
         RecommendationResult[] = [
           createRecommendationResult(
@@ -333,17 +333,28 @@ describe(
         personalized,
       ).toHaveLength(2);
 
-      expect(
-        personalized.every(
-          (result) =>
-            result.products.length ===
-            1,
-        ),
-      ).toBe(true);
+      const selectedProducts =
+        personalized.flatMap(
+          (result) => result.products,
+        );
 
       expect(
-        personalized[0]
-          .products[0].price,
+        selectedProducts,
+      ).toHaveLength(1);
+
+      expect(
+        new Set(
+          selectedProducts.map(
+            (product) =>
+              product.category,
+          ),
+        ).size,
+      ).toBe(
+        selectedProducts.length,
+      );
+
+      expect(
+        selectedProducts[0].price,
       ).toBe(19.9);
     });
 

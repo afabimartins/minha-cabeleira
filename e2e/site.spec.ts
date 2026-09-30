@@ -9,6 +9,9 @@ async function selectOption(page: Page, optionIndex = 0) {
 }
 
 async function mockPublicProductCatalog(page: Page) {
+  const fixtureImage =
+    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Crect width='32' height='32' fill='%23f7efe9'/%3E%3C/svg%3E";
+
   const rows = [
     {
       id: "fixture-shampoo",
@@ -17,7 +20,7 @@ async function mockPublicProductCatalog(page: Page) {
       name: "Shampoo Hidratação",
       category: "shampoo",
       size: "350 ml",
-      image_url: null,
+      image_url: fixtureImage,
       image_path: null,
       image_source_url: null,
       image_credit: null,
@@ -40,7 +43,7 @@ async function mockPublicProductCatalog(page: Page) {
       name: "Condicionador Hidratação",
       category: "conditioner",
       size: "200 ml",
-      image_url: null,
+      image_url: fixtureImage,
       image_path: null,
       image_source_url: null,
       image_credit: null,
@@ -63,7 +66,7 @@ async function mockPublicProductCatalog(page: Page) {
       name: "Máscara Reparadora",
       category: "mask",
       size: "250 g",
-      image_url: null,
+      image_url: fixtureImage,
       image_path: null,
       image_source_url: null,
       image_credit: null,
@@ -86,7 +89,7 @@ async function mockPublicProductCatalog(page: Page) {
       name: "Leave-in Protetor",
       category: "leave_in",
       size: "100 ml",
-      image_url: null,
+      image_url: fixtureImage,
       image_path: null,
       image_source_url: null,
       image_credit: null,
@@ -109,7 +112,7 @@ async function mockPublicProductCatalog(page: Page) {
       name: "Óleo Finalizador",
       category: "oil",
       size: "90 ml",
-      image_url: null,
+      image_url: fixtureImage,
       image_path: null,
       image_source_url: null,
       image_credit: null,
@@ -122,6 +125,29 @@ async function mockPublicProductCatalog(page: Page) {
       attributes: ["conditioning", "moisture_support", "damage_support"],
       availability: "active",
       source_url: "https://example.com/oil",
+      verified_at: "2026-09-29",
+      link_type: "editorial",
+    },
+    {
+      id: "fixture-scalp",
+      slug: "fixture-scalp",
+      brand: "Fixture",
+      name: "Sérum Couro Cabeludo",
+      category: "scalp",
+      size: "50 ml",
+      image_url: fixtureImage,
+      image_path: null,
+      image_source_url: null,
+      image_credit: null,
+      price: 9.9,
+      currency: "BRL",
+      retailer: "Fixture",
+      product_url: "https://example.com/scalp",
+      price_checked_at: "2026-09-29",
+      ingredients_raw: "Glicerol",
+      attributes: ["moisture_support", "scalp_dryness_support"],
+      availability: "active",
+      source_url: "https://example.com/scalp",
       verified_at: "2026-09-29",
       link_type: "editorial",
     },
@@ -279,6 +305,14 @@ test.describe("Minha Cabeleira — fluxo público", () => {
         page.getByText(category, { exact: true }),
       ).toBeVisible();
     }
+
+    await expect(
+      page.locator(".routine-product-slot__image"),
+    ).toHaveCount(5);
+
+    await expect(
+      page.getByText("Sérum Couro Cabeludo", { exact: true }),
+    ).toHaveCount(0);
 
     const downloadButton = page.getByRole("button", {
       name: /Baixar resultado em PDF/i,

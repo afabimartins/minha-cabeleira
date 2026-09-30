@@ -965,6 +965,110 @@ function addIngredientGuidance(
   );
 }
 
+type PdfRecommendationProduct =
+  AnalysisReport["recommendations"][number]["products"][number];
+
+function formatPdfProductPrice(
+  product: PdfRecommendationProduct,
+): string {
+  if (product.price === undefined) {
+    return "Preço não informado";
+  }
+
+  if (product.currency === "BRL") {
+    return new Intl.NumberFormat(
+      "pt-BR",
+      {
+        style: "currency",
+        currency: "BRL",
+      },
+    ).format(product.price);
+  }
+
+  return `${product.currency ?? ""} ${product.price.toFixed(2)}`.trim();
+}
+
+function measureCompactProductCard(
+  context: PdfContext,
+  product: PdfRecommendationProduct,
+  width: number,
+): number {
+  const title = `${product.name} · ${product.brand}`;
+  const titleLines = splitLines(
+    context,
+    title,
+    width - 10,
+    7.5,
+    true,
+  );
+
+  return Math.max(
+    23,
+    9 + titleLines.length * 3.9 + 7,
+  );
+}
+
+function drawCompactProductCard(
+  context: PdfContext,
+  product: PdfRecommendationProduct,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+): void {
+  const title = `${product.name} · ${product.brand}`;
+  const titleLines = splitLines(
+    context,
+    title,
+    width - 10,
+    7.5,
+    true,
+  );
+
+  setFillColor(
+    context.pdf,
+    "#F8FCF9",
+  );
+  context.pdf.roundedRect(
+    x,
+    y,
+    width,
+    height,
+    3,
+    3,
+    "F",
+  );
+
+  context.pdf.setFont(
+    "helvetica",
+    "bold",
+  );
+  context.pdf.setFontSize(7.5);
+  setTextColor(
+    context.pdf,
+    COLORS.ink,
+  );
+  context.pdf.text(
+    titleLines,
+    x + 5,
+    y + 7,
+  );
+
+  const priceY =
+    y + 7 + titleLines.length * 3.9 + 2;
+
+  context.pdf.setFontSize(7.4);
+  setTextColor(
+    context.pdf,
+    COLORS.green,
+  );
+  context.pdf.text(
+    formatPdfProductPrice(product),
+    x + 5,
+    priceY,
+  );
+}
+
 function addProducts(
   context: PdfContext,
   recommendation:
@@ -1031,80 +1135,70 @@ function addProducts(
     },
   );
 
-  recommendation.products.forEach(
-    (product) => {
-      const price =
-        product.price === undefined
-          ? "Preço não informado"
-          : product.currency ===
-              "BRL"
-            ? new Intl.NumberFormat(
-                "pt-BR",
-                {
-                  style: "currency",
-                  currency: "BRL",
-                },
-              ).format(
-                product.price,
-              )
-            : `${product.currency ?? ""} ${product.price.toFixed(
-                2,
-              )}`.trim();
+  // Grade compacta em duas colunas: mantém a consulta de produtos legível
+  // sem empurrar poucos itens para uma página adicional quase vazia.
+  const cardWidth = 80;
+  const gap = 4;
+  const leftX = 23;
+  const rightX = leftX + cardWidth + gap;
 
-      const productHeight =
-        measureText(
+  for (
+    let index = 0;
+    index < recommendation.products.length;
+    index += 2
+  ) {
+    const leftProduct =
+      recommendation.products[index];
+    const rightProduct =
+      recommendation.products[index + 1];
+
+    const leftHeight =
+      measureCompactProductCard(
+        context,
+        leftProduct,
+        cardWidth,
+      );
+    const rightHeight = rightProduct
+      ? measureCompactProductCard(
           context,
-          `${product.name} - ${product.brand}`,
-          {
-            width: 158,
-            fontSize: 8.6,
-            bold: true,
-          },
-        ) + 9;
+          rightProduct,
+          cardWidth,
+        )
+      : 0;
+    const rowHeight = Math.max(
+      leftHeight,
+      rightHeight,
+    );
 
-      ensureSpace(
-        context,
-        productHeight,
-      );
+    ensureSpace(
+      context,
+      rowHeight + 4,
+    );
 
-      setFillColor(
-        context.pdf,
-        "#F8FCF9",
-      );
-      context.pdf.roundedRect(
-        21,
-        context.y - 3,
-        166,
-        productHeight,
-        3,
-        3,
-        "F",
-      );
-      addText(
+    const rowY = context.y;
+
+    drawCompactProductCard(
+      context,
+      leftProduct,
+      leftX,
+      rowY,
+      cardWidth,
+      rowHeight,
+    );
+
+    if (rightProduct) {
+      drawCompactProductCard(
         context,
-        `${product.name} - ${product.brand}`,
-        {
-          x: 25,
-          width: 158,
-          fontSize: 8.6,
-          bold: true,
-          spacingAfter: 1,
-        },
+        rightProduct,
+        rightX,
+        rowY,
+        cardWidth,
+        rowHeight,
       );
-      addText(
-        context,
-        price,
-        {
-          x: 25,
-          width: 158,
-          fontSize: 8.2,
-          bold: true,
-          color: COLORS.green,
-          spacingAfter: 3,
-        },
-      );
-    },
-  );
+    }
+
+    context.y += rowHeight + 4;
+  }
 }
 
 

@@ -938,32 +938,54 @@ export function AnalysisResultView({
                         </span>
                       </div>
 
-                      <p className="routine-product-slot__brand">
-                        {product.brand}
-                      </p>
-                      <h5>{product.name}</h5>
+                      <div className="routine-product-slot__body">
+                        {metadata.imageUrl ? (
+                          <div className="routine-product-slot__image-wrap">
+                            <img
+                              className="routine-product-slot__image"
+                              src={metadata.imageUrl}
+                              alt={`Embalagem de ${product.brand} ${product.name}`}
+                              loading="lazy"
+                            />
+                          </div>
+                        ) : (
+                          <div
+                            className="routine-product-slot__image-wrap routine-product-slot__image-wrap--placeholder"
+                            aria-hidden="true"
+                          >
+                            <span>{product.brand.slice(0, 1)}</span>
+                          </div>
+                        )}
 
-                      {metadata.size ? (
-                        <p className="routine-product-slot__size">
-                          {metadata.size}
-                        </p>
-                      ) : null}
+                        <div className="routine-product-slot__details">
+                          <p className="routine-product-slot__brand">
+                            {product.brand}
+                          </p>
+                          <h5>{product.name}</h5>
 
-                      <p className="routine-product-slot__price">
-                        {formatPrice(product.price, product.currency)}
-                      </p>
+                          {metadata.size ? (
+                            <p className="routine-product-slot__size">
+                              {metadata.size}
+                            </p>
+                          ) : null}
 
-                      {metadata.productUrl ? (
-                        <a
-                          className="product-card__link"
-                          href={metadata.productUrl}
-                          target="_blank"
-                          rel="noreferrer noopener"
-                        >
-                          Ver produto
-                          <span aria-hidden="true">↗</span>
-                        </a>
-                      ) : null}
+                          <p className="routine-product-slot__price">
+                            {formatPrice(product.price, product.currency)}
+                          </p>
+
+                          {metadata.productUrl ? (
+                            <a
+                              className="product-card__link"
+                              href={metadata.productUrl}
+                              target="_blank"
+                              rel="noreferrer noopener"
+                            >
+                              Ver produto
+                              <span aria-hidden="true">↗</span>
+                            </a>
+                          ) : null}
+                        </div>
+                      </div>
                     </article>
                   );
                 })}
