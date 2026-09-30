@@ -16,23 +16,31 @@ type SeoData = {
   robots?: string;
 };
 
-const DEFAULT_TITLE =
+export const SITE_URL = (
+  import.meta.env.VITE_SITE_URL ??
+  "https://minhacabeleira.com.br"
+)
+  .trim()
+  .replace(/\/+$/, "");
+
+export const DEFAULT_TITLE =
   "Minha Cabeleira | Análise capilar sem rótulos";
 
-const DEFAULT_DESCRIPTION =
+export const DEFAULT_DESCRIPTION =
   "Análise capilar personalizada, glossário técnico e orientações organizadas por sinais, rotina e objetivos — sem reduzir o cabelo a rótulos.";
+
+const OG_IMAGE_URL =
+  `${SITE_URL}/og-image.jpg`;
+
+const OG_IMAGE_ALT =
+  "Fotografia de cabelo usada na identidade visual do Minha Cabeleira";
 
 function glossarySlugFromPath(
   pathname: string,
 ): string | null {
-  const prefix =
-    "/glossario/";
+  const prefix = "/glossario/";
 
-  if (
-    !pathname.startsWith(
-      prefix,
-    )
-  ) {
+  if (!pathname.startsWith(prefix)) {
     return null;
   }
 
@@ -43,7 +51,16 @@ function glossarySlugFromPath(
   );
 }
 
-function getSeoData(
+function cleanGlossaryEntryName(
+  name: string,
+): string {
+  return name
+    .trim()
+    .replace(/\s*\|+\s*$/, "")
+    .trim();
+}
+
+export function getSeoData(
   pathname: string,
 ): SeoData {
   if (pathname === "/") {
@@ -58,13 +75,11 @@ function getSeoData(
       title:
         "Análise capilar personalizada | Minha Cabeleira",
       description:
-        "Responda 22 perguntas sobre sinais, rotina e objetivos e receba uma análise capilar organizada sem rótulos de curvatura.",
+        "Responda perguntas sobre sinais, rotina e objetivos e receba uma análise capilar organizada sem rótulos de curvatura.",
     };
   }
 
-  if (
-    pathname === "/glossario"
-  ) {
+  if (pathname === "/glossario") {
     return {
       title:
         "Glossário de cabelo e cosméticos | Minha Cabeleira",
@@ -74,20 +89,21 @@ function getSeoData(
   }
 
   const glossarySlug =
-    glossarySlugFromPath(
-      pathname,
-    );
+    glossarySlugFromPath(pathname);
 
   if (glossarySlug) {
     const entry =
-      getGlossaryEntry(
-        glossarySlug,
-      );
+      getGlossaryEntry(glossarySlug);
 
     if (entry) {
+      const entryName =
+        cleanGlossaryEntryName(
+          entry.inciName ?? entry.name,
+        );
+
       return {
         title:
-          `${entry.name} | Glossário Minha Cabeleira`,
+          `${entryName} | Glossário Minha Cabeleira`,
         description:
           entry.summary,
       };
@@ -103,10 +119,7 @@ function getSeoData(
     };
   }
 
-  if (
-    pathname ===
-    "/privacidade"
-  ) {
+  if (pathname === "/privacidade") {
     return {
       title:
         "Privacidade e cookies | Minha Cabeleira",
@@ -132,8 +145,16 @@ function getSeoData(
     description:
       "O endereço acessado não corresponde a uma página disponível no Minha Cabeleira.",
     robots:
-      "noindex,nofollow",
+      "noindex,nofollow,noarchive",
   };
+}
+
+function getCanonicalUrl(
+  pathname: string,
+): string {
+  return `${SITE_URL}${
+    pathname === "/" ? "" : pathname
+  }`;
 }
 
 function upsertMeta(
@@ -168,12 +189,61 @@ function upsertMeta(
   element.content = content;
 }
 
+function upsertJsonLd(
+  pathname: string,
+  data: SeoData,
+  canonicalUrl: string,
+) {
+  const id = "site-jsonld";
+  let script =
+    document.getElementById(id) as HTMLScriptElement | null;
+
+  if (!script) {
+    script = document.createElement("script");
+    script.id = id;
+    script.type = "application/ld+json";
+    document.head.appendChild(script);
+  }
+
+  const payload = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: data.title,
+    description: data.description,
+    url: canonicalUrl,
+    inLanguage: "pt-BR",
+    isPartOf: {
+      "@type": "WebSite",
+      name: "Minha Cabeleira",
+      url: SITE_URL,
+    },
+    ...(pathname.startsWith("/glossario/")
+      ? {
+          about: {
+            "@type": "Thing",
+            name: data.title.replace(
+              " | Glossário Minha Cabeleira",
+              "",
+            ),
+          },
+        }
+      : {}),
+  };
+
+  script.textContent = JSON.stringify(payload);
+}
+
 export function SiteSeo({
   pathname,
 }: SiteSeoProps) {
   useEffect(() => {
     const data =
       getSeoData(pathname);
+    const canonicalUrl =
+      getCanonicalUrl(pathname);
+
+    document.documentElement.lang =
+      "pt-BR";
 
     document.title =
       data.title;
@@ -214,51 +284,110 @@ export function SiteSeo({
       "website",
     );
 
-    const rawSiteUrl =
-      (
-        import.meta.env
-          .VITE_SITE_URL ??
-        ""
-      )
-        .trim()
-        .replace(/\/+$/, "");
+    upsertMeta(
+      'meta[property="og:site_name"]',
+      "property",
+      "og:site_name",
+      "Minha Cabeleira",
+    );
+
+    upsertMeta(
+      'meta[property="og:locale"]',
+      "property",
+      "og:locale",
+      "pt_BR",
+    );
+
+    upsertMeta(
+      'meta[property="og:url"]',
+      "property",
+      "og:url",
+      canonicalUrl,
+    );
+
+    upsertMeta(
+      'meta[property="og:image"]',
+      "property",
+      "og:image",
+      OG_IMAGE_URL,
+    );
+
+    upsertMeta(
+      'meta[property="og:image:alt"]',
+      "property",
+      "og:image:alt",
+      OG_IMAGE_ALT,
+    );
+
+    upsertMeta(
+      'meta[property="og:image:width"]',
+      "property",
+      "og:image:width",
+      "1200",
+    );
+
+    upsertMeta(
+      'meta[property="og:image:height"]',
+      "property",
+      "og:image:height",
+      "630",
+    );
+
+    upsertMeta(
+      'meta[name="twitter:card"]',
+      "name",
+      "twitter:card",
+      "summary_large_image",
+    );
+
+    upsertMeta(
+      'meta[name="twitter:title"]',
+      "name",
+      "twitter:title",
+      data.title,
+    );
+
+    upsertMeta(
+      'meta[name="twitter:description"]',
+      "name",
+      "twitter:description",
+      data.description,
+    );
+
+    upsertMeta(
+      'meta[name="twitter:image"]',
+      "name",
+      "twitter:image",
+      OG_IMAGE_URL,
+    );
 
     let canonical =
       document.querySelector(
         'link[rel="canonical"]',
       ) as HTMLLinkElement | null;
 
-    if (rawSiteUrl) {
-      if (!canonical) {
-        canonical =
-          document.createElement(
-            "link",
-          );
-
-        canonical.rel =
-          "canonical";
-
-        document.head.appendChild(
-          canonical,
+    if (!canonical) {
+      canonical =
+        document.createElement(
+          "link",
         );
-      }
 
-      canonical.href =
-        `${rawSiteUrl}${
-          pathname === "/"
-            ? ""
-            : pathname
-        }`;
+      canonical.rel =
+        "canonical";
 
-      upsertMeta(
-        'meta[property="og:url"]',
-        "property",
-        "og:url",
-        canonical.href,
+      document.head.appendChild(
+        canonical,
       );
-    } else if (canonical) {
-      canonical.remove();
     }
+
+    canonical.href =
+      canonicalUrl;
+
+    upsertJsonLd(
+      pathname,
+      data,
+      canonicalUrl,
+    );
   }, [pathname]);
 
   return null;
