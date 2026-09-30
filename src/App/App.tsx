@@ -23,6 +23,14 @@ import {
 } from "./HomePage";
 
 import {
+  NotFoundPage,
+} from "./NotFoundPage";
+
+import {
+  getGlossaryEntry,
+} from "./glossary-data";
+
+import {
   SiteFooter,
 } from "./SiteFooter";
 
@@ -83,15 +91,20 @@ export function App() {
       pathname,
     );
 
-  let page = <HomePage />;
+  let page = <NotFoundPage />;
 
-  if (pathname === "/analise") {
+  if (pathname === "/") {
+    page = <HomePage />;
+  } else if (pathname === "/analise") {
     page = <AnalysisPage />;
   } else if (
     pathname === "/glossario"
   ) {
     page = <GlossaryPage />;
-  } else if (glossarySlug) {
+  } else if (
+    glossarySlug &&
+    getGlossaryEntry(glossarySlug)
+  ) {
     page = (
       <GlossaryEntryPage
         slug={glossarySlug}

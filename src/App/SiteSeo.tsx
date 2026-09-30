@@ -46,6 +46,13 @@ function glossarySlugFromPath(
 function getSeoData(
   pathname: string,
 ): SeoData {
+  if (pathname === "/") {
+    return {
+      title: DEFAULT_TITLE,
+      description: DEFAULT_DESCRIPTION,
+    };
+  }
+
   if (pathname === "/analise") {
     return {
       title:
@@ -121,9 +128,11 @@ function getSeoData(
 
   return {
     title:
-      DEFAULT_TITLE,
+      "Página não encontrada | Minha Cabeleira",
     description:
-      DEFAULT_DESCRIPTION,
+      "O endereço acessado não corresponde a uma página disponível no Minha Cabeleira.",
+    robots:
+      "noindex,nofollow",
   };
 }
 

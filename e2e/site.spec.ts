@@ -177,6 +177,28 @@ test.describe("Minha Cabeleira — fluxo público", () => {
     await expect(page).toHaveTitle(/Privacidade e cookies/);
   });
 
+
+  test("rota inexistente mostra 404 e não é indexável", async ({ page }) => {
+    await page.goto("/endereco-que-nao-existe");
+
+    await expect(
+      page.getByRole("heading", {
+        level: 1,
+        name: /Esse endereço não existe/i,
+      }),
+    ).toBeVisible();
+
+    await expect(page).toHaveTitle(/Página não encontrada/);
+
+    await expect(
+      page.locator('meta[name="robots"]'),
+    ).toHaveAttribute("content", "noindex,nofollow");
+
+    await expect(
+      page.getByRole("link", { name: /Voltar ao início/i }),
+    ).toBeVisible();
+  });
+
   test("Questionário permanece sem espaços manuais de anúncio", async ({ page }) => {
     await page.goto("/analise");
 
