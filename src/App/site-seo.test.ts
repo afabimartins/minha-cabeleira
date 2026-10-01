@@ -55,6 +55,12 @@ describe("SiteSeo", () => {
     ).toBe(
       "Transparência comercial | Minha Cabeleira",
     );
+
+    expect(
+      getSeoData("/contato").title,
+    ).toBe(
+      "Contato | Minha Cabeleira",
+    );
   });
 
   it("uses the glossary entry in an ingredient page title", () => {

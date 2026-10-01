@@ -51,6 +51,10 @@ export function SiteFooter() {
             Privacidade
           </InternalLink>
 
+          <InternalLink to="/contato">
+            Contato
+          </InternalLink>
+
           <PrivacySettingsButton />
         </div>
 

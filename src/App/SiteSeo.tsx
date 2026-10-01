@@ -146,6 +146,15 @@ export function getSeoData(
     };
   }
 
+  if (pathname === "/contato") {
+    return {
+      title:
+        "Contato | Minha Cabeleira",
+      description:
+        "Entre em contato com o Minha Cabeleira para dúvidas, sugestões, correções, privacidade, catálogo e assuntos relacionados ao projeto.",
+    };
+  }
+
   if (pathname === "/privacidade") {
     return {
       title:

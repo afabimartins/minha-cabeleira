@@ -41,6 +41,7 @@ const routes = [
   "/termos",
   "/transparencia",
   "/privacidade",
+  "/contato",
   ...glossarySlugs.map((slug) => `/glossario/${slug}`),
 ];
 

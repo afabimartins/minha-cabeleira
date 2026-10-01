@@ -11,6 +11,10 @@ import {
 } from "./AnalysisPage";
 
 import {
+  ContactPage,
+} from "./ContactPage";
+
+import {
   GlossaryEntryPage,
 } from "./GlossaryEntryPage";
 
@@ -132,6 +136,8 @@ export function App() {
     page = <TermsPage />;
   } else if (pathname === "/transparencia") {
     page = <TransparencyPage />;
+  } else if (pathname === "/contato") {
+    page = <ContactPage />;
   } else if (
     pathname ===
     "/privacidade"
