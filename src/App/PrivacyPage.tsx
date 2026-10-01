@@ -34,7 +34,7 @@ export function PrivacyPage() {
 
         <small>
           Última atualização:
-          30 de setembro de 2026.
+          1 de outubro de 2026.
         </small>
       </header>
 
@@ -45,6 +45,7 @@ export function PrivacyPage() {
             <h2>
               Respostas da análise
             </h2>
+
             <p>
               As respostas do
               questionário ficam no
@@ -57,6 +58,7 @@ export function PrivacyPage() {
               respostas para o banco
               de produtos.
             </p>
+
             <p>
               Ao recarregar ou
               encerrar a sessão da
@@ -74,6 +76,7 @@ export function PrivacyPage() {
               Catálogo e
               administração
             </h2>
+
             <p>
               O catálogo público de
               produtos é consultado no
@@ -84,6 +87,7 @@ export function PrivacyPage() {
               para manutenção desse
               conteúdo.
             </p>
+
             <p>
               A recomendação técnica
               não depende de dados de
@@ -99,34 +103,33 @@ export function PrivacyPage() {
           <span>03</span>
           <div>
             <h2>
-              Google AdSense
+              Cloudflare Web
+              Analytics
             </h2>
+
             <p>
-              Quando a publicidade
-              estiver ativada, o site
-              poderá usar o Google
-              AdSense em áreas
-              identificadas como
-              “Publicidade”. O Google
-              e seus parceiros podem
-              usar cookies,
-              armazenamento local ou
-              outros identificadores
-              de acordo com a região,
-              as escolhas de
-              privacidade da pessoa e
-              as configurações da
-              conta de publicidade.
+              O site usa atualmente o
+              Cloudflare Web Analytics
+              para acompanhar métricas
+              agregadas de uso e
+              desempenho das páginas,
+              como visualizações e
+              indicadores de
+              carregamento.
             </p>
+
             <p>
-              O questionário e o
-              resultado da análise não
-              contêm espaços manuais
-              de anúncio. A
-              publicidade é mantida
-              separada de botões,
-              recomendações técnicas
-              e produtos compatíveis.
+              De acordo com a
+              documentação da
+              Cloudflare, esse serviço
+              não usa cookies nem
+              localStorage para
+              analytics, não cria
+              perfis individuais por
+              fingerprinting e foi
+              projetado para coletar
+              métricas sem rastrear
+              pessoas individualmente.
             </p>
           </div>
         </section>
@@ -135,19 +138,45 @@ export function PrivacyPage() {
           <span>04</span>
           <div>
             <h2>
-              Consentimento e
-              preferências
+              Google Analytics e
+              publicidade
             </h2>
+
+            <p>
+              Atualmente, o site não
+              usa Google Analytics ou
+              Google Tag Manager e o
+              Google AdSense não está
+              ativo na experiência
+              pública.
+            </p>
+
+            <p>
+              Se a publicidade do
+              Google AdSense for
+              ativada no futuro, ela
+              será exibida em áreas
+              identificadas como
+              “Publicidade”. O Google
+              e seus parceiros podem
+              usar cookies,
+              armazenamento local ou
+              outros identificadores,
+              conforme a região, as
+              escolhas de privacidade
+              da pessoa e a
+              configuração do serviço.
+            </p>
+
             <p>
               Nas regiões em que o
               Google exige uma
               plataforma de gestão de
               consentimento, a
-              configuração de
-              publicidade será
-              acompanhada pela
+              ativação da publicidade
+              será acompanhada pela
               mensagem de privacidade
-              do Google AdSense.
+              correspondente.
             </p>
 
             <PrivacySettingsButton />
@@ -160,6 +189,7 @@ export function PrivacyPage() {
             <h2>
               Imagens e produtos
             </h2>
+
             <p>
               As imagens de produtos
               publicadas no catálogo
@@ -183,27 +213,17 @@ export function PrivacyPage() {
               privacidade
             </h2>
 
-            {privacyContact ? (
-              <p>
-                Para dúvidas sobre
-                privacidade ou este
-                aviso, escreva para{" "}
-                <a
-                  href={`mailto:${privacyContact}`}
-                >
-                  {privacyContact}
-                </a>
-                .
-              </p>
-            ) : (
-              <p>
-                O endereço de contato
-                de privacidade será
-                informado aqui antes
-                da publicação
-                comercial do site.
-              </p>
-            )}
+            <p>
+              Para dúvidas sobre
+              privacidade ou este
+              aviso, escreva para{" "}
+              <a
+                href={`mailto:${privacyContact}`}
+              >
+                {privacyContact}
+              </a>
+              .
+            </p>
           </div>
         </section>
       </div>
@@ -212,9 +232,11 @@ export function PrivacyPage() {
         <strong>
           Transparência por desenho
         </strong>
+
         <p>
           Se o Minha Cabeleira passar
-          a usar analytics, contas de
+          a usar Google Analytics,
+          publicidade ativa, contas de
           visitantes, histórico,
           upload de fotos ou novos
           parceiros comerciais, esta

@@ -291,16 +291,6 @@ export function ContactPage() {
             {CONTACT_EMAIL}
           </a>
         </p>
-
-        <button
-          type="button"
-          className="button button--secondary"
-          onClick={copyEmail}
-        >
-          {copyStatus === "copied"
-            ? "E-mail copiado"
-            : "Copiar e-mail"}
-        </button>
       </aside>
     </main>
   );
