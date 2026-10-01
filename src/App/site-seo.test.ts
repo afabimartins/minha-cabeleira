@@ -37,6 +37,12 @@ describe("SiteSeo", () => {
     ).toBe(
       "Glossário de cabelo e cosméticos | Minha Cabeleira",
     );
+
+    expect(
+      getSeoData("/metodologia").title,
+    ).toBe(
+      "Metodologia da análise capilar | Minha Cabeleira",
+    );
   });
 
   it("uses the glossary entry in an ingredient page title", () => {

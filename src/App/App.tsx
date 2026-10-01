@@ -23,6 +23,10 @@ import {
 } from "./HomePage";
 
 import {
+  MethodologyPage,
+} from "./MethodologyPage";
+
+import {
   NotFoundPage,
 } from "./NotFoundPage";
 
@@ -77,6 +81,7 @@ function pageCanLoadAds(
     pathname === "/" ||
     pathname === "/sobre" ||
     pathname === "/privacidade" ||
+    pathname === "/metodologia" ||
     pathname === "/glossario" ||
     pathname.startsWith(
       "/glossario/",
@@ -112,6 +117,8 @@ export function App() {
     );
   } else if (pathname === "/sobre") {
     page = <AboutPage />;
+  } else if (pathname === "/metodologia") {
+    page = <MethodologyPage />;
   } else if (
     pathname ===
     "/privacidade"

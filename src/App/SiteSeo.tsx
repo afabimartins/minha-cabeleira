@@ -119,6 +119,15 @@ export function getSeoData(
     };
   }
 
+  if (pathname === "/metodologia") {
+    return {
+      title:
+        "Metodologia da análise capilar | Minha Cabeleira",
+      description:
+        "Entenda como o Minha Cabeleira transforma respostas do questionário em sinais, prioridades, orientações de fórmula e produtos compatíveis.",
+    };
+  }
+
   if (pathname === "/privacidade") {
     return {
       title:

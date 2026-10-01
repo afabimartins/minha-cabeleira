@@ -35,6 +35,10 @@ export function SiteFooter() {
             Sobre
           </InternalLink>
 
+          <InternalLink to="/metodologia">
+            Metodologia
+          </InternalLink>
+
           <InternalLink to="/privacidade">
             Privacidade
           </InternalLink>
