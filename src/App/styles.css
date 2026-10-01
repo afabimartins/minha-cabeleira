@@ -9904,3 +9904,78 @@ a:focus-visible {
     grid-auto-columns: minmax(238px, 84vw);
   }
 }
+
+/* ==========================================================
+   BLOCO S.1 — CORREÇÃO DO MOCKUP DO QUESTIONÁRIO NO MOBILE
+   Mantém o painel demonstrativo totalmente dentro da viewport
+   e impede a fotografia do hero de criar overflow horizontal.
+   ========================================================== */
+
+@media (max-width: 720px) {
+  .home-showcase,
+  .home-showcase__inner,
+  .home-showcase__visual {
+    max-width: 100%;
+  }
+
+  .home-showcase__visual {
+    position: relative;
+    overflow: hidden;
+    margin-left: -14px;
+    margin-right: -14px;
+  }
+
+  .home-showcase__quiz {
+    top: 72px;
+    left: 50%;
+    right: auto;
+    width: min(340px, calc(100% - 36px));
+    max-width: calc(100vw - 36px);
+    box-sizing: border-box;
+    transform: translateX(-50%);
+  }
+
+  .home-showcase__quiz-card {
+    min-width: 0;
+  }
+
+  .home-showcase__quiz-card h2,
+  .home-showcase__option,
+  .home-showcase__quiz-actions {
+    min-width: 0;
+  }
+
+  .home-showcase__quiz-card h2 {
+    max-width: 100%;
+  }
+
+  .home-showcase__quiz-actions a {
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-width: 390px) {
+  .home-showcase__quiz {
+    width: calc(100% - 28px);
+    max-width: calc(100vw - 28px);
+    padding: 14px;
+    border-radius: 22px;
+  }
+
+  .home-showcase__quiz-card {
+    padding: 15px;
+  }
+
+  .home-showcase__quiz-card h2 {
+    font-size: 19px;
+  }
+
+  .home-showcase__option {
+    padding-inline: 10px;
+    font-size: 10.5px;
+  }
+
+  .home-showcase__quiz-actions a {
+    padding-inline: 14px;
+  }
+}
