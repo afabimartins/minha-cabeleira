@@ -1,4 +1,3 @@
-import heroHairAnik from "../assets/hero-hair-anik-paul.webp";
 import hairCareTima from "../assets/hair-care-tima-miroshnichenko.webp";
 import hairCoilyAugusto from "../assets/hair-coily-augusto-carneiro.webp";
 import hairManAlax from "../assets/hair-man-alax-matias.webp";
@@ -177,7 +176,9 @@ export function HomePage() {
           <div className="home-showcase__visual" aria-label="Prévia da análise Minha Cabeleira">
             <div className="home-showcase__hair" aria-hidden="true">
               <img
-                src={heroHairAnik}
+                src="/hero-hair-1280.webp"
+                srcSet="/hero-hair-480.webp 480w, /hero-hair-768.webp 768w, /hero-hair-1024.webp 1024w, /hero-hair-1280.webp 1280w"
+                sizes="(max-width: 720px) 100vw, (max-width: 1050px) 88vw, 900px"
                 alt=""
                 width={1280}
                 height={720}

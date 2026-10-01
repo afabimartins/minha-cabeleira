@@ -5440,7 +5440,7 @@ a:focus-visible {
   border-radius: 48% 42% 46% 52%;
   background:
     linear-gradient(rgba(255, 248, 242, 0.13), rgba(255, 248, 242, 0.13)),
-    url("../assets/hero-hair.png") center / cover no-repeat;
+    url("/hero-hair-480.webp") center / cover no-repeat;
   opacity: 0.44;
   transform: rotate(4deg);
 }
@@ -7606,7 +7606,7 @@ a:focus-visible {
   background: linear-gradient(135deg, #edf5e8, #fbfbf4);
 }
 .home-showcase-card--hair::after {
-  background-image: url("../assets/hero-hair.png");
+  background-image: url("/hero-hair-480.webp");
   background-size: cover;
   background-position: 50% 45%;
   opacity: 0.88;
@@ -7967,7 +7967,7 @@ a:focus-visible {
   height: 145px;
   right: -10px;
   bottom: -10px;
-  background-image: url("../assets/hero-hair.png");
+  background-image: url("/hero-hair-480.webp");
   background-size: cover;
   background-position: 62% 44%;
   opacity: 0.96;
@@ -9979,3 +9979,24 @@ a:focus-visible {
     padding-inline: 14px;
   }
 }
+
+/* ==========================================================
+   BLOCO U — LCP DESCOBRÍVEL + CONTRASTE DA HOME
+   Mantém a identidade visual e escurece apenas cores usadas
+   como texto pequeno para atingir contraste AA.
+   ========================================================== */
+
+.home-section-kicker,
+.home-glossary__term > span {
+  color: #c84432;
+}
+
+.home-diversity__link,
+.home-glossary__link {
+  color: #24785c;
+}
+
+.home-diversity__note {
+  color: #715f59;
+}
+
