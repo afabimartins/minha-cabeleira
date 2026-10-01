@@ -6,8 +6,8 @@ const privacyContact =
   (
     import.meta.env
       .VITE_PRIVACY_CONTACT_EMAIL ??
-    ""
-  ).trim();
+    "contato@minhacabeleira.com.br"
+  ).trim() || "contato@minhacabeleira.com.br";
 
 export function PrivacyPage() {
   return (
@@ -34,7 +34,7 @@ export function PrivacyPage() {
 
         <small>
           Última atualização:
-          28 de setembro de 2026.
+          30 de setembro de 2026.
         </small>
       </header>
 
