@@ -1,0 +1,16 @@
+Minha Cabeleira — favicon cabeça
+
+Copie estes arquivos para:
+C:\Users\Profissional\Projects\minha-cabeleira\public\
+
+Substitua os arquivos existentes quando o Windows perguntar.
+
+Arquivos:
+- favicon.ico
+- favicon-16x16.png
+- favicon-32x32.png
+- favicon-192x192.png
+- apple-touch-icon.png
+- favicon-head.png
+
+Cor da marca: #2B1E1A
