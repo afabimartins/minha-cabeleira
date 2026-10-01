@@ -137,6 +137,15 @@ export function getSeoData(
     };
   }
 
+  if (pathname === "/transparencia") {
+    return {
+      title:
+        "Transparência comercial | Minha Cabeleira",
+      description:
+        "Entenda como o Minha Cabeleira separa recomendações técnicas de publicidade, links comerciais, afiliação e patrocínio.",
+    };
+  }
+
   if (pathname === "/privacidade") {
     return {
       title:

@@ -55,6 +55,10 @@ import {
 } from "./TermsPage";
 
 import {
+  TransparencyPage,
+} from "./TransparencyPage";
+
+import {
   SiteHeader,
 } from "./SiteHeader";
 
@@ -86,6 +90,7 @@ function pageCanLoadAds(
     pathname === "/sobre" ||
     pathname === "/privacidade" ||
     pathname === "/metodologia" ||
+    pathname === "/transparencia" ||
     pathname === "/glossario" ||
     pathname.startsWith(
       "/glossario/",
@@ -125,6 +130,8 @@ export function App() {
     page = <MethodologyPage />;
   } else if (pathname === "/termos") {
     page = <TermsPage />;
+  } else if (pathname === "/transparencia") {
+    page = <TransparencyPage />;
   } else if (
     pathname ===
     "/privacidade"

@@ -49,6 +49,12 @@ describe("SiteSeo", () => {
     ).toBe(
       "Termos de uso | Minha Cabeleira",
     );
+
+    expect(
+      getSeoData("/transparencia").title,
+    ).toBe(
+      "Transparência comercial | Minha Cabeleira",
+    );
   });
 
   it("uses the glossary entry in an ingredient page title", () => {

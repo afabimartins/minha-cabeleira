@@ -43,6 +43,10 @@ export function SiteFooter() {
             Termos
           </InternalLink>
 
+          <InternalLink to="/transparencia">
+            Transparência
+          </InternalLink>
+
           <InternalLink to="/privacidade">
             Privacidade
           </InternalLink>
