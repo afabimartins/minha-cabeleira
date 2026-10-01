@@ -1,4 +1,4 @@
-import heroHairAnik from "../assets/hero-hair-anik-paul.jpg";
+import heroHairAnik from "../assets/hero-hair-anik-paul.webp";
 import hairCareTima from "../assets/hair-care-tima-miroshnichenko.webp";
 import hairCoilyAugusto from "../assets/hair-coily-augusto-carneiro.webp";
 import hairManAlax from "../assets/hair-man-alax-matias.webp";
@@ -179,6 +179,11 @@ export function HomePage() {
               <img
                 src={heroHairAnik}
                 alt=""
+                width={1280}
+                height={720}
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
               />
             </div>
 

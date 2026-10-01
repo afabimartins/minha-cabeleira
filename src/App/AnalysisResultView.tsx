@@ -53,13 +53,6 @@ import {
 
 
 
-import {
-
-  generateAnalysisPdf,
-
-} from "./analysis-pdf";
-
-
 
 type AnalysisResultViewProps = {
 
@@ -380,6 +373,18 @@ export function AnalysisResultView({
     const report =
 
       buildAnalysisReport(result);
+
+
+
+    const {
+
+      generateAnalysisPdf,
+
+    } = await import(
+
+      "./analysis-pdf"
+
+    );
 
 
 

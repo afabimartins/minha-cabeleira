@@ -1,4 +1,4 @@
-import brandMarkUrl from "../assets/minha-cabeleira-logo-mark.png";
+import brandMarkUrl from "../assets/minha-cabeleira-logo-mark-ui.png";
 
 type BrandMarkProps = {
   className?: string;
@@ -14,6 +14,9 @@ export function BrandMark({
       src={brandMarkUrl}
       alt=""
       aria-hidden="true"
+      width={256}
+      height={256}
+      decoding="async"
       draggable={false}
     />
   );
