@@ -128,6 +128,15 @@ export function getSeoData(
     };
   }
 
+  if (pathname === "/termos") {
+    return {
+      title:
+        "Termos de uso | Minha Cabeleira",
+      description:
+        "Consulte os termos de uso do Minha Cabeleira, incluindo limites da análise, uso do conteúdo, produtos, links comerciais e responsabilidades.",
+    };
+  }
+
   if (pathname === "/privacidade") {
     return {
       title:

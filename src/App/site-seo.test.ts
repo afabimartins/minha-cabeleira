@@ -43,6 +43,12 @@ describe("SiteSeo", () => {
     ).toBe(
       "Metodologia da análise capilar | Minha Cabeleira",
     );
+
+    expect(
+      getSeoData("/termos").title,
+    ).toBe(
+      "Termos de uso | Minha Cabeleira",
+    );
   });
 
   it("uses the glossary entry in an ingredient page title", () => {

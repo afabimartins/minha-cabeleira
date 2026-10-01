@@ -51,6 +51,10 @@ import {
 } from "./SiteSeo";
 
 import {
+  TermsPage,
+} from "./TermsPage";
+
+import {
   SiteHeader,
 } from "./SiteHeader";
 
@@ -119,6 +123,8 @@ export function App() {
     page = <AboutPage />;
   } else if (pathname === "/metodologia") {
     page = <MethodologyPage />;
+  } else if (pathname === "/termos") {
+    page = <TermsPage />;
   } else if (
     pathname ===
     "/privacidade"
