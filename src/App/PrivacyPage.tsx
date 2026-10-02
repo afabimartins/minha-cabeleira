@@ -7,7 +7,8 @@ const privacyContact =
     import.meta.env
       .VITE_PRIVACY_CONTACT_EMAIL ??
     "contato@minhacabeleira.com.br"
-  ).trim() || "contato@minhacabeleira.com.br";
+  ).trim() ||
+  "contato@minhacabeleira.com.br";
 
 export function PrivacyPage() {
   return (
@@ -34,7 +35,7 @@ export function PrivacyPage() {
 
         <small>
           Última atualização:
-          1 de outubro de 2026.
+          2 de outubro de 2026.
         </small>
       </header>
 
@@ -65,6 +66,15 @@ export function PrivacyPage() {
               página, essas respostas
               não formam um histórico
               pessoal no site.
+            </p>
+
+            <p>
+              As respostas do
+              questionário e o
+              conteúdo individual da
+              análise não são
+              enviados ao Google
+              Analytics.
             </p>
           </div>
         </section>
@@ -108,9 +118,9 @@ export function PrivacyPage() {
             </h2>
 
             <p>
-              O site usa atualmente o
-              Cloudflare Web Analytics
-              para acompanhar métricas
+              O site usa o Cloudflare
+              Web Analytics para
+              acompanhar métricas
               agregadas de uso e
               desempenho das páginas,
               como visualizações e
@@ -138,17 +148,67 @@ export function PrivacyPage() {
           <span>04</span>
           <div>
             <h2>
-              Google Analytics e
-              publicidade
+              Google Analytics
             </h2>
 
             <p>
-              Atualmente, o site não
-              usa Google Analytics ou
-              Google Tag Manager e o
-              Google AdSense não está
-              ativo na experiência
-              pública.
+              O Minha Cabeleira pode
+              usar o Google Analytics
+              4 para compreender, de
+              forma geral, como as
+              páginas públicas do site
+              são utilizadas.
+            </p>
+
+            <p>
+              A tag do Google
+              Analytics só é carregada
+              quando a visitante
+              escolhe aceitar
+              analytics. Se a escolha
+              for recusar, o site não
+              carrega a tag para essa
+              finalidade.
+            </p>
+
+            <p>
+              A preferência entre
+              aceitar ou recusar é
+              armazenada no navegador
+              para que a escolha possa
+              ser respeitada em novas
+              visitas. Ela pode ser
+              alterada posteriormente
+              nas configurações de
+              privacidade e cookies.
+            </p>
+
+            <p>
+              Na configuração atual,
+              os recursos de Google
+              Signals e os sinais de
+              personalização de
+              publicidade permanecem
+              desativados no Google
+              Analytics.
+            </p>
+
+            <PrivacySettingsButton />
+          </div>
+        </section>
+
+        <section>
+          <span>05</span>
+          <div>
+            <h2>
+              Publicidade
+            </h2>
+
+            <p>
+              O Google AdSense não
+              está ativo na
+              experiência pública
+              neste momento.
             </p>
 
             <p>
@@ -165,12 +225,13 @@ export function PrivacyPage() {
               conforme a região, as
               escolhas de privacidade
               da pessoa e a
-              configuração do serviço.
+              configuração do
+              serviço.
             </p>
 
             <p>
               Nas regiões em que o
-              Google exige uma
+              Google exigir uma
               plataforma de gestão de
               consentimento, a
               ativação da publicidade
@@ -178,13 +239,11 @@ export function PrivacyPage() {
               mensagem de privacidade
               correspondente.
             </p>
-
-            <PrivacySettingsButton />
           </div>
         </section>
 
         <section>
-          <span>05</span>
+          <span>06</span>
           <div>
             <h2>
               Imagens e produtos
@@ -206,7 +265,7 @@ export function PrivacyPage() {
         </section>
 
         <section>
-          <span>06</span>
+          <span>07</span>
           <div>
             <h2>
               Contato sobre
@@ -235,8 +294,8 @@ export function PrivacyPage() {
 
         <p>
           Se o Minha Cabeleira passar
-          a usar Google Analytics,
-          publicidade ativa, contas de
+          a usar novos serviços de
+          publicidade, contas de
           visitantes, histórico,
           upload de fotos ou novos
           parceiros comerciais, esta

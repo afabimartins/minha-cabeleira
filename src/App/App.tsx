@@ -47,6 +47,14 @@ import {
 } from "./adsense";
 
 import {
+  AnalyticsLoader,
+} from "./analytics";
+
+import {
+  PrivacyConsentManager,
+} from "./privacy-consent";
+
+import {
   PrivacyPage,
 } from "./PrivacyPage";
 
@@ -104,6 +112,7 @@ function pageCanLoadAds(
 
 export function App() {
   const pathname = usePathname();
+
   const glossarySlug =
     getGlossarySlugFromPath(
       pathname,
@@ -113,7 +122,9 @@ export function App() {
 
   if (pathname === "/") {
     page = <HomePage />;
-  } else if (pathname === "/analise") {
+  } else if (
+    pathname === "/analise"
+  ) {
     page = <AnalysisPage />;
   } else if (
     pathname === "/glossario"
@@ -121,29 +132,47 @@ export function App() {
     page = <GlossaryPage />;
   } else if (
     glossarySlug &&
-    getGlossaryEntry(glossarySlug)
+    getGlossaryEntry(
+      glossarySlug,
+    )
   ) {
     page = (
       <GlossaryEntryPage
         slug={glossarySlug}
       />
     );
-  } else if (pathname === "/sobre") {
+  } else if (
+    pathname === "/sobre"
+  ) {
     page = <AboutPage />;
-  } else if (pathname === "/metodologia") {
+  } else if (
+    pathname ===
+    "/metodologia"
+  ) {
     page = <MethodologyPage />;
-  } else if (pathname === "/termos") {
+  } else if (
+    pathname === "/termos"
+  ) {
     page = <TermsPage />;
-  } else if (pathname === "/transparencia") {
-    page = <TransparencyPage />;
-  } else if (pathname === "/contato") {
+  } else if (
+    pathname ===
+    "/transparencia"
+  ) {
+    page = (
+      <TransparencyPage />
+    );
+  } else if (
+    pathname === "/contato"
+  ) {
     page = <ContactPage />;
   } else if (
     pathname ===
     "/privacidade"
   ) {
     page = <PrivacyPage />;
-  } else if (pathname === "/admin") {
+  } else if (
+    pathname === "/admin"
+  ) {
     page = <AdminPage />;
   }
 
@@ -152,6 +181,8 @@ export function App() {
       <SiteSeo
         pathname={pathname}
       />
+
+      <AnalyticsLoader />
 
       <AdSenseLoader
         active={pageCanLoadAds(
@@ -166,6 +197,8 @@ export function App() {
       {page}
 
       <SiteFooter />
+
+      <PrivacyConsentManager />
     </div>
   );
 }

@@ -11,6 +11,7 @@ import {
 } from "./App";
 
 import "./styles.css";
+import "./privacy-consent.css";
 
 const rootElement =
   document.getElementById("root");
