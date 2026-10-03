@@ -1,4 +1,5 @@
 import {
+  useRef,
   useState,
 } from "react";
 
@@ -39,12 +40,17 @@ import {
   AnalysisResultView,
 } from "./AnalysisResultView";
 
+import {
+  trackAnalyticsEvent,
+} from "./analytics";
+
 export function Questionnaire() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<QuestionnaireAnswer[]>([]);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [isPreparingAnalysis, setIsPreparingAnalysis] = useState(false);
   const [analysisError, setAnalysisError] = useState("");
+  const analysisStarted = useRef(false);
 
   const currentQuestion = questionnaireQuestions[currentQuestionIndex];
   const currentAnswer = answers.find(
@@ -55,6 +61,13 @@ export function Questionnaire() {
   const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
 
   function selectAnswer(value: ObservationValue) {
+    if (!analysisStarted.current) {
+      analysisStarted.current = true;
+      trackAnalyticsEvent(
+        "analysis_start",
+      );
+    }
+
     setAnswers((previousAnswers) => {
       const otherAnswers = previousAnswers.filter(
         (answer) => answer.questionId !== currentQuestion.id,
@@ -107,6 +120,9 @@ export function Questionnaire() {
 
       if (analysis.valid && analysis.result) {
         setAnalysisResult(analysis.result);
+        trackAnalyticsEvent(
+          "analysis_complete",
+        );
         window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
         setAnalysisError(
@@ -124,6 +140,7 @@ export function Questionnaire() {
   }
 
   function restart() {
+    analysisStarted.current = false;
     setAnswers([]);
     setCurrentQuestionIndex(0);
     setAnalysisResult(null);

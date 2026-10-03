@@ -51,6 +51,10 @@ import {
 
 } from "./analysis-report-model";
 
+import {
+  trackAnalyticsEvent,
+} from "./analytics";
+
 
 
 
@@ -389,6 +393,10 @@ export function AnalysisResultView({
 
 
     await generateAnalysisPdf(report);
+
+    trackAnalyticsEvent(
+      "analysis_pdf_download",
+    );
 
   }
 
@@ -984,6 +992,17 @@ export function AnalysisResultView({
                               href={metadata.productUrl}
                               target="_blank"
                               rel="noreferrer noopener"
+                              onClick={() =>
+                                trackAnalyticsEvent(
+                                  "recommended_product_click",
+                                  {
+                                    placement: "routine",
+                                    ...(metadata.linkType
+                                      ? { link_type: metadata.linkType }
+                                      : {}),
+                                  },
+                                )
+                              }
                             >
                               Ver produto
                               <span aria-hidden="true">↗</span>
@@ -1799,6 +1818,17 @@ export function AnalysisResultView({
                                                   href={metadata.productUrl}
                                                   target="_blank"
                                                   rel="noreferrer noopener"
+                                                  onClick={() =>
+                                                    trackAnalyticsEvent(
+                                                      "recommended_product_click",
+                                                      {
+                                                        placement: "recommendation",
+                                                        ...(metadata.linkType
+                                                          ? { link_type: metadata.linkType }
+                                                          : {}),
+                                                      },
+                                                    )
+                                                  }
                                                 >
                                                   Ver produto
                                                   <span aria-hidden="true">↗</span>

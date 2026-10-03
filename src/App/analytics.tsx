@@ -30,6 +30,18 @@ export const analyticsConfigured =
     analyticsMeasurementId,
   );
 
+export type AnalyticsEventName =
+  | "analysis_start"
+  | "analysis_complete"
+  | "analysis_pdf_download"
+  | "recommended_product_click";
+
+type AnalyticsEventParameters =
+  Record<
+    string,
+    string | number | boolean
+  >;
+
 function getDisableKey() {
   return `ga-disable-${analyticsMeasurementId}`;
 }
@@ -67,6 +79,40 @@ function ensureGtag() {
       arguments,
     );
   };
+}
+
+export function trackAnalyticsEvent(
+  eventName: AnalyticsEventName,
+  parameters?: AnalyticsEventParameters,
+) {
+  if (
+    !analyticsConfigured ||
+    import.meta.env.DEV ||
+    typeof window === "undefined" ||
+    typeof window.gtag !== "function"
+  ) {
+    return;
+  }
+
+  const runtimeWindow =
+    window as unknown as Record<
+      string,
+      unknown
+    >;
+
+  if (
+    runtimeWindow[
+      getDisableKey()
+    ] !== false
+  ) {
+    return;
+  }
+
+  window.gtag(
+    "event",
+    eventName,
+    parameters ?? {},
+  );
 }
 
 function loadAnalyticsScript() {
