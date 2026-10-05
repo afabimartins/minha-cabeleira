@@ -62,7 +62,8 @@ function getGoalPriority(
       "reduce_breakage" ||
       primaryGoal ===
         "retain_length") &&
-    type === "damage_protection"
+    (type === "damage_protection" ||
+      type === "goal_breakage_support")
   ) {
     return 0;
   }
@@ -70,7 +71,8 @@ function getGoalPriority(
   if (
     primaryGoal ===
       "improve_softness" &&
-    type === "conditioning_support"
+    (type === "conditioning_support" ||
+      type === "goal_softness_support")
   ) {
     return 0;
   }
@@ -78,7 +80,25 @@ function getGoalPriority(
   if (
     primaryGoal ===
       "control_frizz" &&
-    type === "moisture_support"
+    (type === "moisture_support" ||
+      type === "goal_frizz_support")
+  ) {
+    return 0;
+  }
+
+  if (
+    primaryGoal ===
+      "improve_definition" &&
+    type === "goal_definition_support"
+  ) {
+    return 0;
+  }
+
+  if (
+    primaryGoal ===
+      "simplify_routine" &&
+    type ===
+      "goal_routine_simplification"
   ) {
     return 0;
   }

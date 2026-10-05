@@ -172,8 +172,14 @@ describe(
             "elseve-oleo-extraordinario-100ml",
             "seda-toque-de-seda-serum-oleo-60ml",
             "loccitane-pataua-serum-calmante-couro-50ml",
-            "match-agente-antioleosidade-tonico-100ml",
           ]),
+        );
+
+        expect(
+          ids,
+          "O tônico Match. deve permanecer fora do catálogo público enquanto estiver pausado.",
+        ).not.toContain(
+          "match-agente-antioleosidade-tonico-100ml",
         );
 
         for (const category of
@@ -202,8 +208,8 @@ describe(
             (product) =>
               product.category === "scalp",
           ).length,
-          "O catálogo precisa ter opções separadas para oleosidade e ressecamento do couro cabeludo.",
-        ).toBeGreaterThanOrEqual(2);
+          "O catálogo precisa ter pelo menos uma opção ativa de cuidado do couro cabeludo. O item de oleosidade pode permanecer pausado enquanto não houver link afiliado adequado.",
+        ).toBeGreaterThanOrEqual(1);
       },
     );
 

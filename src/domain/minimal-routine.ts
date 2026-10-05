@@ -17,6 +17,33 @@ const recommendationAttributeMap:
 
     damage_protection:
       "damage_support",
+
+    heat_protection:
+      "heat_protection",
+
+    chemical_process_care:
+      "conditioning",
+
+    scalp_oiliness_support:
+      "scalp_oiliness_support",
+
+    scalp_dryness_support:
+      "scalp_dryness_support",
+
+    goal_breakage_support:
+      "damage_support",
+
+    goal_softness_support:
+      "conditioning",
+
+    goal_frizz_support:
+      "moisture_support",
+
+    goal_definition_support:
+      "conditioning_support",
+
+    goal_routine_simplification:
+      "conditioning_support",
   };
 
 function getRequiredAttributes(

@@ -54,6 +54,22 @@ const findingPresentations: Record<
     description:
       "Você relatou exposição frequente a fontes de calor. Essa informação é relevante para compreender o histórico do cabelo, mas, isoladamente, não significa que exista dano na fibra.",
   },
+
+  scalp_oiliness_need: {
+    title:
+      "Oleosidade perceptível no couro cabeludo",
+
+    description:
+      "Você relatou oleosidade entre as lavagens. Esse sinal é usado apenas para personalizar o cuidado cosmético do couro cabeludo e não representa um diagnóstico de causa.",
+  },
+
+  scalp_dryness_need: {
+    title:
+      "Ressecamento percebido no couro cabeludo",
+
+    description:
+      "Você relatou ressecamento ou descamação seca. Esse sinal pode orientar cuidados cosméticos quando não há alertas de segurança; persistência, piora ou desconforto importante merecem avaliação profissional.",
+  },
 };
 
 function humanizeType(
@@ -97,6 +113,33 @@ export function getRecommendationTitle(
 
     case "moisture_support":
       return "Suporte à retenção de umidade";
+
+    case "heat_protection":
+      return "Proteção durante o uso de calor";
+
+    case "chemical_process_care":
+      return "Cuidado em uma rotina com química";
+
+    case "scalp_oiliness_support":
+      return "Cuidado para couro cabeludo oleoso";
+
+    case "scalp_dryness_support":
+      return "Cuidado para couro cabeludo ressecado";
+
+    case "goal_breakage_support":
+      return "Suporte ao objetivo de reduzir quebra";
+
+    case "goal_softness_support":
+      return "Suporte ao objetivo de melhorar maciez";
+
+    case "goal_frizz_support":
+      return "Suporte ao objetivo de controlar frizz";
+
+    case "goal_definition_support":
+      return "Suporte ao objetivo de melhorar definição";
+
+    case "goal_routine_simplification":
+      return "Uma rotina mais simples";
 
     default:
       return "Recomendação";

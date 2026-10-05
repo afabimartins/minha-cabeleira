@@ -24,6 +24,10 @@ import {
 } from "./recommendation-engine";
 
 import {
+  buildGoalFallbackRecommendation,
+} from "./goal-fallback-recommendation";
+
+import {
   selectProducts,
 } from "./product-selection";
 
@@ -52,11 +56,34 @@ export function buildAnalysisResult(
   const safety =
     assessSafety(observations);
 
-  const recommendations =
+  const diagnosticRecommendations =
     buildRecommendations(
       recommendationRules,
       diagnosis.findings,
     );
+
+  /*
+   * Uma análise normal não deve terminar sem nenhuma orientação de
+   * fórmula apenas porque os sinais não atingiram o limiar das regras
+   * diagnósticas específicas. Quando não existe recomendação derivada
+   * dos achados, usamos a prioridade declarada pela pessoa como uma
+   * camada de personalização — nunca como diagnóstico.
+   *
+   * Em caution/stop não criamos fallback de objetivo. A camada de
+   * segurança e as orientações gerais da interface continuam prevalecendo.
+   */
+  const goalFallback =
+    diagnosticRecommendations.length === 0 &&
+    safety.level === "normal"
+      ? buildGoalFallbackRecommendation(
+          observations,
+        )
+      : null;
+
+  const recommendations =
+    goalFallback
+      ? [goalFallback]
+      : diagnosticRecommendations;
 
   const recommendationResults:
     RecommendationResult[] =
