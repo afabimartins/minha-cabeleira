@@ -287,18 +287,25 @@ test.describe("Minha Cabeleira — fluxo público", () => {
       page.getByText("Análise concluída", { exact: true }),
     ).toBeVisible({ timeout: 20_000 });
 
+    const productsHeading = page.getByRole("heading", {
+      level: 4,
+      name: /Produtos compatíveis por categoria/i,
+    });
+
+    await expect(productsHeading).toBeVisible();
+    await expect(productsHeading).toHaveCount(1);
+
     await expect(
-      page.getByRole("heading", {
-        level: 4,
-        name: /Uma indicação por tipo de produto/i,
+      page.getByRole("button", {
+        name: /Ver produtos compatíveis/i,
       }),
-    ).toBeVisible();
+    ).toHaveCount(0);
 
     for (const category of [
       "Shampoo",
       "Condicionador",
       "Máscara / tratamento",
-      "Finalizador / leave-in",
+      "Finalizador / creme / leave-in",
       "Óleo / sérum",
     ]) {
       await expect(

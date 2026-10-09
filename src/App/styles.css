@@ -10000,3 +10000,95 @@ a:focus-visible {
   color: #715f59;
 }
 
+
+/* ==========================================================
+   BLOCO AE — DIVERSIDADE DE MARCAS E ORDEM DA RECOMENDAÇÃO
+   ========================================================== */
+.routine-products--final {
+  margin-top: 32px;
+}
+
+.routine-products__categories {
+  display: grid;
+  gap: 20px;
+}
+
+.routine-product-category {
+  min-width: 0;
+  padding-top: 18px;
+  border-top: 1px solid rgba(84, 63, 52, 0.1);
+}
+
+.routine-product-category:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.routine-product-category__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.routine-product-category__heading h5 {
+  margin: 4px 0 0;
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.routine-product-category__gap,
+.routine-product-category__complete {
+  flex: 0 0 auto;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.routine-product-category__gap {
+  color: #7a4e34;
+  background: #fff0e6;
+}
+
+.routine-product-category__complete {
+  color: #22684d;
+  background: #eef8f2;
+}
+
+.routine-product-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.routine-product-options .routine-product-slot {
+  height: 100%;
+}
+
+.recommendation-blocked--products-final {
+  margin-top: 28px;
+}
+
+@media (max-width: 980px) {
+  .routine-product-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .routine-product-category__heading {
+    display: grid;
+  }
+
+  .routine-product-category__gap,
+  .routine-product-category__complete {
+    width: fit-content;
+  }
+
+  .routine-product-options {
+    grid-template-columns: 1fr;
+  }
+}

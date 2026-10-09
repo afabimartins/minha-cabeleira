@@ -1373,7 +1373,7 @@ function getRoutineCategoryLabel(
     case "mask":
       return "Máscara / tratamento";
     case "leave_in":
-      return "Finalizador / leave-in";
+      return "Finalizador / creme / leave-in";
     case "oil":
       return "Óleo / sérum";
     case "scalp":
@@ -1388,11 +1388,11 @@ function getRoutineMatchLabel(
 ): string {
   switch (level) {
     case "exact":
-      return "melhor correspondência";
+      return "correspondência alta";
     case "compatible":
-      return "compatível";
+      return "correspondência parcial";
     case "basic":
-      return "opção básica";
+      return "opção básica da categoria";
     default:
       return "catálogo incompleto";
   }
@@ -1408,7 +1408,7 @@ function addRoutineProducts(
 
   addText(
     context,
-    "ROTINA-BASE DE PRODUTOS",
+    "PRODUTOS COMPATÍVEIS - CONSULTA OPCIONAL",
     {
       x: 20,
       width: 166,
@@ -1421,7 +1421,7 @@ function addRoutineProducts(
 
   addText(
     context,
-    "Uma opção por etapa essencial, preservando os critérios de exclusão e usando fallback apenas quando não há correspondência completa.",
+    "Depois da orientação de fórmula, reunimos até três opções por categoria, priorizando marcas diferentes para reduzir concentração comercial. A ordem segue compatibilidade técnica e não representa preferência de marca.",
     {
       x: 20,
       width: 166,
@@ -1434,13 +1434,29 @@ function addRoutineProducts(
 
   report.routineProducts.forEach(
     (selection) => {
-      const product = selection.product;
       const categoryLabel =
         getRoutineCategoryLabel(
           selection.category,
         );
 
-      if (!product) {
+      const options =
+        selection.options?.length
+          ? selection.options
+          : selection.product
+            ? [
+                {
+                  product: selection.product,
+                  matchLevel:
+                    selection.matchLevel,
+                  matchedAttributes:
+                    selection.matchedAttributes,
+                  missingAttributes:
+                    selection.missingAttributes,
+                },
+              ]
+            : [];
+
+      if (options.length === 0) {
         addText(
           context,
           `${categoryLabel}: categoria sem produto ativo verificado no catálogo.`,
@@ -1455,30 +1471,48 @@ function addRoutineProducts(
         return;
       }
 
-      const price =
-        product.price === undefined
-          ? "Preço não informado"
-          : product.currency === "BRL"
-            ? new Intl.NumberFormat(
-                "pt-BR",
-                {
-                  style: "currency",
-                  currency: "BRL",
-                },
-              ).format(product.price)
-            : `${product.currency ?? ""} ${product.price.toFixed(2)}`.trim();
-
       addText(
         context,
-        `${categoryLabel}: ${product.brand} ${product.name} — ${price} (${getRoutineMatchLabel(selection.matchLevel)})`,
+        `${categoryLabel} — ${options.length} de ${selection.targetOptionCount ?? 3} marcas disponíveis`,
         {
           x: 23,
           width: 164,
-          fontSize: 8.2,
-          lineHeight: 4.2,
-          spacingAfter: 2.5,
+          fontSize: 8.5,
+          bold: true,
+          color: COLORS.ink,
+          spacingAfter: 1.5,
         },
       );
+
+      options.forEach((option) => {
+        const product = option.product;
+        const price =
+          product.price === undefined
+            ? "Preço não informado"
+            : product.currency === "BRL"
+              ? new Intl.NumberFormat(
+                  "pt-BR",
+                  {
+                    style: "currency",
+                    currency: "BRL",
+                  },
+                ).format(product.price)
+              : `${product.currency ?? ""} ${product.price.toFixed(2)}`.trim();
+
+        addText(
+          context,
+          `• ${product.brand} — ${product.name} — ${price} (${getRoutineMatchLabel(option.matchLevel)})`,
+          {
+            x: 27,
+            width: 160,
+            fontSize: 8,
+            lineHeight: 4.1,
+            spacingAfter: 1.5,
+          },
+        );
+      });
+
+      context.y += 1.5;
     },
   );
 
@@ -1512,11 +1546,6 @@ function addRecommendationsSection(
       },
     );
   }
-
-  addRoutineProducts(
-    context,
-    report,
-  );
 
   if (
     report.recommendations.length ===
@@ -1670,10 +1699,6 @@ function addRecommendationsSection(
         context,
         recommendation,
       );
-      addProducts(
-        context,
-        recommendation,
-      );
 
       if (
         index <
@@ -1694,6 +1719,11 @@ function addRecommendationsSection(
         context.y += 7;
       }
     },
+  );
+
+  addRoutineProducts(
+    context,
+    report,
   );
 }
 

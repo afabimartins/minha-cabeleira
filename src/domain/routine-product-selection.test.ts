@@ -27,11 +27,12 @@ function product(
   category: ProductCategory,
   price: number,
   attributes: string[],
+  brand = "Fixture",
 ): Product {
   return {
     id,
     name: id,
-    brand: "Fixture",
+    brand,
     category,
     price,
     currency: "BRL",
@@ -261,6 +262,84 @@ describe(
       ).toBe("conditioner-cheapest");
     });
 
+    it("returns up to three options from different brands for each category", () => {
+      const products = [
+        product(
+          "shampoo-a-1",
+          "shampoo",
+          12,
+          ["moisture_support"],
+          "Marca A",
+        ),
+        product(
+          "shampoo-a-2",
+          "shampoo",
+          10,
+          ["moisture_support"],
+          "Marca A",
+        ),
+        product(
+          "shampoo-b",
+          "shampoo",
+          14,
+          ["moisture_support"],
+          "Marca B",
+        ),
+        product(
+          "shampoo-c",
+          "shampoo",
+          16,
+          ["moisture_support"],
+          "Marca C",
+        ),
+        ...catalog.filter(
+          (item) => item.category !== "shampoo",
+        ),
+      ];
+
+      const routine =
+        selectRoutineProducts(
+          products,
+          [
+            recommendation(
+              "moisture_support",
+              ["moisture_support"],
+            ),
+          ],
+          [
+            preference(
+              "budget_priority",
+              "lowest_price",
+            ),
+          ],
+        );
+
+      const shampoo = routine.find(
+        (selection) =>
+          selection.category === "shampoo",
+      );
+
+      expect(shampoo?.options).toHaveLength(3);
+      expect(
+        shampoo?.options?.map(
+          (option) => option.product.brand,
+        ),
+      ).toEqual([
+        "Marca A",
+        "Marca B",
+        "Marca C",
+      ]);
+
+      expect(
+        new Set(
+          shampoo?.options?.map(
+            (option) =>
+              option.product.brand.toLowerCase(),
+          ),
+        ).size,
+      ).toBe(3);
+    });
+
     it("never relaxes excluded attributes", () => {
       const unsafe = product(
         "unsafe-shampoo",
@@ -391,6 +470,36 @@ describe(
             "scalp",
         )?.product?.id,
       ).toBe("scalp-oiliness-basic");
+    });
+
+    it("does not use a dryness-only scalp product as fallback for oiliness", () => {
+      const observations: Observation[] = [
+        {
+          id: "scalp-oiliness",
+          domain: "scalp",
+          trait: "scalp_oiliness",
+          value: "moderate",
+          region: "scalp",
+          source: "questionnaire",
+        },
+      ];
+
+      const withoutOiliness = catalog.filter(
+        (item) =>
+          item.id !== "scalp-oiliness-basic",
+      );
+
+      const scalp = selectRoutineProducts(
+        withoutOiliness,
+        [],
+        observations,
+      ).find(
+        (selection) =>
+          selection.category === "scalp",
+      );
+
+      expect(scalp?.product).toBeNull();
+      expect(scalp?.options).toEqual([]);
     });
 
     it("does not add scalp care when oiliness and dryness are absent", () => {

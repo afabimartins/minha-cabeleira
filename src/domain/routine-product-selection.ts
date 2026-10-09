@@ -30,6 +30,8 @@ export const CORE_ROUTINE_PRODUCT_CATEGORIES:
     "oil",
   ];
 
+export const ROUTINE_PRODUCT_TARGET_PER_CATEGORY = 3;
+
 const categoryAliases: Record<
   RoutineProductCategory,
   ProductCategory[]
@@ -419,15 +421,36 @@ export function selectRoutineProducts(
 
       const candidates =
         activeProducts.filter(
-          (product) =>
-            allowedCategories.includes(
-              product.category,
-            ) &&
-            !productHasAnyExcludedCriterion(
-              product,
-              excludedAttributes,
-              excludedIngredients,
-            ),
+          (product) => {
+            if (
+              !allowedCategories.includes(
+                product.category,
+              ) ||
+              productHasAnyExcludedCriterion(
+                product,
+                excludedAttributes,
+                excludedIngredients,
+              )
+            ) {
+              return false;
+            }
+
+            if (
+              category === "scalp" &&
+              categoryRequiredAttributes.length > 0
+            ) {
+              const productAttributes = new Set(
+                product.attributes.map(normalize),
+              );
+
+              return categoryRequiredAttributes.some(
+                (attribute) =>
+                  productAttributes.has(attribute),
+              );
+            }
+
+            return true;
+          },
         );
 
       if (candidates.length === 0) {
@@ -439,6 +462,9 @@ export function selectRoutineProducts(
           missingAttributes: [
             ...categoryRequiredAttributes,
           ],
+          options: [],
+          targetOptionCount:
+            ROUTINE_PRODUCT_TARGET_PER_CATEGORY,
         };
       }
 
@@ -453,16 +479,59 @@ export function selectRoutineProducts(
         budgetPriority,
       );
 
-      const selected = ranked[0];
+      /*
+       * Neutralidade comercial: a lista final evita repetir a mesma
+       * marca dentro da categoria. A relevância técnica continua sendo
+       * o primeiro critério de ordenação; depois escolhemos, nessa ordem,
+       * a melhor opção disponível de cada marca até atingir três marcas.
+       */
+      const seenBrands = new Set<string>();
+      const diverseOptions: ProductScore[] = [];
+
+      for (const score of ranked) {
+        const brandKey =
+          normalize(score.product.brand);
+
+        if (seenBrands.has(brandKey)) {
+          continue;
+        }
+
+        seenBrands.add(brandKey);
+        diverseOptions.push(score);
+
+        if (
+          diverseOptions.length >=
+          ROUTINE_PRODUCT_TARGET_PER_CATEGORY
+        ) {
+          break;
+        }
+      }
+
+      const selected = diverseOptions[0];
 
       return {
         category,
-        product: selected.product,
-        matchLevel: selected.level,
+        product: selected?.product ?? null,
+        matchLevel:
+          selected?.level ?? "missing",
         matchedAttributes:
-          selected.matchedAttributes,
+          selected?.matchedAttributes ?? [],
         missingAttributes:
-          selected.missingAttributes,
+          selected?.missingAttributes ?? [
+            ...categoryRequiredAttributes,
+          ],
+        options: diverseOptions.map(
+          (score) => ({
+            product: score.product,
+            matchLevel: score.level,
+            matchedAttributes:
+              score.matchedAttributes,
+            missingAttributes:
+              score.missingAttributes,
+          }),
+        ),
+        targetOptionCount:
+          ROUTINE_PRODUCT_TARGET_PER_CATEGORY,
       };
     },
   );

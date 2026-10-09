@@ -1,11 +1,3 @@
-import {
-
-  useState,
-
-} from "react";
-
-
-
 
 import {
   InternalLink,
@@ -236,7 +228,7 @@ function getRoutineProductCategoryLabel(
     case "mask":
       return "Máscara / tratamento";
     case "leave_in":
-      return "Finalizador / leave-in";
+      return "Finalizador / creme / leave-in";
     case "oil":
       return "Óleo / sérum";
     case "scalp":
@@ -251,14 +243,217 @@ function getRoutineProductMatchLabel(
 ): string {
   switch (level) {
     case "exact":
-      return "Melhor correspondência";
+      return "Correspondência alta";
     case "compatible":
-      return "Compatível";
+      return "Correspondência parcial";
     case "basic":
-      return "Opção básica segura";
+      return "Opção básica da categoria";
     default:
       return "Catálogo incompleto";
   }
+}
+
+function RoutineProductsSection({
+  selections,
+}: {
+  selections: NonNullable<
+    AnalysisResult["routineProducts"]
+  >;
+}) {
+  return (
+    <div className="routine-products routine-products--final">
+      <div className="routine-products__intro">
+        <p className="routine-products__eyebrow">
+          Consulta opcional
+        </p>
+
+        <h4>
+          Produtos compatíveis por categoria
+        </h4>
+
+        <p>
+          Primeiro vem a orientação técnica sobre necessidades, tipos de
+          ingredientes e exemplos no rótulo. Só depois mostramos opções do
+          catálogo compatíveis com esses critérios. Quando o catálogo permite,
+          exibimos até três marcas diferentes por categoria para reduzir
+          concentração comercial. A ordem não representa preferência de marca.
+        </p>
+      </div>
+
+      <div className="routine-products__categories">
+        {selections.map((selection) => {
+          const options =
+            selection.options?.length
+              ? selection.options
+              : selection.product
+                ? [
+                    {
+                      product: selection.product,
+                      matchLevel:
+                        selection.matchLevel,
+                      matchedAttributes:
+                        selection.matchedAttributes,
+                      missingAttributes:
+                        selection.missingAttributes,
+                    },
+                  ]
+                : [];
+
+          const target =
+            selection.targetOptionCount ?? 3;
+          const missingCount = Math.max(
+            0,
+            target - options.length,
+          );
+
+          return (
+            <section
+              className="routine-product-category"
+              key={selection.category}
+            >
+              <div className="routine-product-category__heading">
+                <div>
+                  <p className="routine-product-slot__category">
+                    {getRoutineProductCategoryLabel(
+                      selection.category,
+                    )}
+                  </p>
+                  <h5>
+                    {options.length} de {target} marcas disponíveis
+                  </h5>
+                </div>
+
+                {missingCount > 0 ? (
+                  <span className="routine-product-category__gap">
+                    Faltam {missingCount} {missingCount === 1 ? "marca" : "marcas"}
+                  </span>
+                ) : (
+                  <span className="routine-product-category__complete">
+                    Cobertura diversificada
+                  </span>
+                )}
+              </div>
+
+              {options.length === 0 ? (
+                <article className="routine-product-slot routine-product-slot--missing">
+                  <strong>Categoria sem produto ativo</strong>
+                  <p>
+                    O catálogo precisa de opções verificadas nesta categoria.
+                  </p>
+                </article>
+              ) : (
+                <div className="routine-product-options">
+                  {options.map((option) => {
+                    const product = option.product;
+                    const metadata =
+                      product as typeof product &
+                        ProductWithCatalogMeta;
+
+                    return (
+                      <article
+                        className="routine-product-slot"
+                        key={product.id}
+                      >
+                        <div className="routine-product-slot__topline">
+                          <span className="routine-product-slot__brand">
+                            {product.brand}
+                          </span>
+                          <span
+                            className={`routine-product-slot__match routine-product-slot__match--${option.matchLevel}`}
+                          >
+                            {getRoutineProductMatchLabel(
+                              option.matchLevel,
+                            )}
+                          </span>
+                        </div>
+
+                        <div className="routine-product-slot__body">
+                          {metadata.imageUrl ? (
+                            <div className="routine-product-slot__image-wrap">
+                              <img
+                                className="routine-product-slot__image"
+                                src={metadata.imageUrl}
+                                alt={`Embalagem de ${product.brand} ${product.name}`}
+                                loading="lazy"
+                              />
+                            </div>
+                          ) : (
+                            <div
+                              className="routine-product-slot__image-wrap routine-product-slot__image-wrap--placeholder"
+                              aria-hidden="true"
+                            >
+                              <span>
+                                {product.brand.slice(0, 1)}
+                              </span>
+                            </div>
+                          )}
+
+                          <div className="routine-product-slot__details">
+                            <h5>{product.name}</h5>
+
+                            {metadata.size ? (
+                              <p className="routine-product-slot__size">
+                                {metadata.size}
+                              </p>
+                            ) : null}
+
+                            <p className="routine-product-slot__price">
+                              {formatPrice(
+                                product.price,
+                                product.currency,
+                              )}
+                            </p>
+
+                            {metadata.productUrl ? (
+                              <a
+                                className="product-card__link"
+                                href={metadata.productUrl}
+                                target="_blank"
+                                rel="noreferrer noopener sponsored"
+                                onClick={() =>
+                                  trackAnalyticsEvent(
+                                    "recommended_product_click",
+                                    {
+                                      placement:
+                                        "routine_diverse",
+                                      ...(metadata.linkType
+                                        ? {
+                                            link_type:
+                                              metadata.linkType,
+                                          }
+                                        : {}),
+                                    },
+                                  )
+                                }
+                              >
+                                Ver produto
+                                <span aria-hidden="true">
+                                  ↗
+                                </span>
+                              </a>
+                            ) : null}
+
+                            {metadata.linkType &&
+                            metadata.linkType !== "editorial" ? (
+                              <span className="product-card__commercial-note">
+                                {metadata.linkType === "affiliate"
+                                  ? "Link afiliado"
+                                  : "Conteúdo patrocinado"}
+                              </span>
+                            ) : null}
+                          </div>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 function getSafetyClassName(
@@ -299,36 +494,14 @@ export function AnalysisResultView({
 
 }: AnalysisResultViewProps) {
 
-  const [
-
-    visibleProducts,
-
-    setVisibleProducts,
-
-  ] = useState<
-
-    Record<string, boolean>
-
-  >({});
-
-
-
   const reportPolicy =
-
     getAnalysisReportPolicy(result);
 
-
-
   const productsBlocked =
-
     !reportPolicy.showProducts;
 
-
-
   const guidanceBlocked =
-
     !reportPolicy.showIngredientGuidance;
-
 
   const baselinePriority =
     getBaselinePriority(result);
@@ -339,37 +512,6 @@ export function AnalysisResultView({
       : baselinePriority
         ? 1
         : 0;
-
-
-
-  function toggleProducts(
-
-    recommendationId: string,
-
-  ) {
-
-    setVisibleProducts(
-
-      (previous) => ({
-
-        ...previous,
-
-
-
-        [recommendationId]:
-
-          !previous[
-
-            recommendationId
-
-          ],
-
-      }),
-
-    );
-
-  }
-
 
 
   async function handleDownloadPdf() {
@@ -891,132 +1033,6 @@ export function AnalysisResultView({
 
 
 
-          {!productsBlocked &&
-            (result.routineProducts?.length ?? 0) > 0 && (
-            <div className="routine-products">
-              <div className="routine-products__intro">
-                <p className="routine-products__eyebrow">
-                  Rotina-base
-                </p>
-
-                <h4>
-                  Uma indicação por tipo de produto
-                </h4>
-
-                <p>
-                  O motor escolhe uma opção para cada etapa essencial.
-                  Primeiro tenta a correspondência técnica mais completa;
-                  quando ela não existe, usa a melhor alternativa compatível
-                  e só então uma opção básica da categoria, sem relaxar
-                  critérios de exclusão.
-                </p>
-              </div>
-
-              <div className="routine-products__grid">
-                {result.routineProducts?.map((selection) => {
-                  const product = selection.product;
-
-                  if (!product) {
-                    return (
-                      <article
-                        className="routine-product-slot routine-product-slot--missing"
-                        key={selection.category}
-                      >
-                        <span className="routine-product-slot__category">
-                          {getRoutineProductCategoryLabel(selection.category)}
-                        </span>
-                        <strong>Categoria sem produto ativo</strong>
-                        <p>
-                          O catálogo precisa de pelo menos uma opção verificada
-                          nesta categoria antes da publicação.
-                        </p>
-                      </article>
-                    );
-                  }
-
-                  const metadata =
-                    product as typeof product & ProductWithCatalogMeta;
-
-                  return (
-                    <article
-                      className="routine-product-slot"
-                      key={selection.category}
-                    >
-                      <div className="routine-product-slot__topline">
-                        <span className="routine-product-slot__category">
-                          {getRoutineProductCategoryLabel(selection.category)}
-                        </span>
-                        <span className={`routine-product-slot__match routine-product-slot__match--${selection.matchLevel}`}>
-                          {getRoutineProductMatchLabel(selection.matchLevel)}
-                        </span>
-                      </div>
-
-                      <div className="routine-product-slot__body">
-                        {metadata.imageUrl ? (
-                          <div className="routine-product-slot__image-wrap">
-                            <img
-                              className="routine-product-slot__image"
-                              src={metadata.imageUrl}
-                              alt={`Embalagem de ${product.brand} ${product.name}`}
-                              loading="lazy"
-                            />
-                          </div>
-                        ) : (
-                          <div
-                            className="routine-product-slot__image-wrap routine-product-slot__image-wrap--placeholder"
-                            aria-hidden="true"
-                          >
-                            <span>{product.brand.slice(0, 1)}</span>
-                          </div>
-                        )}
-
-                        <div className="routine-product-slot__details">
-                          <p className="routine-product-slot__brand">
-                            {product.brand}
-                          </p>
-                          <h5>{product.name}</h5>
-
-                          {metadata.size ? (
-                            <p className="routine-product-slot__size">
-                              {metadata.size}
-                            </p>
-                          ) : null}
-
-                          <p className="routine-product-slot__price">
-                            {formatPrice(product.price, product.currency)}
-                          </p>
-
-                          {metadata.productUrl ? (
-                            <a
-                              className="product-card__link"
-                              href={metadata.productUrl}
-                              target="_blank"
-                              rel="noreferrer noopener"
-                              onClick={() =>
-                                trackAnalyticsEvent(
-                                  "recommended_product_click",
-                                  {
-                                    placement: "routine",
-                                    ...(metadata.linkType
-                                      ? { link_type: metadata.linkType }
-                                      : {}),
-                                  },
-                                )
-                              }
-                            >
-                              Ver produto
-                              <span aria-hidden="true">↗</span>
-                            </a>
-                          ) : null}
-                        </div>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
           {result.recommendations.length ===
 
           0 ? (
@@ -1061,8 +1077,6 @@ export function AnalysisResultView({
 
                     recommendation,
 
-                    products,
-
                   },
 
                   index,
@@ -1074,20 +1088,6 @@ export function AnalysisResultView({
                     recommendation
 
                       .ingredientGuidance;
-
-
-
-                  const productsAreVisible =
-
-                    Boolean(
-
-                      visibleProducts[
-
-                        recommendation.id
-
-                      ],
-
-                    );
 
 
 
@@ -1509,370 +1509,6 @@ export function AnalysisResultView({
 
 
 
-                      {productsBlocked ? (
-
-                        <div className="recommendation-blocked">
-
-                          <span
-
-                            className="recommendation-blocked__icon"
-
-                            aria-hidden="true"
-
-                          >
-
-                            !
-
-                          </span>
-
-
-
-                          <div>
-
-                            <h4>
-
-                              Sugestões de
-
-                              produtos
-
-                              pausadas
-
-                            </h4>
-
-
-
-                            <p>
-
-                              As sugestões de
-
-                              produtos do
-
-                              catálogo foram
-
-                              bloqueadas por
-
-                              segurança neste
-
-                              resultado.
-
-                            </p>
-
-                          </div>
-
-                        </div>
-
-                      ) : (
-
-                        <div className="recommendation-products">
-
-                          <div className="recommendation-products__summary">
-
-                            <div>
-
-                              <p className="recommendation-products__eyebrow">
-
-                                Consulta
-
-                                opcional
-
-                              </p>
-
-
-
-                              <h5>
-
-                                Produtos
-
-                                compatíveis
-
-                              </h5>
-
-
-
-                              <p>
-
-                                Veja produtos
-
-                                do catálogo
-
-                                que atendem
-
-                                aos critérios
-
-                                desta
-
-                                recomendação.
-
-                                A marca não
-
-                                determina a
-
-                                recomendação.
-
-                              </p>
-
-                            </div>
-
-
-
-                            {products.length >
-
-                              0 && (
-
-                              <button
-
-                                className="recommendation-products__toggle"
-
-                                type="button"
-
-                                aria-expanded={
-
-                                  productsAreVisible
-
-                                }
-
-                                onClick={() =>
-
-                                  toggleProducts(
-
-                                    recommendation.id,
-
-                                  )
-
-                                }
-
-                              >
-
-                                {productsAreVisible
-
-                                  ? "Ocultar produtos"
-
-                                  : "Ver produtos compatíveis"}
-
-                              </button>
-
-                            )}
-
-                          </div>
-
-
-
-                          {products.length ===
-
-                          0 ? (
-
-                            <div className="recommendation-card__empty">
-
-                              Nenhum produto
-
-                              do catálogo
-
-                              atual atende
-
-                              aos critérios
-
-                              desta
-
-                              recomendação.
-
-                              Isso não altera
-
-                              a orientação de
-
-                              fórmula acima.
-
-                            </div>
-
-                          ) : (
-
-                            productsAreVisible && (
-
-                              <div className="product-grid">
-
-                                {products.map(
-
-                                  (
-
-                                    product,
-
-                                  ) => (
-
-                                    <article
-
-                                      className="product-card"
-
-                                      key={
-
-                                        product.id
-
-                                      }
-                                    >
-                                      {(() => {
-                                        const metadata =
-                                          product as typeof product &
-                                            ProductWithCatalogMeta;
-
-                                        return metadata.imageUrl ? (
-                                          <div className="product-card__image-wrap">
-                                            <img
-                                              className="product-card__image"
-                                              src={metadata.imageUrl}
-                                              alt={`Embalagem de ${product.brand} ${product.name}`}
-                                              loading="lazy"
-                                            />
-                                          </div>
-                                        ) : (
-                                          <div
-                                            className="product-card__image-wrap product-card__image-wrap--placeholder"
-                                            aria-hidden="true"
-                                          >
-                                            <span>{product.brand.slice(0, 1)}</span>
-                                          </div>
-                                        );
-                                      })()}
-
-                                      <div className="product-card__content">
-
-                                        <p className="product-card__brand">
-
-                                          {
-
-                                            product.brand
-
-                                          }
-
-                                        </p>
-
-
-
-                                        <h5>
-
-                                          {
-
-                                            product.name
-
-                                          }
-
-                                        </h5>
-
-
-
-                                        {(() => {
-                                          const metadata =
-                                            product as typeof product &
-                                              ProductWithCatalogMeta;
-
-                                          return metadata.size ? (
-                                            <p className="product-card__size">
-                                              {metadata.size}
-                                            </p>
-                                          ) : null;
-                                        })()}
-
-                                        <p className="product-card__price">
-
-                                          {formatPrice(
-
-                                            product.price,
-
-                                            product.currency,
-
-                                          )}
-
-                                        </p>
-
-                                        {(() => {
-                                          const metadata =
-                                            product as typeof product &
-                                              ProductWithCatalogMeta;
-
-                                          return (
-                                            <>
-                                              {metadata.retailer ? (
-                                                <p className="product-card__retailer">
-                                                  {metadata.retailer}
-                                                </p>
-                                              ) : null}
-
-                                              {metadata.priceCheckedAt ? (
-                                                <p className="product-card__checked">
-                                                  Preço verificado em {new Intl.DateTimeFormat(
-                                                    "pt-BR",
-                                                  ).format(
-                                                    new Date(`${metadata.priceCheckedAt}T12:00:00`),
-                                                  )}
-                                                </p>
-                                              ) : metadata.verifiedAt ? (
-                                                <p className="product-card__checked">
-                                                  Produto verificado em {new Intl.DateTimeFormat(
-                                                    "pt-BR",
-                                                  ).format(
-                                                    new Date(`${metadata.verifiedAt}T12:00:00`),
-                                                  )}
-                                                </p>
-                                              ) : null}
-
-                                              {metadata.productUrl ? (
-                                                <a
-                                                  className="product-card__link"
-                                                  href={metadata.productUrl}
-                                                  target="_blank"
-                                                  rel="noreferrer noopener"
-                                                  onClick={() =>
-                                                    trackAnalyticsEvent(
-                                                      "recommended_product_click",
-                                                      {
-                                                        placement: "recommendation",
-                                                        ...(metadata.linkType
-                                                          ? { link_type: metadata.linkType }
-                                                          : {}),
-                                                      },
-                                                    )
-                                                  }
-                                                >
-                                                  Ver produto
-                                                  <span aria-hidden="true">↗</span>
-                                                </a>
-                                              ) : null}
-
-                                              {metadata.linkType &&
-                                              metadata.linkType !== "editorial" ? (
-                                                <span className="product-card__commercial-note">
-                                                  {metadata.linkType === "affiliate"
-                                                    ? "Link afiliado"
-                                                    : "Conteúdo patrocinado"}
-                                                </span>
-                                              ) : null}
-                                            </>
-                                          );
-                                        })()}
-
-                                      </div>
-
-
-
-                                      <span className="product-card__badge">
-
-                                        Compatível
-
-                                      </span>
-
-                                    </article>
-
-                                  ),
-
-                                )}
-
-                              </div>
-
-                            )
-
-                          )}
-
-                        </div>
-
-                      )}
-
                     </article>
 
                   );
@@ -1884,6 +1520,29 @@ export function AnalysisResultView({
             </div>
 
           )}
+
+          {productsBlocked ? (
+            <div className="recommendation-blocked recommendation-blocked--products-final">
+              <span
+                className="recommendation-blocked__icon"
+                aria-hidden="true"
+              >
+                !
+              </span>
+
+              <div>
+                <h4>Sugestões de produtos pausadas</h4>
+                <p>
+                  As sugestões de produtos do catálogo foram bloqueadas
+                  por segurança neste resultado.
+                </p>
+              </div>
+            </div>
+          ) : (result.routineProducts?.length ?? 0) > 0 ? (
+            <RoutineProductsSection
+              selections={result.routineProducts ?? []}
+            />
+          ) : null}
 
         </section>
 
